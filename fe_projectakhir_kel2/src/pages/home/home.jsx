@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Header } from '../../components'
 
 
 class Home extends Component {
@@ -6,6 +7,7 @@ class Home extends Component {
     render() { 
         return ( 
             <>
+                <Header/> 
                 <h1>ini Home</h1>
             </>
          );

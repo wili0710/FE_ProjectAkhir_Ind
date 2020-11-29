@@ -5,12 +5,11 @@ import Home from './pages/home/home'
 import Register from './pages/register/register'
 import Admin from './pages/admin/admin'
 import {Switch,Route} from 'react-router-dom'
-import {Header} from './components'
+
 
 function App() {
   return (
     <>
-      <Header/>  
       <Switch>
         <Route exact path ='/' component={Home}/>
         <Route exact path ='/login' component={Login}/>
