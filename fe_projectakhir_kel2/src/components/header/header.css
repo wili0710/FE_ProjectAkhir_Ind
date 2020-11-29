@@ -6,7 +6,7 @@ header {
     left: 0;
     right: 0;
     width: 100%;
-    padding: 30px 70px;
+    padding: 30px 130px;
     display: flex !important;
     justify-content: space-between;
     align-items: center;
@@ -46,7 +46,7 @@ header .userBx {
 header .userBx .buttonBx .buttonBorder {
     width: 100px;
     height: 45px;
-    border: 1px solid;
+    border: 1px dashed;
     border-radius: 8px;
     border-color: var(--secondarys);
     margin-left: -5px;
