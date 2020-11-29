@@ -1,0 +1,122 @@
+.outerdiv {
+    background-color:#74b9ff;
+    height:100vh;
+    width:100%;
+    display:flex;
+    flex:row;
+    justify-content: center;
+}
+/* .outerdiv-2 {
+    background-color:#0984e3;
+    height:100vh;
+    width:85%;
+} */
+
+
+ .left-box{
+    background-color:red;
+    height:85vh;
+    width:35%;
+    /* margin-left: 50px; */
+    margin-top:40px;
+    border-top-left-radius: 3%;
+    border-bottom-left-radius: 3%;
+}
+.right-box{
+    background-color: white;
+    height:85vh;
+    width:35%;
+    margin-top:40px;
+    /* margin-right:50px; */
+    border-top-right-radius: 3%;
+    border-bottom-right-radius: 3%;
+   
+} 
+.div-icon{
+/* background:blue; */
+height:50px;
+padding-left:30px;
+display:flex;
+align-items: center;
+
+}
+.arrow-icon{
+    font-size:100px;
+}
+.div-opening{
+    height:50px;
+    padding-left:30px;
+    display:flex;
+}
+.div-opening p{
+    font-size: 35px;
+    font-weight: 600;
+}
+
+.div-username{
+    margin-top: 30px;
+    padding-left:30px;
+}
+.div-username p {
+    font-weight: 500;
+}
+
+.username-input {
+    /* border-bottom : 1px solid gray; */
+    /* #32ff7e warna ijo pas active */
+    margin-right:50px;
+    /* background-color: yellow; */
+    height:35px;
+    display:flex;
+    flex-direction: row;
+}
+.input-user{
+    background-color: #ffff;
+    color:white;
+
+}
+
+.div-password{
+    margin-top:30px;
+    padding-left:30px;
+}
+.password-input{
+    margin-right:50px;
+    height:35px;
+    display:flex;
+    flex-direction: row;
+}
+.remember-password{
+    height:35px;
+    padding-left:42px;
+    display: flex;
+    justify-content: end;
+    /* background-color: blue; */
+    margin-top: 10px;
+    flex-direction: row;
+}
+.remember-password p {
+    color:#0984e3;
+}
+
+.btn-login{
+    height:50px;
+    width:400px;
+    background-color:#74b9ff;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-left:30px;
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
+
+}
+.btn-login p {
+    color:white;
+    margin-top:10px;
+}
+.btn-login:hover{
+    background-color:#0984e3 ;
+}
