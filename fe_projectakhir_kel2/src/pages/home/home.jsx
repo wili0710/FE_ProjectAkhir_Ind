@@ -8,7 +8,9 @@ class Home extends Component {
         return ( 
             <>
                 <Header/> 
-                <h1>ini Home</h1>
+                <section className="banner">
+                    
+                </section>
             </>
          );
     }
