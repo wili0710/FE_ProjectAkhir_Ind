@@ -4,6 +4,11 @@ import {ArrowBack,CheckCircle} from '@material-ui/icons';
 import * as Icon from 'react-bootstrap-icons';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import FilledInput from '@material-ui/core/FilledInput';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
 
 const Styles={
     root:{
@@ -38,7 +43,8 @@ const Styles={
 class Login extends Component {
     state = {
         username:createRef(),
-        password:createRef()
+        password:createRef(),
+        showPassword:false
       }
 
       onLoginClick=()=>{
@@ -51,7 +57,17 @@ class Login extends Component {
             console.log(username1,' ini username')
             console.log(password1, ' ini password')
             console.log('button jalan')
+            alert(username1)
+            alert(password1)
         }
+         handleChange = (prop) => (event) => {
+            // setValues({ ...values, [prop]: event.target.value });
+            this.setState({showPassword:true})
+          };
+        
+        //    handleClickShowPassword = () => {
+        //     setValues({ ...values, showPassword: !values.showPassword });
+        //   };
     render() { 
         console.log(this.state.username)
         const {classes}= this.props
@@ -64,7 +80,7 @@ class Login extends Component {
                         </div>
                         <div className="right-box">
                             <div className="div-icon">
-                                <ArrowBack style={{fontSize:30,color:'gray'}}/>
+                                <ArrowBack style={{fontSize:30,color:'gray', cursor:'pointer'}}/>
                             </div>
                             <div className="div-opening">
                                 <p>Glad to see you!</p>
@@ -82,14 +98,15 @@ class Login extends Component {
                             </div>
                             <div className="div-password">
                                 <div className="password-input">
-                                <TextField className={classes.root} inputRef={this.state.password} label="password" fullWidth="true" variant="outlined" size='small' ></TextField>
+                                <TextField className={classes.root} inputRef={this.state.password} label="password" type="password" fullWidth="true" variant="outlined" size='small' ></TextField>
                                     <CheckCircle style={{color:'#55efc4'}}/>
                                 </div>
                             </div>
 
                             <div className="remember-password">
-                                <p>Forgot Password?</p>
+                                <p>Forgot Password ?</p>
                             </div>
+
 
                             <div className="btn-login" onClick={this.onLoginClick}>
                                 <p>LOG IN</p>
