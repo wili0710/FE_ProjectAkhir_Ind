@@ -1,0 +1,6 @@
+export {default as logo}            from './logo.png'
+export {default as d_user}          from './d_user.png'
+export {default as d_parcel}        from './d_parcel.png'
+export {default as icon}            from './icon.svg'
+export {default as illustration_1}  from './illustration_1.png'
+export {default as pattern}         from './pattern.png'
