@@ -1,0 +1,95 @@
+@import url('../../styles/colors.css');
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 30px 130px;
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary);
+    z-index: 500;
+}
+header .logoBx {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+header .logoBx .imgBx {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+header .logoBx .imgBx img,
+header .userBx .imgBx img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+header .logoBx .slogan {
+    margin-top: 2px;
+    color: var(--secondarys);
+}
+header .logoBx .slogan span {
+    font-weight: bolder;
+}
+header .userBx {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+header .userBx .buttonBx .buttonBorder {
+    width: 100px;
+    height: 45px;
+    border: 1px dashed;
+    border-radius: 8px;
+    border-color: var(--secondarys);
+    margin-left: -5px;
+    margin-bottom: -40px;
+    transition: .3s;
+}
+header .userBx .buttonBx button {
+    width: 100px;
+    height: 45px;
+    font-family: 'Fredoka One', cursive;
+    color: var(--secondarys); 
+    border: 2px solid;
+    border-radius: 8px;
+    border-color: var(--secondarys);
+    background-color: transparent;
+    transition: .3s;
+}
+header .userBx .buttonBx:hover .buttonBorder {
+    width: 90px;
+    height: 35px;
+    border: 4px solid;
+    margin-bottom: -40px;
+    margin-left: 5px;
+    border-radius: 6px;
+    border-color: transparent;
+    background-color: var(--dk_tertiary); 
+}
+header .userBx .buttonBx:hover button {
+    color: var(--secondarys);
+    letter-spacing: 1.2px;
+    font-size: 16px;
+    border: 1.8px dashed;
+    border-color: var(--secondarys);
+}
+header .userBx .buttonBx button:focus {
+    outline: none;
+}
+header .userBx .imgBx {
+    position: relative;
+    height: 70px;
+    width: 70px;
+    margin-left: 20px;
+    border-radius: 100%;
+    background-color: var(--dk_tertiary);
+}
