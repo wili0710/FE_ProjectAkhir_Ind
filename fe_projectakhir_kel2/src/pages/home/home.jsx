@@ -2,7 +2,7 @@ import React from 'react';
 import './home.css'
 import { 
     debounce,
-    scrollCardToggle
+    draggableCard
 } from '../../helpers'
 import { 
     icon,
@@ -70,10 +70,8 @@ class Home extends React.Component {
         filteredPackage:[]
     };
 
-    
-
     componentDidMount() {
-        scrollCardToggle();
+        draggableCard();
         this.setState({listPackage:packages});
     };
 
@@ -82,12 +80,20 @@ class Home extends React.Component {
     }
 
     onSearchInputChange(e) {
-        packages.filter((val,index) => {})
+        //* temporary code *// 
+        let newArr = [];
+        for (let i = 0; i < packages.length; i++) {
+            if(packages[i].title.toLowerCase().includes(e.target.value)) {
+                newArr.push(packages[i])
+            };
+        };
+        this.setState({filteredPackage:newArr})
     };
 
     componentDidUpdate() {
-        console.log(this.state.inputSearch, this.state.listPackage)
-    }
+        console.log(this.state.listPackage);
+        console.log(this.state.filteredPackage);
+    };
 
     render() { 
         return ( 
@@ -116,7 +122,15 @@ class Home extends React.Component {
                         </div>
                     </div>   
                 </section>
-                {packageCarousel(this.state.listPackage)}
+                <section className="packages">
+                {
+                    this.state.filteredPackage.length?
+                    packageCarousel(this.state.filteredPackage)
+                    :
+                    packageCarousel(this.state.listPackage)
+                }
+                </section>
+
             </>
         );
     };

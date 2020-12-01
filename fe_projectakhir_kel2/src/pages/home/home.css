@@ -2,7 +2,7 @@
 
 /* general setup */
 section {
-    padding: 10px 50px;
+    background-color: var(--primary);
 }
 .banner .content .textBx .imgBx img,
 .banner .content .illustrationBx img,
@@ -15,10 +15,10 @@ section {
 /* end of general setup */
 .banner {
     position: relative;
+    padding: 10px 50px;
     margin-top: 120px;
     z-index: 0;
     width: 100%;
-    background-color: var(--primary);
 }
 .banner .content {
     width: 100%;

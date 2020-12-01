@@ -8,7 +8,7 @@ export function debounce(funct, delay = 100) {
     };
 };
 
-export function scrollCardToggle() {
+export function draggableCard() {
     const slider = document.querySelector('.cardBx');
     let isDown = false;
     let startX;
