@@ -42,7 +42,19 @@ const Register=(props)=>{
         Axios.post(`${Backend_Link}/auth/c_otp`,{email:email,otp:otp})
         .then((res)=>{
             console.log(res)
-            if(res.data.message=="OTP Expired"){
+            if(res.data=="OTP Expired"){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OTP Expired',
+                    text: 'OTP Expired!'                    
+                })
+                setLoadingregister(false)
+            }else if(res.data=="OTP SALAH"){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OTP Salah',
+                    text: 'OTP Salah!'                    
+                })
                 setLoadingregister(false)
             }else{
                 setIsverified(true)
@@ -115,14 +127,14 @@ const Register=(props)=>{
                 return(
                     <div className='d-flex flex-column mt-1'>
                         <span>Email :</span>
-                        <input type='email' className="form-control" onChange={(e)=>funcvalidateemail(e)} style={{transition:'500ms'}} disabled/>
+                        <input disabled type='email' className="form-control" onChange={(e)=>funcvalidateemail(e)} style={{transition:'500ms'}} defaultValue={email}/>
                         <span style={{fontSize:12}} className='my-2'>OTP Berhasil di kirim ke {email}</span>
                         <input type="text" className="form-control my-2" onChange={(e)=>changeOtp(e)} placeholder="Masukkan OTP" style={{transition:'500ms'}} />
                         {timeout()}
                         {timeoutOption?
                             <div style={{marginBottom:10}}>
                                 <span 
-                                    className='my-2' onClick={sentOtp}
+                                    className='my-2' onClick={()=>{setInputOtp(false);setTimeoutOption(false);sentOtp()}}
                                     style={{
                                         cursor:"pointer",
                                         color:"blue"
@@ -218,7 +230,7 @@ const Register=(props)=>{
                             <div className='d-flex flex-column align-items-center mx-5 py-3' style={{backgroundColor:'white',border:'1px solid #E5E7E7',borderRadius:"5px",boxShadow:"0 0 10px 1px #E5E7E7"}}>
                                 <h5 className='mt-3'>Mendaftar dengan Email:</h5>
                                 <h5>{email}</h5>
-                                <a href='/register'><span className='mb-3' style={{fontWeight:'lighter'}}><span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}} onClick={()=>{localStorage.removeItem('registrasi');localStorage.removeItem('verified');setEmail('')}}>Pakai Email lain</span></span></a>
+                                <a href='/register'><span className='mb-3' style={{fontWeight:'lighter'}}><span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}} onClick={()=>{localStorage.removeItem('registrasi');localStorage.removeItem('verified')}}>Pakai Email lain</span></span></a>
                                 <form className='pt-3' style={{width:'80%', marginTop:10, borderTop:'2px solid #E5E7E7'}}>
                                     <span>Nama :</span>
                                     <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,name:e.target.value})}/>
