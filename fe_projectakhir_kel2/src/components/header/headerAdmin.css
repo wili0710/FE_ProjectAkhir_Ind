@@ -1,5 +1,7 @@
 .container-luar{
-    background-color: #74b9ff;
+    /* background-color: #74b9ff;
+     */
+     background: linear-gradient(0deg, rgba(116,185,255,1) 0%, rgba(9,132,227,1) 100%);
     width:20%;
     height:100vh;
     box-shadow:1px 2px 3px 4px gray;
@@ -7,6 +9,7 @@
     border-bottom-right-radius:10px;
     /* #74b9ff;  biru muda
     #0984e3; biru tua*/
+    
 }
 .logo{
     height:80px;
@@ -14,11 +17,79 @@
     justify-content: center;
     display: flex;
     align-items: center;
+    margin-bottom:40px;
     /* background-color: red; */
 }
 .logoimg{
     width:90%;
     position: relative;
+}
 
+.container-option{
+    height:40px;
+    width:100%;
+    background-color: #0984e3;
+    margin-bottom:20px;
+    padding-left: 30px;
+    padding-right:10px;
+    display:flex;
+    /* justify-content: center; */
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
 
+}
+.container-option:hover{
+    cursor: pointer;
+    color:#0984e3;
+    background-color: #74b9ff;
+}
+.option-word{
+    color:white;
+    font-weight:700;
+    margin-top:10px;
+    font-size:20px;
+}
+.icon-size{
+    font-size: 25px;
+    color:white;
+    margin-right:10px;
+    /* margin-left:10px; */
+    /* margin-right:10px; */
+}
+.icon-size2{
+    font-size:25px;
+    color:white;
+     display:flex;
+     align-items: flex-end;
+}
+
+.button-logout{
+    width:80%;
+    height:40px;
+    background-color:#0984e3;
+    border-radius:10px;
+    justify-content: center;
+    display: flex;
+    margin-left:25px;
+    margin-top:30px;
+    align-items: center;
+}
+.button-logout p {
+    color:white;
+    font-weight:800;
+}
+.button-logout:hover{
+    cursor: pointer;
+    color:#0984e3;
+    background-color: #74b9ff;
+}
+
+.inside-option{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width:100%;
+    
 }

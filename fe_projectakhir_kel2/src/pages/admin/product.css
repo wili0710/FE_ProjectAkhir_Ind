@@ -1,0 +1,21 @@
+.btn-add{
+    border-radius:5px;
+    height:30px;
+    width:100px;
+    margin-bottom:30px;
+    margin-left:10px;
+    margin-top:20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border:1px solid gray;
+}
+.btn-add p{
+    margin-top:15px;
+}
+.btn-add:hover{
+    cursor: pointer;
+    color:white;
+    background-color: #74b9ff;
+    
+}

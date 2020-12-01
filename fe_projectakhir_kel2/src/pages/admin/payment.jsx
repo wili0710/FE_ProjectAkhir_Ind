@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
-class Admin extends Component {
+class Payment extends Component {
     state = {  }
     render() { 
         return ( 
             <>
-                <h1>ini Admin</h1>
+                <h1>ini Payment</h1>
             </>
          );
     }
 }
  
-export default Admin;
+export default Payment;
