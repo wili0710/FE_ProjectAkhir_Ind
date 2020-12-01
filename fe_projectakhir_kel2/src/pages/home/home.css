@@ -3,7 +3,6 @@
 /* general setup */
 section {
     padding: 10px 50px;
-    background-color: var(--primary);
 }
 .banner .content .textBx .imgBx img,
 .banner .content .illustrationBx img,
@@ -17,8 +16,9 @@ section {
 .banner {
     position: relative;
     margin-top: 120px;
-    z-index: -1;
+    z-index: 0;
     width: 100%;
+    background-color: var(--primary);
 }
 .banner .content {
     width: 100%;
@@ -74,7 +74,7 @@ section {
     background-size: cover;
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
 }
 .banner .lowerContent input {
