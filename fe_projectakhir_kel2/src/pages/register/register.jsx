@@ -14,6 +14,7 @@ const Register=(props)=>{
     const [loading,setLoading]=useState(true)
     const [newuser,setNewuser]=useState({})
     const [disable,setDisable]=useState(true)
+    const [inputOtp,setInputOtp]=useState(false)
     
     useEffect(()=>{
         setLoading(false)
@@ -29,6 +30,15 @@ const Register=(props)=>{
         }
         return setValidateEmail(false)
     }
+    const sentOtp=()=>{
+        Axios.post(`${Backend_Link}/auth/s_r_otp`,{email:email})
+        .then((res)=>{
+            setInputOtp(true)
+        }).catch((err)=>{
+            console.log(err)
+        })
+
+    }
     const rendercekemail=()=>{
         if(loadingregister===true){
             return(
@@ -40,11 +50,21 @@ const Register=(props)=>{
             )
         }
         if(validateemail===true){
+            if(inputOtp===true){
+                return(
+                    <div className='d-flex flex-column mt-1'>
+                        <input type='email' className="form-control" onChange={(e)=>funcvalidateemail(e)} style={{transition:'500ms'}} disabled/>
+                        <span style={{fontSize:12}} className='my-2'>OTP Berhasil di kirim ke {email}</span>
+                        <input type="text" className="form-control my-2" placeholder="Masukkan OTP" style={{transition:'500ms'}} />
+                        <button onClick={()=>onsendclick()} className='p-2' style={{transition:'1000ms',border:'0px', borderRadius:'5px', backgroundColor:"#0095DA",fontSize:'20px',cursor: 'pointer', color:'white'}}>Daftar</button>
+                    </div>
+                )
+            }
             return(
                 <div className='d-flex flex-column mt-1'>
                     <input type='email' className="form-control" onChange={(e)=>funcvalidateemail(e)} style={{transition:'500ms'}}/>
-                    <span className='my-2'>Contoh : email@parcelita.com</span>
-                    <button onClick={()=>onsendclick()} className='p-2' style={{transition:'1000ms',border:'0px', borderRadius:'5px', backgroundColor:"#0095DA",fontSize:'20px',cursor: 'pointer', color:'white'}}>Daftar</button>
+                    <span style={{cursor:"pointer",color:"blue"}} className='my-2' onClick={sentOtp}>Verify dengan OTP</span>
+                    <button className='p-2' disabled style={{transition:'1000ms',border:'0px', borderRadius:'5px', backgroundColor:"#e5e7e9",fontSize:'20px',cursor:'not-allowed'}}>Daftar</button>
                 </div>
             )
         }
