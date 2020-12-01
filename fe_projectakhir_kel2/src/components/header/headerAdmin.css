@@ -1,0 +1,24 @@
+.container-luar{
+    background-color: #74b9ff;
+    width:20%;
+    height:100vh;
+    box-shadow:1px 2px 3px 4px gray;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius:10px;
+    /* #74b9ff;  biru muda
+    #0984e3; biru tua*/
+}
+.logo{
+    height:80px;
+    width:100%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    /* background-color: red; */
+}
+.logoimg{
+    width:90%;
+    position: relative;
+
+
+}
