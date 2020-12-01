@@ -42,16 +42,17 @@ const Register=(props)=>{
         Axios.post(`${Backend_Link}/auth/c_otp`,{email:email,otp:otp})
         .then((res)=>{
             console.log(res)
-            setIsverified(true)
-            localStorage.setItem("registrasi",email)
-            localStorage.setItem("verified",true)
-            setLoadingregister(false)
+            if(res.data.message=="OTP Expired"){
+                setLoadingregister(false)
+            }else{
+                setIsverified(true)
+                localStorage.setItem("registrasi",email)
+                localStorage.setItem("verified",true)
+                setLoadingregister(false)
+            }
         }).catch((err)=>{
             console.log(err)
         })
-
-
-        
     }
     const funcvalidateemail=(e)=>{
         if (/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(e.target.value)){
@@ -127,7 +128,6 @@ const Register=(props)=>{
                                         color:"blue"
                                 }}>
                                     Sent OTP Lagi
-
                                 </span>
                                 <span style={{cursor:"default"}}> - </span>
                                 <span 
@@ -137,7 +137,6 @@ const Register=(props)=>{
                                         color:"blue"
                                 }}>
                                     Ganti Email
-
                                 </span>
                             </div>
                             :
