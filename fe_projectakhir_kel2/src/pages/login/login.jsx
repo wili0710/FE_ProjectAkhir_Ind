@@ -15,6 +15,8 @@ import Courier from './../../assets/Courier.png'
 import {Redirect, Link} from 'react-router-dom'
 import {LoginThunk} from './../../redux/Actions'
 import {connect} from 'react-redux';
+import GoogleLogin from 'react-google-login';
+
 
 const Styles={
     root:{
@@ -51,17 +53,32 @@ class Login extends Component {
     state = {
         email:createRef(),
         password:createRef(),
-        showPassword:false
+        showPassword:false,
+        testemail:'',
+        testpassword:''
+
+      }
+
+      onChangeEmail=(e)=>{
+          this.setState({testemail:e.target.value})
+      }
+      onChangePassword=(e)=>{
+          this.setState({testpassword:e.target.value})
+      }
+      
+      responseGoogle = (response) => {
+        console.log(response);
       }
 
       onLoginClick=()=>{
-        //   const {username,password}=this.state
-        //     var username1=username.current.value
-        //     var password1=password.current.value
-            // console.log(username1,password1)
-            let email1= this.state.email.current.value
-            let password1= this.state.password.current.value
+       
+            // let email1= this.state.email.current.value
+            // let password1= this.state.password.current.value
+            let email1= this.state.testemail
+            let password1=this.state.testpassword
             this.props.LoginThunk(email1,password1)
+            console.log(this.state.testemail,'ini test email')
+            console.log(this.state.testpassword,'ini test pasword')
             // Axios.post(`${API_URL_SQL}/auth/login`,{
             //     email:email1,
             //     password:password1
@@ -84,7 +101,8 @@ class Login extends Component {
         //     setValues({ ...values, showPassword: !values.showPassword });
         //   };
     render() { 
-        console.log(this.state.username)
+        console.log(this.state.testemail)
+        console.log(this.state.testpassword)
         const {classes}= this.props
         if(this.props.Auth.isLogin){
             return <Redirect to='/' />
@@ -106,10 +124,16 @@ class Login extends Component {
                             <div className="border-username">
                                 <div className="div-username">
                                     <div className="username-input">
-                                    <TextField className={classes.root} inputRef={this.state.email} label="Email" fullWidth="true" variant="outlined" size='small' ></TextField>
+                                    <TextField className={classes.root} 
+                                    
+                                    // inputRef={this.state.email} 
+                                    onChange={this.onChangeEmail}
+                                    label="Email" fullWidth="true" 
+                                    value={this.state.testemail}
+                                    variant="outlined" size='small' ></TextField>
                                     {
-                                        this.state.email.length>4 ?
-                                        <CheckCircle/>
+                                        this.state.testemail.length>4 ?
+                                        <CheckCircle style={{color:'#55efc4'}}/>
                                         :
                                         null
                                     }
@@ -117,13 +141,22 @@ class Login extends Component {
                                 </div>
                                 <div className="div-password">
                                     <div className="password-input">
-                                    <TextField className={classes.root} inputRef={this.state.password} label="password" type="password" fullWidth="true" variant="outlined" size='small' ></TextField>
+                                    <TextField className={classes.root}
+                                    //  inputRef={this.state.password} 
+                                    onChange={this.onChangePassword}
+                                    value={this.state.testpassword}
+                                    label="password" type="password" fullWidth="true" variant="outlined" size='small' ></TextField>
+                                       {
+                                        this.state.testpassword.length>4 ?
                                         <CheckCircle style={{color:'#55efc4'}}/>
+                                        :
+                                        null
+                                    }
                                     </div>
                                 </div>
 
                                 <div className="remember-password">
-                                    <p>Forgot Password ?</p>
+                                    <p style={{marginRight:'10px'}}>Forgot Password ? </p>
                                 </div>
 
 
