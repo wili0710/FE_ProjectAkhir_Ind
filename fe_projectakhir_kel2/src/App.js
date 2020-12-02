@@ -12,7 +12,6 @@ import Axios from 'axios';
 import AdminPayment from './pages/admin/adminpayment';
 import HeaderAdmin from './../src/components/header/headerAdmin'
 import User from './../src/pages/admin/user'
-import Payment from './../src/pages/admin/payment'
 import Parcel from './../src/pages/admin/parcel'
 import Product from './../src/pages/admin/product'
 import CategoryProduct from './../src/pages/admin/categoryProduct'
@@ -61,9 +60,6 @@ function App() {
           <Route exact path='/adminpanel/headerAdmin' component={HeaderAdmin}/>
           <Route exact path ='/adminpanel/categoryProduct' component={CategoryProduct}/>
           <Route exact path ='/adminpanel/categoryParcel' component={CategoryParcel}/>
-          {/* <Route exact path ='/user' component={User}/>
-          <Route exact path ='/parcel' component={Parcel}/>
-          <Route exact path ='/product' component={Product}/> */}
         </>
       )
     }
