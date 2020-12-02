@@ -16,6 +16,8 @@ import ReactImageMagnify from 'react-image-magnify';
 import HeaderAdmin from '../../components/header/headerAdmin';
 import {FaUserCog,FaMoneyCheckAlt} from 'react-icons/fa'
 import './user.css'
+import { Pagination,PaginationItem, PaginationLink } from 'reactstrap';
+import { TableFooter } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
@@ -31,17 +33,40 @@ const useStyles = makeStyles({
 
 const AdminPayment=()=>{
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [paymentInWaiting,setPaymentInWaiting]=useState([])
+  const [pages,setpages]=useState(1)
+  const [maxpages,setmaxpages]=useState(0)
 
   useEffect(()=>{
+    console.log(pages)
     Axios.get(`${API_URL_SQL}/payment/getpaymentwaiting`)
+    .then((res)=>{
+      console.log(res.data)
+      setmaxpages(res.data.length)
+    }).catch((err)=>{
+      console.log(err)
+    })
+
+    Axios.get(`${API_URL_SQL}/payment/getpaymentwaiting?page=${pages}`)
     .then((res)=>{
         console.log(res)
         setPaymentInWaiting(res.data)
+    }).catch((err)=>{
+      console.log(err)
     })
   },[])
+
+  useEffect(()=>{
+    console.log(pages)
+    Axios.get(`${API_URL_SQL}/payment/getpaymentwaiting?page=${pages}`)
+    .then((res)=>{
+        console.log(res)
+        setPaymentInWaiting(res.data)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  },[pages])
 
   const onConfirmClick=(payment_id,transaksi_id)=>{
     Axios.post(`${API_URL_SQL}/payment/confirmpayment`,{payment_id:payment_id,transaksi_id:transaksi_id})
@@ -54,7 +79,7 @@ const AdminPayment=()=>{
   const renderTable=()=>{
     return paymentInWaiting.map((val,index)=>{
       return(
-        <TableRow key={val.id} className={classes.subcontainer}>
+        <TableRow key={val.payment_id} className={classes.subcontainer}>
             <TableCell style={{width:130}} align="center">{val.payment_id}</TableCell>
             <TableCell style={{width:130}} align="center">{val.transaksi_id}</TableCell>
             <TableCell style={{width:200}}>
@@ -88,43 +113,73 @@ const AdminPayment=()=>{
       )
     })
   }
+  const pindahpage=(a)=>{
+    console.log(a)
+    setpages(a)
+  }
+  const renderpaging=()=>{
+    console.log("jalan")
+    console.log(maxpages)
+    var jumlahpage=Math.ceil(maxpages/3)
+    var arr=new Array(jumlahpage)
+    console.log(jumlahpage)
+    console.log(arr)
+    for(let i=0;i<arr.length;i++){
+      if((i+1)===pages){
+        arr[i]=(<PaginationItem key={i} disabled>
+                  <PaginationLink>
+                    {i+1}
+                  </PaginationLink>
+                </PaginationItem>)
+      }else{
+        console.log(i)
+        arr[i]=(
+          <PaginationItem key={i} onClick={()=>pindahpage(i+1)}>
+                <PaginationLink>
+                  {i+1}
+                </PaginationLink>
+              </PaginationItem>
+        )
+      }
+    }
+    return arr
+  }
 
   return (
     <>
       <div className="user-container">
       <HeaderAdmin/>
-          <div className="user-right">
-              <div className="header-user">
-                  <div className="icon-group">
-                      <FaMoneyCheckAlt className="icon-size" color="black"/>
-                      <p style={{fontWeight:'600'}}>Payment</p>
-                  </div>
-              </div>
-              <div className="container-data">
-
-              
-                {/* <Paper className={classes.root}> */}
-                    <TableContainer>
-                        <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center">Payment Id</TableCell>
-                                <TableCell align="center">Transaksi Id</TableCell>
-                                <TableCell align="center">Bukti Transfer</TableCell>
-                                <TableCell align="center">Tgl Transaksi</TableCell>
-                                <TableCell align="center">Tgl Expired</TableCell>
-                                <TableCell align="center">Total Harus Dibayar</TableCell>
-                                <TableCell align="center"></TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {renderTable()}
-                        </TableBody>
-                        </Table>
-                    </TableContainer>
-                {/* </Paper> */}
-              </div>
-          </div>
+        <div className="user-right">
+            <div className="header-user">
+                <div className="icon-group">
+                    <FaMoneyCheckAlt className="icon-size" color="black"/>
+                    <p style={{fontWeight:'600'}}>Payment</p>
+                </div>
+            </div>
+            <div className="container-data">
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                        <TableCell align="center">Payment Id</TableCell>
+                        <TableCell align="center">Transaksi Id</TableCell>
+                        <TableCell align="center">Bukti Transfer</TableCell>
+                        <TableCell align="center">Tgl Transaksi</TableCell>
+                        <TableCell align="center">Tgl Expired</TableCell>
+                        <TableCell align="center">Total Harus Dibayar</TableCell>
+                        <TableCell align="center"></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                      {renderTable()}
+                  </TableBody>
+                </Table>
+                <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+                  {renderpaging()}
+                </Pagination>
+              </TableContainer>
+            </div>
+        </div>
       </div>
       </>
     
