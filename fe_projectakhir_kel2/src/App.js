@@ -10,7 +10,11 @@ import {useDispatch,useSelector} from 'react-redux'
 import {FullPageLoading } from './components/loading';
 import Axios from 'axios';
 import AdminPayment from './pages/admin/adminpayment';
-
+import HeaderAdmin from './../src/components/header/headerAdmin'
+import User from './../src/pages/admin/user'
+import Payment from './../src/pages/admin/payment'
+import Parcel from './../src/pages/admin/parcel'
+import Product from './../src/pages/admin/product'
 
 function App() {
   
@@ -60,11 +64,17 @@ function App() {
   return (
     <>
       <Switch>
+      
         <Route exact path ='/' component={Home}/>
         <Route exact path ='/login' component={Login}/>
         <Route exact path ='/register' component={Register}/>
         {renderProtectedAdminRoutes()}
         <Route path='*' component={ManageAdmin}/>
+        <Route exact path='/headerAdmin' component={HeaderAdmin}/>
+        <Route exact path ='/user' component={User}/>
+        <Route exact path ='/payment' component={Payment}/>
+        <Route exact path ='/parcel' component={Parcel}/>
+        <Route exact path ='/product' component={Product}/>
       </Switch>
     </>
   );
