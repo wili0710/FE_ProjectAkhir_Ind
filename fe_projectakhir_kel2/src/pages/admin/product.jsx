@@ -52,6 +52,7 @@ class Product extends Component {
 
      onDelete=()=>{
          console.log('delete jalan')
+         
      }
 
      renderProduct=()=>{
@@ -92,7 +93,7 @@ class Product extends Component {
      renderCatProd=()=>{
          return this.state.categoryProduct.map((val,index)=>{
              return (
-                <option value={val.id}>Category : {val.id } </option>
+                <option value={val.id}>Category : {val.id } {val.nama} </option>
              )
          })
      }
