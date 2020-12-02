@@ -3,6 +3,7 @@ const INITIAL_STATE = {
     username: '',
     password: '',
     email: '',
+    role:'',
     isLogin: false,
     isLoading: false,
     error: '',
