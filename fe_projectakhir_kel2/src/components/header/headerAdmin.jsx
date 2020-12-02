@@ -20,7 +20,7 @@ class HeaderAdmin extends Component {
                             </div>
                         </NavLink>
 
-                        <Link to='/user' style={{textDecoration:'none'}}>
+                        <Link to='/adminpanel/datauser' style={{textDecoration:'none'}}>
                             <div className="container-option">
                                     <div className="inside-option">
                                         <FaUserCog className="icon-size"/>  
@@ -30,7 +30,7 @@ class HeaderAdmin extends Component {
                             </div>
                         </Link>
 
-                        <Link to="/payment" style={{textDecoration:'none'}}>
+                        <Link to="/adminpanel/payment" style={{textDecoration:'none'}}>
                             <div className="container-option">
                                     <div className="inside-option">
                                         <FaMoneyCheckAlt className="icon-size"/>
@@ -40,7 +40,7 @@ class HeaderAdmin extends Component {
                             </div>
                         </Link>
 
-                        <Link to="/product" style={{textDecoration:'none'}}>
+                        <Link to="/adminpanel/product" style={{textDecoration:'none'}}>
                             <div className="container-option">
                                 <div className="inside-option">
                                     <MdAddShoppingCart className="icon-size"/>
@@ -52,7 +52,7 @@ class HeaderAdmin extends Component {
 
      
 
-                        <Link to="/parcel" style={{textDecoration:'none'}}>
+                        <Link to="/adminpanel/parcel" style={{textDecoration:'none'}}>
                             <div className="container-option">
                                 <div className="inside-option">
                                     <GiMilkCarton className="icon-size"/>
@@ -62,7 +62,7 @@ class HeaderAdmin extends Component {
                             </div>
                         </Link>
                         
-                        <Link to="/categoryProduct" style={{textDecoration:'none'}}>
+                        <Link to="/adminpanel/categoryProduct" style={{textDecoration:'none'}}>
                             <div className="container-option">
                                 <div className="inside-option">
                                     <MdAddShoppingCart className="icon-size"/>
@@ -72,7 +72,7 @@ class HeaderAdmin extends Component {
                             </div>
                         </Link>
 
-                        <Link to="/categoryParcel" style={{textDecoration:'none'}}>
+                        <Link to="/adminpanel/categoryParcel" style={{textDecoration:'none'}}>
                             <div className="container-option">
                                 <div className="inside-option">
                                     <GiMilkCarton className="icon-size"/>

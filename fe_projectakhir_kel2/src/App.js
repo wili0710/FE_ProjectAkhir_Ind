@@ -53,11 +53,17 @@ function App() {
     // if(Auth.role==="Admin"){
       return(
         <>
-          <Route exact path='/adminpanel' component={AdminPayment}/>
-          <Route exact path='/adminpanel/datauser' component={AdminPayment}/>
+          <Route exact path='/adminpanel' component={User}/>
+          <Route exact path='/adminpanel/datauser' component={User}/>
           <Route exact path='/adminpanel/payment' component={AdminPayment}/>
-          <Route exact path='/adminpanel/product' component={AdminPayment}/>
-          <Route exact path='/adminpanel/parcel' component={AdminPayment}/>
+          <Route exact path='/adminpanel/product' component={Product}/>
+          <Route exact path='/adminpanel/parcel' component={Parcel}/>
+          <Route exact path='/adminpanel/headerAdmin' component={HeaderAdmin}/>
+          <Route exact path ='/adminpanel/categoryProduct' component={CategoryProduct}/>
+          <Route exact path ='/adminpanel/categoryParcel' component={CategoryParcel}/>
+          {/* <Route exact path ='/user' component={User}/>
+          <Route exact path ='/parcel' component={Parcel}/>
+          <Route exact path ='/product' component={Product}/> */}
         </>
       )
     }
@@ -72,13 +78,7 @@ function App() {
         <Route exact path ='/register' component={Register}/>
         {renderProtectedAdminRoutes()}
         <Route path='*' component={ManageAdmin}/>
-        <Route exact path='/headerAdmin' component={HeaderAdmin}/>
-        <Route exact path ='/user' component={User}/>
-        <Route exact path ='/payment' component={Payment}/>
-        <Route exact path ='/parcel' component={Parcel}/>
-        <Route exact path ='/product' component={Product}/>
-        <Route exact path ='/categoryProduct' component={CategoryProduct}/>
-        <Route exact path ='/categoryParcel' component={CategoryParcel}/>
+
       </Switch>
     </>
   );
