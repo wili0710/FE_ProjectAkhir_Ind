@@ -3,12 +3,13 @@ import React,{useEffect,useState} from 'react';
 import Login from './pages/login/login'
 import Home from './pages/home/home'
 import Register from './pages/register/register'
-import ManageAdmin from './pages/admin/admin'
+import ManageAdmin from './pages/admin/adminpayment'
 import {Switch,Route} from 'react-router-dom'
 import {API_URL_SQL} from './helpers/apiUrl'
 import {useDispatch,useSelector} from 'react-redux'
 import {FullPageLoading } from './components/loading';
 import Axios from 'axios';
+import AdminPayment from './pages/admin/adminpayment';
 
 
 function App() {
@@ -42,14 +43,15 @@ function App() {
     )
   }
   const renderProtectedAdminRoutes=()=>{
-    if(Auth.role==="Admin"){
+    if(1===1){
+    // if(Auth.role==="Admin"){
       return(
         <>
-          <Route exact path='/adminpanel' component={ManageAdmin}/>
-          <Route exact path='/adminpanel/datauser' component={ManageAdmin}/>
-          <Route exact path='/adminpanel/payment' component={ManageAdmin}/>
-          <Route exact path='/adminpanel/product' component={ManageAdmin}/>
-          <Route exact path='/adminpanel/parcel' component={ManageAdmin}/>
+          <Route exact path='/adminpanel' component={AdminPayment}/>
+          <Route exact path='/adminpanel/datauser' component={AdminPayment}/>
+          <Route exact path='/adminpanel/payment' component={AdminPayment}/>
+          <Route exact path='/adminpanel/product' component={AdminPayment}/>
+          <Route exact path='/adminpanel/parcel' component={AdminPayment}/>
         </>
       )
     }
