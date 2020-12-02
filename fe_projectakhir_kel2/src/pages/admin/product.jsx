@@ -165,7 +165,7 @@ class Product extends Component {
 
             {/* BATAS */}
                 <div className="user-container">
-            <HeaderAdmin />
+                    <HeaderAdmin />
                 <div className="user-right">
                     <div className="header-user">
                         <div className="icon-group">
