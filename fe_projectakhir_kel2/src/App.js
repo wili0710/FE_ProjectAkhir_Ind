@@ -9,6 +9,8 @@ import User from './../src/pages/admin/user'
 import Payment from './../src/pages/admin/payment'
 import Parcel from './../src/pages/admin/parcel'
 import Product from './../src/pages/admin/product'
+import CategoryProduct from './../src/pages/admin/categoryProduct'
+import CategoryParcel from './../src/pages/admin/categoryParcel'
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route exact path ='/payment' component={Payment}/>
         <Route exact path ='/parcel' component={Parcel}/>
         <Route exact path ='/product' component={Product}/>
+        <Route exact path ='/categoryProduct' component={CategoryProduct}/>
+        <Route exact path ='/categoryParcel' component={CategoryParcel}/>
       </Switch>
     </>
   );

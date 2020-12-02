@@ -36,6 +36,8 @@ class User extends Component {
             console.log(val.nama)
             console.log('render jalan')
             if(val.role==='admin'){
+                return (
+
                     <>
                         <TableRow key={val.id}>
                             <TableCell>{index+1}</TableCell>
@@ -50,21 +52,25 @@ class User extends Component {
                             </TableCell>
                         </TableRow>
                     </>
+                )
             }else {
-                <>
-                <TableRow key={val.id}>
-                    <TableCell>{index+1}</TableCell>
-                    <TableCell>{val.id}</TableCell>
-                    <TableCell>{val.nama}</TableCell>
-                    <TableCell>{val.email}</TableCell>
-                    <TableCell>{val.role}</TableCell>
-                    <TableCell>{val.statusver}</TableCell>
-                    <TableCell>
-                        <button onClick={()=>this.onChangeUser(val.id)}>Change to Admin</button>
-                        <button onClick={()=>this.onDelete(val.id)}>Delete</button>
-                    </TableCell>
-                </TableRow>
-            </>
+                return (
+                        <>
+                        <TableRow key={val.id}>
+                            <TableCell>{index+1}</TableCell>
+                            <TableCell>{val.id}</TableCell>
+                            <TableCell>{val.nama}</TableCell>
+                            <TableCell>{val.email}</TableCell>
+                            <TableCell>{val.role}</TableCell>
+                            <TableCell>{val.statusver}</TableCell>
+                            <TableCell>
+                                <button onClick={()=>this.onChangeUser(val.id)}>Change to Admin</button>
+                                <button onClick={()=>this.onDelete(val.id)}>Delete</button>
+                            </TableCell>
+                        </TableRow>
+                    </>
+
+                )
             }
         })
     }

@@ -50,11 +50,33 @@ class HeaderAdmin extends Component {
                             </div>
                         </Link>
 
+     
+
                         <Link to="/parcel" style={{textDecoration:'none'}}>
                             <div className="container-option">
                                 <div className="inside-option">
                                     <GiMilkCarton className="icon-size"/>
                                     <p className="option-word">Parcel</p>
+                                    <CgArrowRightR  className="icon-size2"/>
+                                </div>
+                            </div>
+                        </Link>
+                        
+                        <Link to="/categoryProduct" style={{textDecoration:'none'}}>
+                            <div className="container-option">
+                                <div className="inside-option">
+                                    <MdAddShoppingCart className="icon-size"/>
+                                    <p className="option-word">Cat Product</p>
+                                    <CgArrowRightR  className="icon-size2"/>
+                                </div>
+                            </div>
+                        </Link>
+
+                        <Link to="/categoryParcel" style={{textDecoration:'none'}}>
+                            <div className="container-option">
+                                <div className="inside-option">
+                                    <GiMilkCarton className="icon-size"/>
+                                    <p className="option-word">Cat Parcel</p>
                                     <CgArrowRightR  className="icon-size2"/>
                                 </div>
                             </div>
