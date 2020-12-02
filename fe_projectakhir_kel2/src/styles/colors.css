@@ -1,0 +1,17 @@
+/* 
+    lt = lighter,
+    dk = darker
+*/
+
+:root{
+    --primary     : #0984E3;
+    --lt_primary  : #74B9FF;
+    --secondarys  : #FDE8E2;
+    --tertiary    : #F68E71;
+    --dk_tertiary : #EA4F31;
+    --white       : #FFFFFF;
+    --lt_gray     : #DEDEDE;
+    --dk_gray     : #414141;
+};
+
+

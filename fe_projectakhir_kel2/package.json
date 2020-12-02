@@ -1,0 +1,74 @@
+{
+  "name": "fe_projectakhir_kel2",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.1.1",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.2.2",
+    "axios": "^0.20.0",
+    "bootstrap": "^4.5.3",
+    "bootstrap-icons": "^1.1.0",
+    "dropdown": "^0.2.0",
+    "lodash.debounce": "^4.0.8",
+    "material-ui-popup-state": "^1.6.1",
+    "moment": "^2.29.1",
+    "numeral": "^2.0.6",
+    "react": "^17.0.1",
+    "react-bootstrap": "^1.3.0",
+    "react-bootstrap-dropdown": "^0.3.0",
+    "react-bootstrap-icons": "^1.1.0",
+    "react-dom": "^17.0.1",
+    "react-google-login": "^5.1.25",
+    "react-icons": "^4.1.0",
+    "react-image-magnify": "^2.7.4",
+    "react-loader-spinner": "^3.1.14",
+    "react-particles-js": "^3.3.0",
+    "react-read-more-less": "^0.1.6",
+    "react-redux": "^7.2.1",
+    "react-responsive-carousel": "^3.2.9",
+    "react-reveal": "^1.2.2",
+    "react-router-bootstrap": "^0.25.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.1",
+    "react-spinners": "^0.9.0",
+    "react-toastify": "^6.0.8",
+    "react-validation": "^3.0.7",
+    "reactstrap": "^8.5.1",
+    "read-more-react": "^1.0.10",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "sweetalert2": "^9.17.2",
+    "sweetalert2-react-content": "^3.1.0",
+    "validator": "^13.1.1",
+    "web-vitals": "^0.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
