@@ -178,6 +178,19 @@ class Admin extends Component {
         };
     };
 
+    onSendtoDatabase = (index) =>{
+        Axios.post(`http://localhost:8000/parcel/addparcel`,{
+            name    : this.state.ready_topush[index].name,
+            price   : this.state.ready_topush[index].price,
+            category: this.state.ready_topush[index].category,
+            item    : this.state.ready_topush[index].item
+        }).then((result)=>{
+            console.log(result)
+        }).catch((error)=>{
+            console.log(error)
+        });
+    };
+
     render() { 
         return ( 
             <div style={{padding:50, display:"flex", flexDirection:"column", alignItems:"center"}}>
@@ -402,7 +415,7 @@ class Admin extends Component {
                                                     <button style={{backgroundColor:"white", color:"gray", width:"100%"}}>Edit</button>
                                                 </div>
                                                 <div style={{display:"flex", width:"100%"}}>
-                                                    <button style={{backgroundColor:"gray", color:"white", width:"100%"}}>Deploy</button>
+                                                    <button style={{backgroundColor:"gray", color:"white", width:"100%"}} onClick={()=>this.onSendtoDatabase(index)}>Deploy</button>
                                                 </div>
                                             </div>
                                         </div>
