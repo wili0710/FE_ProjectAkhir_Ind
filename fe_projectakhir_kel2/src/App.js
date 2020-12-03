@@ -16,6 +16,8 @@ import Parcel from './../src/pages/admin/parcel'
 import Product from './../src/pages/admin/product'
 import CategoryProduct from './../src/pages/admin/categoryProduct'
 import CategoryParcel from './../src/pages/admin/categoryParcel'
+import DataProduct from './pages/Product/dataProduct'
+
 
 function App() {
   
@@ -73,6 +75,7 @@ function App() {
         <Route exact path ='/register' component={Register}/>
         {renderProtectedAdminRoutes()}
         <Route path='*' component={ManageAdmin}/>
+        <Route path='/dataproduct' component={DataProduct}/>
 
       </Switch>
     </>
