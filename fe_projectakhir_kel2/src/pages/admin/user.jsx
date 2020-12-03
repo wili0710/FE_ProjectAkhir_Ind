@@ -35,7 +35,7 @@ class User extends Component {
         console.log(id, ' ini id change user')
         var id2= id
         Axios.post(`${API_URL_SQL}/auth/changeuser`,{
-            id2
+            id:id2
         })
         .then((res)=>{
             console.log('berhasil update data')
@@ -51,7 +51,7 @@ class User extends Component {
         console.log('button jalan ')
         var id2= id
         Axios.post(`${API_URL_SQL}/auth/changeadmin`,{
-            id2
+            id:id2
         })
         .then((res)=>{
             console.log('berhasil update data')

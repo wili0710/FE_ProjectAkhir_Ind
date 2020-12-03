@@ -32,8 +32,18 @@ class CategoryParcel extends Component {
         this.setState({setModalParcel:true})
     }
 
-    onDelete=()=>{
+    onDelete=(id)=>{
+        let id2= id
         console.log('delete jalan')
+        Axios.post(`${API_URL_SQL}/product/deletecatparcel`,{
+            id:id2
+        }).then((res)=>{
+            console.log('berhasil delete')
+            console.log(res.data)
+            this.setState({categoryParcel:res.data})
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
 
     onSave=()=>{
@@ -48,7 +58,7 @@ class CategoryParcel extends Component {
             this.setState({setModalParcel:false})
         }).catch((err)=>{
             console.log(err)
-        })
+        })  
     
     }
 

@@ -101,13 +101,19 @@ align-items: center;
     /* background-color: blue; */
     margin-top: 10px;
     flex-direction: row;
+    justify-content: space-between;
+    width:100%;
 
 }
 .remember-password p {
     color:#0984e3;
 }
+.remember-password p:hover{
+    color:'gray';
+}
 .remember-password:hover{
     cursor: pointer;
+    color:'gray';
 }
 
 .btn-login{

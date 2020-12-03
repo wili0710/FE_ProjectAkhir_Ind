@@ -115,9 +115,11 @@ class Login extends Component {
                             <img  src={Courier}   className="img-left"/>
                         </div>
                         <div className="right-box">
-                            <div className="div-icon">
-                                <ArrowBack style={{fontSize:30, cursor:'pointer'}} className="icon-back"/>
-                            </div>
+                            <Link to='/'>
+                                <div className="div-icon">
+                                    <ArrowBack style={{fontSize:30, cursor:'pointer'}} className="icon-back"/>
+                                </div>
+                            </Link>
                             <div className="div-opening">
                                 <p>Glad to see you!</p>
                             </div>
@@ -156,6 +158,10 @@ class Login extends Component {
                                 </div>
 
                                 <div className="remember-password">
+                                    <Link to='/register' style={{textDecoration:
+                                    'none'}}>
+                                     <p style={{marginRight:'10px'}}>Register </p>
+                                    </Link>
                                     <p style={{marginRight:'10px'}}>Forgot Password ? </p>
                                 </div>
 
