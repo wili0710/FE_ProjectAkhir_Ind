@@ -37,3 +37,5 @@ export function draggableCard() {
         slider.scrollLeft = scrollLeft - (((e.pageX - slider.offsetLeft) - startX) * 2); //--> multiply to setup scrolling speed
     });
 };
+
+export const API_URL_SQL = `http://localhost:8000`;
