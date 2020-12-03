@@ -1,13 +1,17 @@
 import React, { Component, useState,useEffect } from 'react';
-import { ButtonLoading, FullPageLoading } from './../../component/loading';
-import {Backend_Link} from './../helper/Backend_Link'
+import { ButtonLoading, FullPageLoading } from '../../components/loading';
+import {API_URL_SQL} from './../../helpers/apiUrl'
 import Swal from 'sweetalert2';
 import Axios from 'axios';
 import './register.css'
 import { AiFillEye,AiFillEyeInvisible } from 'react-icons/ai';
-
+import {useSelector,useDispatch} from 'react-redux'
+import {Redirect, Link} from 'react-router-dom'
 
 const Register=(props)=>{
+
+    const Auth=useSelector(state=>state.Auth) 
+    const dispatch=useDispatch()
 
     const [validateemail,setValidateEmail]=useState(null)
     const [email,setEmail]=useState('')
@@ -39,10 +43,22 @@ const Register=(props)=>{
 
     const onsendclick=()=>{
         setLoadingregister(true)
-        Axios.post(`${Backend_Link}/auth/c_otp`,{email:email,otp:otp})
+        Axios.post(`${API_URL_SQL}/auth/c_otp`,{email:email,otp:otp})
         .then((res)=>{
             console.log(res)
-            if(res.data.message=="OTP Expired"){
+            if(res.data=="OTP Expired"){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OTP Expired',
+                    text: 'OTP Expired!'                    
+                })
+                setLoadingregister(false)
+            }else if(res.data=="OTP SALAH"){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OTP Salah',
+                    text: 'OTP Salah!'                    
+                })
                 setLoadingregister(false)
             }else{
                 setIsverified(true)
@@ -72,7 +88,7 @@ const Register=(props)=>{
     }
     const sentOtp=()=>{
         setIsOtpSent(true)
-        Axios.post(`${Backend_Link}/auth/s_r_otp`,{email:email})
+        Axios.post(`${API_URL_SQL}/auth/s_r_otp`,{email:email})
         .then((res)=>{
             setInputOtp(true)
             setIsOtpSent(false)
@@ -85,7 +101,7 @@ const Register=(props)=>{
     const onClickNewUser=(e)=>{
         e.preventDefault()
         console.log("jalan")
-        Axios.post(`${Backend_Link}/auth/register`,{email:email,password:newuser.password,name:newuser.name,alamat:newuser.alamatlengkap,nomortelfon:newuser.nomorhandphone})
+        Axios.post(`${API_URL_SQL}/auth/register`,{email:email,password:newuser.password,nama:newuser.name,alamat:newuser.alamatlengkap,nomortelfon:newuser.nomorhandphone})
         .then((res)=>{
             console.log(res)
             Swal.fire(
@@ -93,6 +109,7 @@ const Register=(props)=>{
                 'Ingin mengirimkan Parcel Custom? Serahkan pada kami!',
                 'success'
             )
+            dispatch({type:'LOGIN',payload:res.data.datauser,cart:''})
         }).catch((err)=>{
             console.log(err)
         })
@@ -115,14 +132,14 @@ const Register=(props)=>{
                 return(
                     <div className='d-flex flex-column mt-1'>
                         <span>Email :</span>
-                        <input type='email' className="form-control" onChange={(e)=>funcvalidateemail(e)} style={{transition:'500ms'}} disabled/>
+                        <input disabled type='email' className="form-control" onChange={(e)=>funcvalidateemail(e)} style={{transition:'500ms'}} defaultValue={email}/>
                         <span style={{fontSize:12}} className='my-2'>OTP Berhasil di kirim ke {email}</span>
                         <input type="text" className="form-control my-2" onChange={(e)=>changeOtp(e)} placeholder="Masukkan OTP" style={{transition:'500ms'}} />
                         {timeout()}
                         {timeoutOption?
                             <div style={{marginBottom:10}}>
                                 <span 
-                                    className='my-2' onClick={sentOtp}
+                                    className='my-2' onClick={()=>{setInputOtp(false);setTimeoutOption(false);sentOtp()}}
                                     style={{
                                         cursor:"pointer",
                                         color:"blue"
@@ -195,11 +212,14 @@ const Register=(props)=>{
             </div>
         )
     }
+    if(Auth.isLogin){
+        return <Redirect to='/' />
+    }
     return(
         <div className='d-flex justify-content-center'>
                 {email && isverified?
                     <div style={{position:'fixed',zIndex:-1,width:'100vw',height:'100vh'}} className='d-flex justify-content-end align-items-end'>
-                        <img src={`${Backend_Link}/frontend/img2png.png`} height='70%'/>
+                        <img src={`${API_URL_SQL}/frontend/img2png.png`} height='70%'/>
                     </div>
                     :
                     null
@@ -218,7 +238,7 @@ const Register=(props)=>{
                             <div className='d-flex flex-column align-items-center mx-5 py-3' style={{backgroundColor:'white',border:'1px solid #E5E7E7',borderRadius:"5px",boxShadow:"0 0 10px 1px #E5E7E7"}}>
                                 <h5 className='mt-3'>Mendaftar dengan Email:</h5>
                                 <h5>{email}</h5>
-                                <a href='/register'><span className='mb-3' style={{fontWeight:'lighter'}}><span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}} onClick={()=>{localStorage.removeItem('registrasi');localStorage.removeItem('verified');setEmail('')}}>Pakai Email lain</span></span></a>
+                                <a href='/register'><span className='mb-3' style={{fontWeight:'lighter'}}><span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}} onClick={()=>{localStorage.removeItem('registrasi');localStorage.removeItem('verified')}}>Pakai Email lain</span></span></a>
                                 <form className='pt-3' style={{width:'80%', marginTop:10, borderTop:'2px solid #E5E7E7'}}>
                                     <span>Nama :</span>
                                     <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,name:e.target.value})}/>
@@ -252,7 +272,7 @@ const Register=(props)=>{
                         :
                         <div className='d-flex py-5' style={{width:'100%', borderTop:'1px solid #E5E7E7'}}>
                             <div className='d-flex flex-column align-items-center mx-4' style={{width:'50%'}}>
-                                <img src={`${Backend_Link}/frontend/img2png.png`} alt="Belanja Online" width='90%' style={{borderRadius:"20px"}}/>
+                                <img src={`${API_URL_SQL}/frontend/img2png.png`} alt="Belanja Online" width='90%' style={{borderRadius:"20px"}}/>
                                 <span className='my-4' style={{fontSize:'25px',textAlign:"center"}}>Ingin Mengirimkan Parcel Custom? <br/> Serahkan Pada Kami!</span>
                             </div>
                             
