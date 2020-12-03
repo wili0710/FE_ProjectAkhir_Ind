@@ -50,9 +50,23 @@ class Product extends Component {
 
      }
 
-     onDelete=()=>{
+     onDelete=(id)=>{
          console.log('delete jalan')
+         let id2=id
+         Axios.post(`${API_URL_SQL}/product/deleteprod`,{
+             id:id2
+         })
+         .then((res)=>{
+             console.log(res.data)
+             console.log('berhasil delete')
+             this.setState({dataProduct:res.data})
+            
+         }).catch((err)=>{
+             console.log(err)
+         })      
      }
+
+
 
      renderProduct=()=>{
          return this.state.dataProduct.map((val,index)=>{
@@ -92,7 +106,7 @@ class Product extends Component {
      renderCatProd=()=>{
          return this.state.categoryProduct.map((val,index)=>{
              return (
-                <option value={val.id}>Category : {val.id } </option>
+                <option value={val.id}>Category : {val.id } {val.nama} </option>
              )
          })
      }

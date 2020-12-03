@@ -4,7 +4,7 @@ import './user.css'
 import {CgArrowRightR} from 'react-icons/cg'
 import {FaUserCog,FaMoneyCheckAlt} from 'react-icons/fa'
 import Axios from 'axios'
-import { API_URL_SQL } from '../../helpers/apiUrl';
+import { API_URL, API_URL_SQL } from '../../helpers/apiUrl';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -30,10 +30,42 @@ class User extends Component {
         })
     }
 
+    onChangeUser=(id)=>{
+        console.log('button jalan ')
+        console.log(id, ' ini id change user')
+        var id2= id
+        Axios.post(`${API_URL_SQL}/auth/changeuser`,{
+            id:id2
+        })
+        .then((res)=>{
+            console.log('berhasil update data')
+            console.log(res.data)
+            this.setState({dataUser:res.data})
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+    
+    onChangeAdmin=(id)=>{
+        console.log(id,' ini id change to admin')
+        console.log('button jalan ')
+        var id2= id
+        Axios.post(`${API_URL_SQL}/auth/changeadmin`,{
+            id:id2
+        })
+        .then((res)=>{
+            console.log('berhasil update data')
+            console.log(res.data)
+            this.setState({dataUser:res.data})
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+
     renderUsers=()=>{
         return this.state.dataUser.map((val,index)=>{
             console.log(index+1)
-            console.log(val.nama)
+            // console.log(val.nama)
             console.log('render jalan')
             if(val.role==='admin'){
                 return (
@@ -64,7 +96,7 @@ class User extends Component {
                             <TableCell>{val.role}</TableCell>
                             <TableCell>{val.statusver}</TableCell>
                             <TableCell>
-                                <button onClick={()=>this.onChangeUser(val.id)}>Change to Admin</button>
+                                <button onClick={()=>this.onChangeAdmin(val.id)}>Change to Admin</button>
                                 <button onClick={()=>this.onDelete(val.id)}>Delete</button>
                             </TableCell>
                         </TableRow>
