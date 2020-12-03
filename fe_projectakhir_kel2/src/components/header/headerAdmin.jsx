@@ -20,6 +20,16 @@ class HeaderAdmin extends Component {
                             </div>
                         </NavLink>
 
+                        <Link to='/adminpanel/' style={{textDecoration:'none'}}>
+                            <div className="container-option">
+                                    <div className="inside-option">
+                                        <FaUserCog className="icon-size"/>  
+                                        <p className="option-word">Dashboard</p> 
+                                        <CgArrowRightR  className="icon-size2"/>
+                                    </div>
+                            </div>
+                        </Link>
+
                         <Link to='/adminpanel/datauser' style={{textDecoration:'none'}}>
                             <div className="container-option">
                                     <div className="inside-option">
