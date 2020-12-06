@@ -6,6 +6,8 @@ import {  } from '../../custom'
 import { Courier, test , cat_2} from '../../assets';
 import { HeaderAdmin } from '../../components';
 import { API_URL_SQL, priceFormatter, draggableCard } from '../../helpers';
+import { GiTrojanHorse } from 'react-icons/gi';
+import { Redirect } from 'react-router-dom';
 
 class Admin extends Component {
     state = {
@@ -19,7 +21,7 @@ class Admin extends Component {
         upl_files               : null,
         upl_files_preview       : null,
         url_files               : "",
-        id_category_parcel      : 1,
+        id_category_parcel      : 0,
 
         //* Initial Temporary Parcel Item *//
         index_add_cat_product   : -1,
@@ -36,7 +38,6 @@ class Admin extends Component {
     /* end of State */
 
     componentDidMount() {
-        
         Axios.get(`${API_URL_SQL}/product/getallcatprod`)
         .then((res)=>{
             Axios.get(`${API_URL_SQL}/product/getallcatparcel`)
@@ -55,10 +56,10 @@ class Admin extends Component {
 
     componentDidUpdate() {
         // console.table(this.state.category_products);
-        console.table(this.state.item_category);
+        // console.table(this.state.upl_files_preview);
         if(this.state.index_add_cat_product !== (-1)){
             draggableCard(".renderBx","left",1);
-        }
+        };
     };
 
     renderOption = (props) => {
@@ -77,7 +78,11 @@ class Admin extends Component {
                 <option className="hide" value={0} disabled selected>Select your option</option>  
                 { 
                     arr.map((val)=>{
-                        return <option key={val.id} value={val.id}>{val.nama}</option>
+                        return (
+                            <option key={val.id} value={val.id}>
+                                {val.nama}
+                            </option>
+                        )
                     })
                 }
             </>
@@ -92,17 +97,18 @@ class Admin extends Component {
     onInputUploadFileChange = (e) => {  
         if(e.target.files[0]){
             this.setState({
-                upl_files:e.target.files[0],
-                upl_files_preview:URL.createObjectURL(e.target.files[0])
-            })
-        }
+                upl_files_preview:URL.createObjectURL(e.target.files[0]),
+                upl_files:e.target.files[0]
+            });
+        };
     };
-
+   
     onEraseImage = () => {
+        
         this.setState({
-            url_files:"",
-            upl_files:null,
-            upl_files_preview:null
+            // url_files:"",
+            // upl_files:null,
+            // upl_files_preview:null
         });
     };
 
@@ -114,8 +120,8 @@ class Admin extends Component {
             id_category_parcel
         } = this.state;
         //*****//
-        if(nama_parcel.current.value === "" || harga.current.value === "")
-        return alert("nama dan harga parcel wajib diisi");
+        if(nama_parcel.current.value === "" || harga.current.value === "" || id_category_parcel === 0)
+            return alert("kategori, nama, dan harga parcel wajib diisi");
         //*****//
         if(this.state.upl_files){
             let options = {
@@ -362,12 +368,11 @@ class Admin extends Component {
                             <div className="rotate90">.ADD.</div>
                             <div className="imgBx">
                                 {
-                                this.state.url_files || this.state.upl_files?
+                                this.state.url_files || this.state.upl_files_preview?
                                 <>
                                     <button className="erase" onClick={this.onEraseImage}> x </button>
                                     <img src={this.state.url_files? this.state.url_files:this.state.upl_files_preview}
-                                         alt="Foto Parcel" 
-                                         onChange={this.onInputFileChange}/>
+                                         alt="Foto Parcel"/>
                                 </>
                                     :
                                 <img src={Courier} alt="Foto Parcel"/>
@@ -386,15 +391,15 @@ class Admin extends Component {
                                 </div>
                                 <div className="priceBx">
                                     <label>{"Harga Parcel"}</label>
-                                    <input type="number" placeholder="tentukan harga parcel" ref={this.state.harga}/>
+                                    <input type="number" min={1} placeholder="tentukan harga parcel" ref={this.state.harga}/>
                                 </div>
                                 <div className="urlBx">
                                     <label>{"Gambar Parcel"}</label>
                                     <div>
                                         <input type="text" placeholder="masukkan link url gambar" value={this.state.url_files} onChange={(e)=>this.setState({url_files:e.target.value})} disabled={ this.state.upl_files === null? false:true}/>
                                         <span> atau </span>
-                                        <input type="file" accept=".png,.jpg,.svg,.gif" value={this.state.upl_files} onChange={this.onInputUploadFileChange} disabled={ this.state.url_files === null? false:true}/>
-                                        <div className="fakeBx">
+                                        <input type="file" accept=".png,.jpg,.svg,.gif" value={this.state.upl_files} onChange={(e)=>this.onInputUploadFileChange(e)} disabled={ true }/>
+                                        <div className="fakeBx" disabled={ true }>
                                             {
                                             this.state.upl_files_preview?
                                             <> ganti gambar </>
@@ -409,7 +414,7 @@ class Admin extends Component {
                         </div>
                     </div>
                     <div className="buttonBx">
-                        <button className="addbutton" onClick={this.onAddClick}>Add This New Parcel</button>
+                        <button className="addbutton" onClick={this.onAddClick} disabled={this.state.nama_parcel==="" && this.state.harga===""? true:false}>Add This New Parcel</button>
                     </div>
                 </section>
                 <section className="addedparcel">
@@ -501,7 +506,7 @@ class Admin extends Component {
                         </div>
                     </div>
                 </section>
-                <section>
+                {/* <section>
                     <div style={{margin:"50px 0", padding:40, boxShadow:"2px 2px 5px 2px rgba(0,0,0,0.1)", borderTop:"4px solid gray", borderBottom:"4px solid gray"}}>
                         <h1> Parcel Ready to <span style={{backgroundColor:"tomato", color:"white", padding:"0 10px"}}> Deploy! </span></h1>
                         <div style={{display:"flex", justifyContent:"center", flexFlow:"wrap", margin:"10px 5px", padding:40}}>
@@ -578,7 +583,7 @@ class Admin extends Component {
                             }
                         </div>
                     </div>
-                </section>
+                </section> */}
             </>
         );
     };
