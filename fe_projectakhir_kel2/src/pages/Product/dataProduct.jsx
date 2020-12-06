@@ -96,26 +96,26 @@ class dataProduct extends Component {
         console.log('function jalan')
         return this.state.dataParcel.map((val,index)=>{
           var render=this.state.allDataParcel.filter(function(parcel){
-            //   console.log(parcel,' ini line 71  ')
-            //   console.log(parcel.parcel_id ,' ini parcle id')
-            //   console.log(val.id , ' ini val id')
+    
               return parcel.parcel_id == val.id
           })
         //   console.log(render, ' ini render line 76')
             console.log('jalam dalem map ' , val.id)
             return (
                 <div className="box-3 item " key={val.id} onClick={()=>this.onCheckData(val.id)} >
-                    <div className="box">
-                        <img src={val.gambar} alt="logo" className="img-parcel " />      
-                        <div className="cover">
-                            <p className="name">{val.nama}</p>
-                            <p className="title">Rp.{val.harga}</p>
-                            <p className="social">Custom Parcel:</p>
-                            <p className="social">{render[0].nama} : {render[0].qty}</p>
-                            <p className="social">{render[1].nama} : {render[1].qty}</p>
-                            <p className="social">{render[2].nama} : {render[2].qty}</p>
-                        </div>          
-                    </div>
+                    <Link to={'/adminpanel/detailParcel/'+val.id}>
+                        <div className="box">
+                            <img src={val.gambar} alt="logo" className="img-parcel " />      
+                            <div className="cover">
+                                <p className="name">{val.nama}</p>
+                                <p className="title">Rp.{val.harga}</p>
+                                <p className="social">Custom Parcel:</p>
+                                <p className="social">{render[0].nama} : {render[0].qty}</p>
+                                <p className="social">{render[1].nama} : {render[1].qty}</p>
+                                <p className="social">{render[2].nama} : {render[2].qty}</p>
+                            </div>          
+                        </div>
+                    </Link>
                     <p className="nama-parcel">{val.nama}</p>
                 </div>
             )
@@ -125,7 +125,7 @@ class dataProduct extends Component {
     renderChocolate=()=>{
         return this.state.dataChocolate.map((val,index)=>{
             return (
-                <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMakanan(val.id)}>
+                <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataChocolate(val.id)}>
                 <div className="body">
                     <div className="cp_img">
                         <img src={val.image} alt="logo" className="img-parcel"/>
@@ -201,6 +201,21 @@ class dataProduct extends Component {
         })
     }
 
+    onCheckDataMinuman=(id)=>{
+        console.log(id)
+        console.log('data')
+    }
+
+    onCheckDataMakanan=(id)=>{
+        console.log(id)
+        console.log('data makanan')
+    }
+
+    onCheckDataChocolate=(id)=>{
+        console.log(id)
+        console.log('data chocolate')
+    }
+
     render() { 
         return ( 
             <>
@@ -257,7 +272,9 @@ class dataProduct extends Component {
                         this.state.activeTab ==0 ?
                         <>
                         <div className="promo">
-                            <h1>promo</h1>
+                            <div className>
+
+                            </div>
                         </div>
                         </>
                         :
