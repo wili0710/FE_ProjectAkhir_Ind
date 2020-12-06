@@ -1,38 +1,552 @@
 @import url('../../styles/colors.css');
 
-
-
-.main {
-    background-color: var(--white);
+@mixin flexin( $direction , $justify , $align ) {
     display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+};
+@mixin bordering( $top , $left , $right , $bottom) {
+    border-top: $top;
+    border-left: $left;
+    border-right: $right;
+    border-bottom: $bottom;
+};
 
-    .parcelcomponent {
-        display: flex;
-        flex-direction: column;
-        padding: 40px;
+$borderset : 1px dashed var(--tertiary);
+
+
+// section //
+.subheader {
+    @include flexin( null , center , center );
+    height: 150px;
+    padding: 30px 30px 0 30px;
+    background-color: var(--dk_gray);
+   
+    .subborder {
+        @include flexin( null , center , center );
+        @include bordering( $borderset,$borderset,$borderset,none );
+        padding: 0 40px;
+        width: 100%;
+        height: 100%;
 
         .title {
-            font-family: 'Lato', sans-serif;
-        }   
+            font-family: "Lato",sans-serif;
+            font-weight: 500;
+            letter-spacing: 6px;
+            color: var(--lt_gray);
+            transition: 0.5s;
+            margin-top: -80px;
+            margin-right: 30px;
+           
+            span {
+                font-weight: 800;
+                transition: 0.5s;
+                font-size: 7rem;
+                color: var(--dk_tertiary); 
+                vertical-align: bottom;
+            }
+                                            }
+        .navbar {
+            background-color: var(--lt_gray);
+            width: 600px;
+    
+            div {
+                color: var(--dk_gray);
+                font-size: 1rem;
+                letter-spacing: .5px;
+                margin: 0 20px;
+                transition: 0.5s;
+                &:hover {
+                    letter-spacing: 2px;
+                    color: var(--dk_tertiary);
+                    font-weight: 600 }
+                                         }
+            div.active {
+                background-color: var(--tertiary);
+                padding: 15px;
+                color: var(--white)
+            }
+        }
+    }
+}
+// section //
+.addparcel {
+    padding: 0 30px;
+    background-color: var(--dk_gray);
 
-        .addparcel {
-            background-color: tomato;
-    
+    .subborder2 {
+        @include bordering( none,$borderset,$borderset,none );
+        padding: 20px 30px 0 30px;
+        display: flex;
+        justify-content: center;
+        
+        .addcard {
+            @include flexin( null , center , center );
+            width: 1000px;
+            padding: 50px 10px;
+            background-color: var(--white);
+            box-shadow: 5px 2px 6px 0px rgba(gray,0.1);
+
+            .rotate90 {
+                transform: rotate(-90deg);
+                letter-spacing: 10px;
+                margin: -15px;
+                font-weight: 600;
+                font-size: 40px;
+                color: var(--lt_gray);
+                                        }
             .imgBx {
-                width: 150px;
-                height: 150px;
-    
+                width: 250px;
+                height: 250px;
+                margin: 0 30px 0 10px;
+                
+                .erase {
+                    position: fixed; 
+                    text-align: center;
+                    font-size: 10px;
+                    color: white;
+                    top: 230px;
+                    bottom: 770px; 
+                    left: 770px; 
+                    right: 230px;
+                    padding: 2px 8px;
+                    z-index: 5;
+                    opacity: 0.6;
+                    border: none;
+                    border-radius: 5px;
+                    background-color: #555;
+                    cursor: pointer;
+
+                    &:hover {
+                        opacity: 1;
+                        background-color: var(--dk_tertiary); }
+
+                    &:focus {
+                        outline: none; }
+                }
+            
                 img {
                     position: relative;
                     width: 100%;
                     height: 100%;
-                    object-fit: cover;
-                }
+                    object-fit: cover }
+                                            }
+            .formBx {
+                @include flexin( column,center,center);
+                color: var(--dk_gray);
+             
+                div {
+
+                    &:not(.fakeBx) {
+                        @include flexin( row,center,center );
+                        width: 100%; }
+
+                    span {
+                        font-size: 10px;
+                        color: var(--tertiary); 
+                        margin: -5px 0 0 10px; }
+                                                }
+                label {
+                    margin-right: 20px;
+                    width: 300px; }
+                
+                select {
+                    width: 100%;
+                    background-color: var(--lt_gray);
+                    border: 2px dashed var(--lt_gray);
+                    padding: 5px;
+                    margin: 5px 0; }
+
                 input {
-                    margin-top: -200px;
-                }
+                    width: 100%;
+
+                    &:not([type=file]){
+                    border: 1px dashed var(--tertiary);
+                    padding: 5px;
+                    margin: 5px 0; 
+
+                    &:disabled {
+                        border: 1px dashed var(--lt_gray); }
+
+                    &:hover {
+                        letter-spacing: .5px;
+                        &::placeholder {
+                            letter-spacing: .5px; }
+                            color: var(--tertiary); }
+                                                        }
+                    &[type=file] {
+                        position: relative; 
+                        opacity: 0;
+                        z-index: 2;
+
+                        &:hover {
+                            cursor: pointer;
+
+                            & ~ .fakeBx {
+                                background-color: var(--dk_tertiary);
+                                letter-spacing: 1px; }
+                                                        }
+                                                            }
+                    &::placeholder {
+                        font-size: small;
+                        padding: 20px;
+                        transition: .3s;
+                        text-align: center; }
+
+                    &:focus {
+                        outline: none;
+                        border: 1.5px solid var(--tertiary); }
+                                                                }
+                .urlBx {
+                    div {
+                        @include flexin( column,center,center ); }
+                                                                    }
+                .fakeBx {
+                    position: absolute;
+                    width: 280px;
+                    height: 35px;
+                    font-size: 12px;
+                    margin-top: 60px;
+                    border-radius: 5px;
+                    background-color: var(--tertiary);
+                    transition: 0.3s;
+                    color: var(--white);
+                    font-weight: 600;
+                 
+                    &:hover {
+                        background-color: var(--dk_tertiary);
+                        letter-spacing: 1px; }
+                                                }
+                                                    }  
+            .rotate270 {
+                transform: rotate(90deg);
+                letter-spacing: 10px;
+                margin: -15px;
+                font-weight: 600;
+                font-size: 40px;
+                color: var(--lt_gray);
             }
         }  
     }
+    .buttonBx {
+        @include flexin( none,center,center );
+        width: 100%;
+        border-left: $borderset;
+        border-right: $borderset;
 
+        button {
+            width: 500px;
+            padding: 10px;
+            margin: 10px;
+            // background-color: var(--lt_gray);
+            color: var(--tertiary);
+            border:$borderset;
+            transition: .5s;
+            
+
+            &:hover {
+                width: 1000px;
+                background-color: var(--dk_tertiary);
+                letter-spacing: 10px;
+                font-weight: bold;
+                text-transform: uppercase;
+                color: var(--lt_gray);
+                margin: 10px;
+            }
+
+            &:focus, &:active {
+                outline: none;
+            }    
+        }
+    }
 }
+// section //
+.addedparcel {
+    padding: 0 30px;
+    background-color: var(--lt_gray);
+
+    .subborder3 {
+        @include flexin( column,center,center );
+        @include bordering( none,$borderset,$borderset,none );
+        padding: 40px 30px 0 30px;
+        
+        h1 {
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            padding: 10px 50px;
+            border-bottom: 1px dashed gray;
+            transition: .5s;
+
+            span:not(span.space) {
+                padding: 5px;
+                font-size: 12px;
+                color: var(--white);
+                border-radius: 2px;
+                background-color: var(--dk_tertiary);
+                letter-spacing: 2px;
+                vertical-align: text-top; }
+        }
+        
+        .tempcards {
+            @include flexin( row,center,center );
+            flex-wrap: wrap;
+
+            .newparcel{
+                background-color: var(--white);
+                padding: 10px;
+                margin: 10px 5px;
+
+                .subsubborder {
+                    @include bordering( $borderset,$borderset,$borderset,$borderset );
+                    padding: 20px;
+                    background-color: var(--white);
+
+                    .cardhead {
+                        @include flexin( row,space-between,center );
+                        
+                        .tag {
+                            font-weight: 600;
+                            color: var(--dk_tertiary);
+                        }
+
+                        button {
+                            border: none;
+                            color: white;
+                            font-weight: bold;
+                            background-color: var(--tertiary);
+                            padding: 2px 7px;
+
+                            &:hover:not([disabled]) {
+                                background-color: var(--dk_tertiary);
+                            }
+                        }
+                    }
+
+                    .cardname {
+                        font-weight: bolder;
+                        text-transform: uppercase;
+                        text-align: center;
+                        letter-spacing: 1px;
+                        padding:3px;
+                        border-bottom: $borderset;
+                    }
+
+                    .cardcategory {
+                        text-align: center;
+                        font-size: 14px;
+                        text-transform: capitalize;
+                        letter-spacing: 2px;
+                        margin: 5px;
+                    }
+
+                    .imgBx {
+                        margin: 5px 0 10px 0;
+                        width: 200px;
+                        height: 230px;
+
+                        img {
+                            position: relative;
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover; }
+                                                }
+                    .cardharga {
+                        text-align: center;
+                        font-weight: bolder;
+                        background-color: var(--dk_tertiary);
+                        color: var(--white); }
+
+                    .carditem {
+                        @include flexin( row,space-between,center );
+                        width: 100%;
+                        padding: 0 10px;
+
+                        .texted {
+                            font-size: 15px; }
+
+                        button {
+                            position: relative;
+                            background-color: transparent;
+                            border: none;
+                            transition: .3s;
+                            font-size: 30px;
+                            
+                            &:hover:not([disabled]) {
+                                font-weight: 800;
+                                color: var(--primary); }
+                                                        }
+                                                            }
+                }
+            }
+
+            .addingitemBx{
+                @include flexin( row,center,center );
+                background-color: var(--dk_gray);
+                padding: 30px;
+                margin: 0 30px;
+                width: 100%;
+                height: 100%; 
+                
+                .additemContent {
+                    @include bordering( $borderset,none,$borderset,$borderset );
+                    @include flexin ( column,center,center );
+                    text-align: center;
+                    padding: 40px 40px;
+                    height: 100%;
+                    width: 100%; 
+                    
+                    h2 {
+                        color: var(--lt_gray);
+                        margin: -10px 0 10px 0;
+
+                        span {
+                            color: var(--lt_gray);
+                            vertical-align: baseline; }
+                                                        }
+                    .subcaption {
+                        color: var(--lt_gray);
+                        padding: 5px 0 20px 0;
+
+                        .span0 {
+                            color: var(--dk_tertiary);
+                            padding: 0 5px;
+                            font-weight: 700;
+                            font-size: 20px; }
+
+                        .span1 {
+                            background-color: var(--dk_tertiary);
+                            padding: 0 5px; }
+
+                        .span2 {
+                            color: red;
+                            padding: 0 5px;
+                            font-weight: 700;
+                            font-size: 20px; }
+                                                }
+                    .renderBx {
+                        overflow: hidden;
+                        white-space: nowrap;
+                        height: 185px;
+                        width: 1000px;
+                        transition: 0.2s;
+                        margin-bottom: 10px;
+                        border: 1px solid var(--lt_gray);
+                        
+                        &:active {
+                            cursor: grabbing;
+                            cursor: -webkit-grabbing; }
+
+                        .rendersubBx0 {
+                            display: inline-block;
+                            vertical-align: top;
+                            background-color: white;
+                            margin: 18px 10px;
+                            height: 150px;
+                            width: 150px;
+
+                            &:start {
+                                margin-left: 10px;
+                            }
+                            &:end {
+                                margin-right: 10px;
+                            }
+                            &:hover {
+                                cursor: grabbing;
+                            }
+
+                            .content {
+                                @include flexin( column,center,center );
+                                text-align: center;
+                                overflow: hidden;
+                                max-width: 150;
+                                
+                                .itemhead {
+                                    @include flexin( row,space-between,center );
+                                    width: 100%;
+                                    z-index: 2;
+                                    padding: 10px;
+                                    
+                                    .id {
+                                        font-size: 12px;
+                                        font-weight: bold;
+                                        text-transform: uppercase;
+                                        letter-spacing: 1px;
+                                        padding-left: 5px;
+                                    }
+
+                                    button {
+                                       border: none;
+                                       background-color: transparent;
+                                       color: var(--tertiary);
+                                       font-weight: bolder;
+                                       transition: .5s;
+                                    
+                                       &:hover {
+                                        color: var(--dk_tertiary);
+                                       }
+                                    }
+                                }
+
+                                .category {
+                                    z-index: 1;
+                                    font-weight: 800;
+                                    font-size: 25px;
+                                    line-height: 32px;
+                                    margin-top: -5px;
+                                    font-family: 'Lato', sans-serif;
+                                    
+                                    span {
+                                        font-size: 20px;
+                                        padding: 0 10px;
+                                        font-weight: normal;
+                                        background-color: var(--lt_primary);
+                                    }
+                                }
+                                
+                                .imgBx {
+                                    z-index: 0;
+                                    width: 150px;
+                                    height: 150px;
+                                    margin-top: -138px;
+                                    opacity: .3;
+                                }
+                                
+                
+                            }
+
+
+                        }
+                            
+                    }
+
+                    .selectBx {
+                        @include flexin( row,space-between,center );
+                        width: 100%;
+
+                        select {
+                            border: none;
+                            background-color: transparent;
+                            color: white;
+                            appearance: none;
+
+                            &:focus {
+                                outline: none;
+                                
+
+                                .hide {
+                                    display: none;
+                                }
+                            }
+
+                            option {
+
+                            }
+                        }
+                    }
+                }   
+            }
+        }
+    }
+}
+

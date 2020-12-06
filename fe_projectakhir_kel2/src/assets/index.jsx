@@ -5,3 +5,9 @@ export {default as icon}            from './icon.svg'
 export {default as illustration_1}  from './illustration_1.png'
 export {default as pattern}         from './pattern.png'
 export {default as Courier}         from './Courier.png'
+export {default as test}            from './test.gif'
+
+//* start -> products *//
+
+//* start -> products -> item_select *//
+export {default as cat_2}            from './products/item_select/cat_2.png'
