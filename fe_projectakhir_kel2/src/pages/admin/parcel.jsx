@@ -4,40 +4,46 @@ import Axios from 'axios';
 import { connect } from 'react-redux';
 import {  } from '../../custom'
 import { Courier, test , cat_2} from '../../assets';
-import { HeaderAdmin } from '../../components';
+// import { HeaderAdmin } from '../../components';
 import { API_URL_SQL, priceFormatter, draggableCard } from '../../helpers';
-import { GiTrojanHorse } from 'react-icons/gi';
-import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 
-class Admin extends Component {
+const Mapstatetoprops=(state)=>{
+    return {
+        Admin:state.Admin
+    };
+};
+
+export default connect(Mapstatetoprops) (class Admin extends Component {
     state = {
         //* Initial Database State *//
         category_products       : [],
         category_parcel         : [],
         
         //* Initial Parcel Input Values *// 
-        harga                   : createRef(),
-        nama_parcel             : createRef(),
+        id_category_parcel      : 0,
+        harga                   : "",
+        nama_parcel             : "",
+        url_files               : "",
         upl_files               : null,
         upl_files_preview       : null,
-        url_files               : "",
-        id_category_parcel      : 0,
-
+    
         //* Initial Temporary Parcel Item *//
         index_add_cat_product   : -1,
         item_category           : 0,
-        temp_parcel             : [],
+        item_qty                : "",
         temp_item               : [],
-        item_qty                : createRef(),
-
+        temp_parcel             : [],
+    
         //* Initial Parcel Ready to Deploy State *//
         ready_topush            : [],
-
+    
         //* test state *//
     };
     /* end of State */
-
+    
     componentDidMount() {
+        console.log(this.props.Admin)
         Axios.get(`${API_URL_SQL}/product/getallcatprod`)
         .then((res)=>{
             Axios.get(`${API_URL_SQL}/product/getallcatparcel`)
@@ -53,34 +59,49 @@ class Admin extends Component {
             console.log(err);
         });
     };  
-
+    
     componentDidUpdate() {
-        // console.table(this.state.category_products);
-        // console.table(this.state.upl_files_preview);
         if(this.state.index_add_cat_product !== (-1)){
             draggableCard(".renderBx","left",1);
         };
     };
-
+    
     renderOption = (props) => {
+        if(props.text!=="pilih kategori product") {
+            return (
+                <> 
+                    <option className="hide" value={0} disabled selected>{props.text}</option>  
+                    { 
+                        props.state.map((val)=>{
+                            return (
+                                <option key={val.id} value={val.id}>
+                                    {val.id} | {val.nama}
+                                </option>
+                            )
+                        })
+                    }
+                </>
+            );
+        };
         let a;
         let arr = [];
-        arr.push(...props)
+        arr.push(...props.state)
         for (let i = 0; i < this.state.temp_item.length; i++){
-            a = arr.filter(val=>{
+            a = arr.filter(val => {
                     return val.id !== this.state.temp_item[i].category_item
                 });
             arr.splice(0,arr.length)
             arr.push(...a)
         };
+        console.log(arr)
         return (
             <> 
-                <option className="hide" value={0} disabled selected>Select your option</option>  
+                <option className="hide" value={0} disabled selected>{props.text}</option>  
                 { 
                     arr.map((val)=>{
                         return (
                             <option key={val.id} value={val.id}>
-                                {val.nama}
+                                {val.id} | {val.nama}
                             </option>
                         )
                     })
@@ -89,29 +110,35 @@ class Admin extends Component {
         );
     };
     /* end of Initial Funcs */
-
-    onChangeCategoryInput = (e) =>{
-        this.setState({id_category_parcel:e.target.value})
+    
+    onChangeInput = (e) =>{
+        if(e.target.name === ("harga" || "item_qty")) {
+            console.log(e.target.value);
+            if(!(e.target.value < 0)) {
+                // console.log(e.target.value, " a")
+                this.setState({[e.target.name]:e.target.value})
+            };
+        }else{
+            this.setState({[e.target.name]:e.target.value})
+        };
     };
-
+    
     onInputUploadFileChange = (e) => {  
+        console.log(e.target.files[0]);
         if(e.target.files[0]){
             this.setState({
-                upl_files_preview:URL.createObjectURL(e.target.files[0]),
                 upl_files:e.target.files[0]
             });
         };
     };
-   
+    
     onEraseImage = () => {
-        
         this.setState({
-            // url_files:"",
-            // upl_files:null,
-            // upl_files_preview:null
+            url_files:"",
+            upl_files:null,
         });
     };
-
+    
     onAddClick = () => {
         const {
             harga,
@@ -120,8 +147,7 @@ class Admin extends Component {
             id_category_parcel
         } = this.state;
         //*****//
-        if(nama_parcel.current.value === "" || harga.current.value === "" || id_category_parcel === 0)
-            return alert("kategori, nama, dan harga parcel wajib diisi");
+        if(nama_parcel === "" || harga === "" || id_category_parcel === 0) return alert("kategori, nama, dan harga parcel wajib diisi");
         //*****//
         if(this.state.upl_files){
             let options = {
@@ -140,30 +166,32 @@ class Admin extends Component {
                     let obj = this.state.temp_parcel;
                     const newObj = {
                         category: id_category_parcel,
-                        name    : nama_parcel.current.value,
-                        price   : harga.current.value,
+                        name    : nama_parcel,
+                        price   : harga,
                         gambar  : `${API_URL_SQL}${img}`
                     };
                     obj.push(newObj)
                     this.setState({
                         temp_parcel:obj,
-                        upl_files:null
+                        upl_files:null,
+                        id_category_parcel:0,
+                        nama_parcel:"",
+                        harga:""
                     });
-                    this.state.nama_parcel.current.value="";
-                    this.state.harga.current.value = "";
                 }else{
                     const obj = {
                         category: id_category_parcel,
-                        name    : nama_parcel.current.value,
-                        price   : harga.current.value,
+                        name    : nama_parcel,
+                        price   : harga,
                         gambar  : `${API_URL_SQL}${img}`
                     };
                     this.setState({
                         temp_parcel:[obj],
-                        upl_files:null
+                        upl_files:null,
+                        id_category_parcel:0,
+                        nama_parcel:"",
+                        harga:""
                     });
-                    this.state.nama_parcel.current.value="";
-                    this.state.harga.current.value = "";
                 };
             }).catch((error)=>{
                 alert("gagal!")
@@ -174,30 +202,32 @@ class Admin extends Component {
                 let obj = this.state.temp_parcel;
                 const newObj = {
                     category: id_category_parcel,
-                    name    : nama_parcel.current.value,
-                    price   : harga.current.value,
+                    name    : nama_parcel,
+                    price   : harga,
                     gambar  : url_files
                 };
                 obj.push(newObj)
                 this.setState({
                     temp_parcel:obj,
-                    url_files:null
-                })
-                this.state.nama_parcel.current.value="";
-                this.state.harga.current.value = "";
+                    url_files:"",
+                    id_category_parcel:0,
+                    nama_parcel:"",
+                    harga:""
+                });
             }else{
                 const obj = {
                     category: id_category_parcel,
-                    name    : nama_parcel.current.value,
-                    price   : harga.current.value,
+                    name    : nama_parcel,
+                    price   : harga,
                     gambar  : url_files
                 };
                 this.setState({
                     temp_parcel:[obj],
-                    url_files:null
-                })
-                this.state.nama_parcel.current.value="";
-                this.state.harga.current.value = "";
+                    url_files:"",
+                    id_category_parcel:0,
+                    nama_parcel:"",
+                    harga:""
+                });
             };
         };
     };
@@ -220,52 +250,52 @@ class Admin extends Component {
         };
     };
     
-    onChangeItemCategoryInput=(e)=>{
-        this.setState({item_category:e.target.value})
-    };
-
     onSaveItem = () => {
-        if(isNaN(parseInt(this.state.item_qty.current.value)) || this.state.item_category===0) return alert('quantity dan category harus diisi');
+        if(isNaN(this.state.item_qty||this.state.item_category)) return alert('quantity dan category harus diisi');
         //* *** *//
         if(this.state.temp_item.length) {
+            console.log('a', this.state.item_category, parseInt(this.state.item_qty))
             const obj = this.state.temp_item;
             const newObj = {
-                category_item : parseInt(this.state.item_category),
-                qty_item: parseInt(this.state.item_qty.current.value)
+                category_item   : parseInt(this.state.item_category),
+                qty_item        : parseInt(this.state.item_qty)
             };
             obj.push(newObj);
+            console.log(obj)
             this.setState({
-                temp_item:obj,
-                item_category:0
+                temp_item       : obj,
+                item_qty        : "",
+                item_category   : 0
             });
         }else{
+            console.log('b', this.state.item_category, parseInt(this.state.item_qty))
             const obj = {
-                category_item : parseInt(this.state.item_category),
-                qty_item: parseInt(this.state.item_qty.current.value)
+                category_item   : parseInt(this.state.item_category),
+                qty_item        : parseInt(this.state.item_qty)
             };
+            console.log(obj)
             this.setState({
-                temp_item:[obj],
-                item_category:0
+                temp_item       :[obj],
+                item_qty        :"",
+                item_category   :0
             });
         };
     };
-
+    
     onDeleteAddItem = (index) => {
         const {temp_item}=this.state;
         temp_item.splice(index,1);
         this.setState({temp_item});
     };
-
+    
     onFinishAddItem = () => {
         if(this.state.ready_topush.length !== 0){
             const obj=this.state.ready_topush;
-            console.log(obj)
             const newObj={
                 ...this.state.temp_parcel[this.state.index_add_cat_product],
                 item  :this.state.temp_item
             }
             obj.push(newObj)
-            console.log(obj)
             const {temp_parcel} = this.state;
             temp_parcel.splice(this.state.index_add_cat_product, 1);
             this.setState({
@@ -293,7 +323,7 @@ class Admin extends Component {
             });
         };
     };
-
+    
     onSendtoDatabase = (index) =>{
         Axios.post(`${API_URL_SQL}/parcel/addparcel`,{
             name    : this.state.ready_topush[index].name,
@@ -307,7 +337,7 @@ class Admin extends Component {
             console.log(error)
         });
     };
-
+    
     onCancelAddItem = () => {
         this.setState({
             index_add_cat_product   : -1,
@@ -315,7 +345,7 @@ class Admin extends Component {
             temp_item               : []
         });
     };
-
+    
     renderTempParcel = (val,index) => {
         return (
             <div key={val.id} className="newparcel">
@@ -337,19 +367,20 @@ class Admin extends Component {
                     <div className="cardname">{val.name}</div>
                     <div className="cardcategory">{this.state.category_parcel[val.category-1].nama}</div>
                     <div className="imgBx">
-                        <img  src={val.gambar? val.gambar:test} alt="Foto Package"/>
+                        <img src={val.gambar? val.gambar:Courier} alt="Foto Package"/>
                     </div>
                     <div className="cardharga">{priceFormatter(val.price)}</div>
                     <div className="carditem">
                         <div className="texted">Items Selection</div>
-                        <button classname="buttonadded" onClick={()=>this.setState({index_add_cat_product:index})} disabled={this.state.index_add_cat_product!==-1? true : false}>+</button>
+                        <button className="buttonadded" onClick={()=>this.setState({index_add_cat_product:index})} disabled={this.state.index_add_cat_product!==-1? true : false}>+</button>
                     </div>
                 </div>
             </div>
         )
     };
-
-    render() { 
+    
+    render() {
+        console.log(this.state.temp_parcel, this.state.index_add_cat_product)
         return (
            <>
                 <section className="subheader">
@@ -368,38 +399,63 @@ class Admin extends Component {
                             <div className="rotate90">.ADD.</div>
                             <div className="imgBx">
                                 {
-                                this.state.url_files || this.state.upl_files_preview?
+                                this.state.url_files||this.state.upl_files?
                                 <>
-                                    <button className="erase" onClick={this.onEraseImage}> x </button>
-                                    <img src={this.state.url_files? this.state.url_files:this.state.upl_files_preview}
-                                         alt="Foto Parcel"/>
+                                    <button className="erase" onClick={this.onEraseImage}>x</button> 
+                                    <img src={this.state.url_files? this.state.url_files: URL.createObjectURL(this.state.upl_files)} alt="Foto Parcel"/>
                                 </>
                                     :
-                                <img src={Courier} alt="Foto Parcel"/>
+                                <img src={Courier} alt="Gambar Parcel"/>
                                 }
                             </div>
                             <div className="formBx">
                                 <div className="categoryBx">
                                     <label>{"Kategori Parcel"}</label>
-                                    <select onChange={(e)=>this.onChangeCategoryInput(e)}>
-                                        {this.renderOption(this.state.category_parcel)}
+                                    <select name        = "id_category_parcel" 
+                                            value       = {this.state.id_category_parcel} 
+                                            onChange    = {this.onChangeInput}
+                                            >
+                                        {this.renderOption({state:this.state.category_parcel,text:"pilih kategori parcel"})}
                                     </select>    
                                 </div>
-                                <div className="nameBx">
+                                <div className = "nameBx">
                                     <label>{"Nama Parcel"}</label>
-                                    <input type="text" placeholder="tentukan nama parcel" ref={this.state.nama_parcel}/>    
+                                    <input  type        = "text" 
+                                            name        = "nama_parcel" 
+                                            value       = {this.state.nama_parcel} 
+                                            onChange    = {this.onChangeInput}
+                                            placeholder = "tentukan nama parcel" 
+                                    />    
                                 </div>
                                 <div className="priceBx">
                                     <label>{"Harga Parcel"}</label>
-                                    <input type="number" min={1} placeholder="tentukan harga parcel" ref={this.state.harga}/>
+                                    <input type         = "number" 
+                                           name         = "harga"
+                                           value        = {this.state.harga} 
+                                           onChange     = {this.onChangeInput}
+                                           min          = {1}
+                                           placeholder  = "tentukan harga parcel" 
+                                    />
                                 </div>
-                                <div className="urlBx">
+                                <div className = "urlBx">
                                     <label>{"Gambar Parcel"}</label>
                                     <div>
-                                        <input type="text" placeholder="masukkan link url gambar" value={this.state.url_files} onChange={(e)=>this.setState({url_files:e.target.value})} disabled={ this.state.upl_files === null? false:true}/>
+                                        <input type         = "text"
+                                               name         = "url_files"
+                                               placeholder  = "masukkan link url gambar"
+                                               value        = {this.state.url_files}
+                                               onChange     = {this.onChangeInput}
+                                               disabled     = {this.state.upl_files? true:false}
+                                               />
                                         <span> atau </span>
-                                        <input type="file" accept=".png,.jpg,.svg,.gif" value={this.state.upl_files} onChange={(e)=>this.onInputUploadFileChange(e)} disabled={ true }/>
-                                        <div className="fakeBx" disabled={ true }>
+                                        <input type     = "file" 
+                                               accept   = ".png,.jpg,.svg,.gif" 
+                                               onChange = {this.onInputUploadFileChange} 
+                                               disabled = {this.state.url_files? true:false}
+                                        />
+                                        <div className  = "fakeBx" 
+                                             disabled   = {this.state.url_files? true:false}
+                                        >
                                             {
                                             this.state.upl_files_preview?
                                             <> ganti gambar </>
@@ -414,20 +470,24 @@ class Admin extends Component {
                         </div>
                     </div>
                     <div className="buttonBx">
-                        <button className="addbutton" onClick={this.onAddClick} disabled={this.state.nama_parcel==="" && this.state.harga===""? true:false}>Add This New Parcel</button>
+                        <button className   = "addbutton" 
+                                onClick     = {this.onAddClick}
+                                disabled    = {this.state.nama_parcel===""||this.state.harga===""||this.state.id_category_parcel===""? true:false}
+                        >
+                            Add This New Parcel
+                        </button>
                     </div>
                 </section>
                 <section className="addedparcel">
                     <div className="subborder3">
                         <h1 className="subtitle">
-                            Parcel <span className="space"> </span>
                             {
                             this.state.temp_parcel.length?
-                            <span> New! </span>
+                            <span>New!</span>
                                 : 
                             null
                             }
-                             Added
+                            Parcel Added
                         </h1>
                         <p> 
                             New Initial Parcel needed to be added with Item Selections before being able to be deployed and accessed by user.
@@ -440,12 +500,19 @@ class Admin extends Component {
                                 return (
                                 <>
                                     {
-                                    index===this.state.index_add_cat_product?    
+                                    index === this.state.index_add_cat_product?    
                                     <div className="addingitemBx">
                                         {this.renderTempParcel(val,index)}
                                         <div className="additemContent">
-                                            <h2 className="title">Choose Parcel <span>{this.state.temp_parcel[this.state.index_add_cat_product].nama}</span> Items & Quantities</h2>
-                                            <div className="subcaption"> Press 
+                                            <h2 className="title">
+                                                Choose Parcel 
+                                                <span>
+                                                {this.state.temp_parcel[this.state.index_add_cat_product].name}
+                                                </span>
+                                                Items & Quantities
+                                            </h2>
+                                            <div className="subcaption"> 
+                                                Press 
                                                 <span className="span0">Add</span>
                                                 to add more item, 
                                                 <span className="span1">Finish</span>
@@ -466,9 +533,9 @@ class Admin extends Component {
                                                             </div>
                                                         <div className="category"> 
                                                                 Any
-                                                                    <br/>
+                                                                <br/>
                                                                 {this.state.category_products[val.category_item-1].nama}
-                                                                    <br/>
+                                                                <br/>
                                                                 <span> Qty : {val.qty_item} </span>
                                                             </div> 
                                                         <div className="imgBx">
@@ -482,15 +549,42 @@ class Admin extends Component {
                                                 }
                                             </div>
                                             <div className="selectBx">
-                                                <select className="select0" onChange={(e)=>this.onChangeItemCategoryInput(e)} value={this.state.item_category} disabled={this.state.temp_item.length===this.state.category_products.length? true:false}>
-                                                    {this.renderOption(this.state.category_products)}
+                                                <select className   = "select0"
+                                                        name        = "item_category"
+                                                        onChange    = {this.onChangeInput}
+                                                        value       = {this.state.item_category}
+                                                        disabled    = {this.state.temp_item.length === this.state.category_products.length? true:false}
+                                                >
+                                                    {this.renderOption({state:this.state.category_products,text:"pilih kategori product"})}
                                                 </select>
-                                                <input className="input0" type="number" ref={this.state.item_qty}/>
-                                                <button className="button0" onClick={this.onSaveItem}>Add</button>
+                                                <input className    = "input0" 
+                                                       type         = "number"
+                                                       name         = "item_qty"
+                                                       value        = {this.state.item_qty}
+                                                       onChange     = {this.onChangeInput}
+                                                       disabled     = {this.state.temp_item.length === this.state.category_products.length? true:false}
+                                                       min          = {1}
+                                                       placeholder  = "masukkan angka jumlah item per product"
+                                                />
+                                                <button className   = "button0"
+                                                        onClick     = {this.onSaveItem}
+                                                        disabled    = {this.state.item_qty && this.state.item_category? false:true}
+                                                >
+                                                    Add
+                                                </button>
                                             </div>
                                             <div className="buttonBx">
-                                                <button className="button0" onClick={this.onFinishAddItem} disabled={this.state.temp_item.length? false:null}>Finish</button>
-                                                <button className="button1" onClick={this.onCancelAddItem}>Cancel</button>
+                                                <button className   = "button0" 
+                                                        onClick     = {this.onFinishAddItem}
+                                                        disabled    = {this.state.temp_item.length? false:true}
+                                                >
+                                                    Finish
+                                                </button>
+                                                <button className   = "button1" 
+                                                        onClick     = {this.onCancelAddItem}
+                                                >
+                                                    Cancel
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -501,7 +595,7 @@ class Admin extends Component {
                                 )
                             }).reverse()
                                 :
-                            <div className="maincaption"> --- tidak ada parcel yang <span> baru </span> dibuat ---</div>
+                            <div className="maincaption"> --- tidak ada parcel yang<span>baru</span>dibuat ---</div>
                             }
                         </div>
                     </div>
@@ -587,6 +681,4 @@ class Admin extends Component {
             </>
         );
     };
-};
- 
-export default Admin;
+});

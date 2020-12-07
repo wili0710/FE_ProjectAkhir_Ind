@@ -1,10 +1,10 @@
 const INITIAL_STATE = {
-    Parcel:[],
-    AR_Parcel:[],
-    Product:[],
-    Parcel_Category:[],
-    Product_Category:[],
-    isLoading:false
+    Parcel              :[],
+    AR_Parcel           :[],
+    Product             :[],
+    Parcel_Category     :[],
+    Product_Category    :[],
+    isLoading           :false
 };
 
 export default (state=INITIAL_STATE, action)=>{
