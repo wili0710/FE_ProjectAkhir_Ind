@@ -30,8 +30,7 @@ export function draggableCard(classname="",dir="left"||"top",speed=Number) {
         });
         slider.addEventListener('mousemove', (e) => {
             if(!isDown) return;
-            /* end of protection */    
-    
+            /* *** */ 
             e.preventDefault();
             slider.scrollLeft = scrollDir - (((e.pageX - slider.offsetLeft) - initPos) * speed); //--> multiply to setup scrolling speed
         });

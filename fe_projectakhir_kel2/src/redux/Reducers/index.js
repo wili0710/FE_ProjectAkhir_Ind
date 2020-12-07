@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux'
 import AuthReducers from './AuthReducers'
-import AdminReducers from './AdminReducers'
+import ParcelReducers from './ParcelReducers'
 
 export default combineReducers({
-    Auth: AuthReducers,
-    Admin: AdminReducers
+    Auth    : AuthReducers,
+    Parcel  : ParcelReducers
 });
