@@ -157,7 +157,7 @@
 }
 
 .product_item .product_details {
-    padding-top: 70%;
+    padding-top: 300px;
     text-align: center
 }
 
@@ -215,4 +215,23 @@
     margin-right:10px;
     margin-left:10px;
     margin-top:50px;
+   }
+
+   .button-add{
+       background-color:#74b9ff;
+       height:30px;
+       width:100px;
+       border-radius:10px;
+       border:1px solid gray;
+       display:flex;
+       justify-content: center;
+       align-items: center;
+       margin-top:10px;
+   }
+   .button-add p{
+       margin-top:10px;
+   }
+   .button-add:hover{
+       cursor: pointer;
+    background-color:#0984e3;
    }
