@@ -37,8 +37,10 @@ class DetailParcel extends Component {
         buttonChocolate:false,
         qtyMakanan:[],
         qtyMinuman:[],
-        qtyChocolat:[],
-        saveQtyMinuman:0
+        qtyChocolate:[],
+        saveQtyMinuman:0,
+        dataArrMakanan:[],
+        dataArrMinuman:[],
         
 
      }
@@ -100,99 +102,196 @@ class DetailParcel extends Component {
   
      hapusDataMinuman=(id)=>{
          console.log(id,' line 101')
-         if(this.state.arrMinuman.length <= this.state.dataParcelByIdMinuman.qty){
-             var b = this.state.arrMinuman
-             var a = b.findIndex((val)=>{
-                 return val=id
-             })
-             b.splice(a,1)
-             this.setState({buttonMinuman:false,arrMinuman:b})
+         var prodid= this.state.dataParcelByIdMinuman.categoryproduct_id
+         var filterprod=this.state.dataArrMakanan.filter((val)=>{
+             return val.categoryproduct_id === prodid
+         })
+         var total =0
+         for(var i=0; i<filterprod.length; i++){
+             total += filterprod[i].qty
+         }
+    
+          if(total <= this.state.dataParcelByIdMinuman.qty){
+             var dataArrMakanan = this.state.dataArrMakanan
+             console.log(dataArrMakanan)
+            var a = dataArrMakanan.findIndex((val)=>{
+                return val.parcel_id = id
+            })
+            console.log(a)
+
+            if(dataArrMakanan[a].qty-1==0){
+                dataArrMakanan.splice(a,1)             
+            }else {
+                dataArrMakanan[a].qty=dataArrMakanan[a].qty-1
+            }
+            this.setState({dataArrMakanan:dataArrMakanan})
+
          }
 
      }
  
      hapusDataMakanan=(id)=>{
          console.log(id,'delete id ')
-         if(this.state.arrMakanan.length <= this.state.dataParcelByIdMakanan.qty){
-             var b = this.state.arrMakanan
-             console.log(b)
-            var a = b.findIndex((val)=>{
-                return val = id
+     
+         var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id
+         var filterprod=this.state.dataArrMakanan.filter((val)=>{
+             return val.categoryproduct_id === prodid
+         })
+         var total =0
+         for(var i=0; i<filterprod.length; i++){
+             total += filterprod[i].qty
+         }
+    
+          if(total <= this.state.dataParcelByIdMakanan.qty){
+             var dataArrMakanan = this.state.dataArrMakanan
+             console.log(dataArrMakanan)
+            var a = dataArrMakanan.findIndex((val)=>{
+                return val.parcel_id = id
             })
             console.log(a)
-            b.splice(a,1)
-            
-             this.setState({buttonMakanan:false,arrMakanan:b})
-             
+
+            if(dataArrMakanan[a].qty-1==0){
+                dataArrMakanan.splice(a,1)             
+            }else {
+                dataArrMakanan[a].qty=dataArrMakanan[a].qty-1
+            }
+            this.setState({dataArrMakanan:dataArrMakanan})
+
          }
      }
 
      hapusDataChocolate=(id)=>{
          console.log(id)
-         if(this.state.arrChocolate.length <= this.state.dataParcelByIdChocolate.qty){
-             var b = this.state.arrChocolate
-             var a = b.findIndex((val)=>{
-                 return val =id
-             })
-             b.splice(a,1)
-             this.setState({buttonChocolate:false,arrChocolate:b})
+         var prodid= this.state.dataParcelByIdChocolate.categoryproduct_id
+         var filterprod=this.state.dataArrMakanan.filter((val)=>{
+             return val.categoryproduct_id === prodid
+         })
+         var total =0
+         for(var i=0; i<filterprod.length; i++){
+             total += filterprod[i].qty
+         }
+    
+          if(total <= this.state.dataParcelByIdChocolate.qty){
+             var dataArrMakanan = this.state.dataArrMakanan
+             console.log(dataArrMakanan)
+            var a = dataArrMakanan.findIndex((val)=>{
+                return val.parcel_id = id
+            })
+            console.log(a)
+
+            if(dataArrMakanan[a].qty-1==0){
+                dataArrMakanan.splice(a,1)             
+            }else {
+                dataArrMakanan[a].qty=dataArrMakanan[a].qty-1
+            }
+            this.setState({dataArrMakanan:dataArrMakanan})
+
          }
      }
 
      
+     
      AddDataMakanan=(id)=>{
         console.log(id)
         console.log('jalan line 69')
-        var b = this.state.qtyMakanan
-        var a = b.findIndex((val)=>{
-            return val=id
+        var dataArrMakanan = this.state.dataArrMakanan
+        console.log(dataArrMakanan,' ini dataArrMakanan')
+        var a = dataArrMakanan.findIndex((val)=>{
+            console.log(val.parcel_id,'193') // 10
+            console.log(id,194) // 9
+            return val.parcel_id==id
         })
-       console.log(a, ' ini a line 148')
-       if(a == -1){
-           console.log('masuk ke if 150')
-           var joined = this.state.arrMakanan.concat(id)
-           var addQty = this.state.arrMakanan.concat(id)
-           this.setState({arrMakanan:joined, qtyMakanan:addQty})
-       }else {
-            console.log('nambah qty jadi 2')
-       }
-        
-       //  console.log(joined)
-        console.log(this.state.arrMakanan.length)
+        var findMakanan=this.state.dataMakanan
+        var find = findMakanan.findIndex((val=>{
+            return val.id == id
+        }))
+
+        console.log(a)
+        if(a== -1){
+            var arrMakanan2=this.state.dataArrMakanan
+             arrMakanan2.push({
+                parcel_id:id,
+                qty:1,
+                categoryproduct_id:this.state.dataParcelByIdMakanan.categoryproduct_id,
+                namaProduct:this.state.dataMakanan[find].nama
+            })
+            
+            console.log(arrMakanan2)
+            this.setState({dataArrMakanan:arrMakanan2})
+        }else {
+            console.log(this.state.dataArrMakanan)
+            console.log(a, 206)
+            var dataSama = this.state.dataArrMakanan
+            dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
+
+            // arrMakanan2[a]={...arrMakanan2[a],qty:arrMakanan2[2].qty+1}
+            // addData={...addData,qty:addData.qty+1}
+            this.setState({dataArrMakanan:dataSama})
+        }
         }
 
      AddDataMinuman=(id)=>{
          console.log(id, ' ini id')
-         
-        //  var b = this.state.arrMinuman
-        // if(b.indexOf(id)!== -1){
-        //     console.log('data udh ada')
-        //     this.setState({saveQtyMinuman:(this.state.saveQtyMinuman+1)})
-        //     this.setState({qtyMinuman:this.state.saveQtyMinuman})
 
-        // }else {
-        //     console.log('data blm ada')
-        //     var addQty = this.state.arrMinuman.concat(1)
-        //     var joined= this.state.arrMinuman.concat(id)
-        //     this.setState({arrMinuman:joined,qtyMinuman:addQty})
-        //     this.setState({saveQtyMinuman:1})
-
-        // }
-        // var render=this.state.arrMinuman.filter(function(val){
-        //     console.log(val)
-        //     return val == val
-        // })
-        // console.log(render)
-
-        var joined= this.state.arrMinuman.concat(id)
-        this.setState({arrMinuman:joined})
+         var dataArrMakanan = this.state.dataArrMakanan
+         console.log(dataArrMakanan,' ini dataArrMakanan')
+         var a = dataArrMakanan.findIndex((val)=>{
+             console.log(val.parcel_id,'193') // 10
+             console.log(id,194) // 9
+             return val.parcel_id==id
+         })
+         var findMinuman=this.state.dataMinuman
+         var find = findMinuman.findIndex((val=>{
+             return val.id == id
+         }))
  
+         if(a== -1){
+             var arrMakanan2= this.state.dataArrMakanan
+             arrMakanan2.push({
+                 parcel_id:id,
+                 qty:1,
+                 categoryproduct_id:this.state.dataParcelByIdMinuman.categoryproduct_id,
+                 namaProduct:this.state.dataMinuman[find].nama
+             })
+                this.setState({dataArrMakanan:arrMakanan2})
+         }else {
+             console.log(this.state.dataArrMakanan)
+             var dataSama = this.state.dataArrMakanan
+             dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
+             this.setState({dataArrMakanan:dataSama})
+         }
      }
 
      AddDataChocolate=(id)=>{
-         var joined=this.state.arrChocolate.concat(id)
-         this.setState({arrChocolate:joined})
-         console.log(id)
+        console.log(id, ' ini id')
+
+        var dataArrMakanan = this.state.dataArrMakanan
+        console.log(dataArrMakanan,' ini dataArrMakanan')
+        var a = dataArrMakanan.findIndex((val)=>{
+            console.log(val.parcel_id,'193') // 10
+            console.log(id,194) // 9
+            return val.parcel_id==id
+        })
+        var findChocolate=this.state.dataChocolate
+        var find = findChocolate.findIndex((val=>{
+            return val.id == id
+        }))
+        if(a== -1){
+            var arrMakanan2= this.state.dataArrMakanan
+            arrMakanan2.push({
+                parcel_id:id,
+                qty:1,
+                categoryproduct_id:this.state.dataParcelByIdChocolate.categoryproduct_id,
+                namaProduct:this.state.dataChocolate[find].nama
+            })
+                this.setState({dataArrMakanan:arrMakanan2})
+
+        }else {
+            console.log(this.state.dataArrMakanan)
+            var dataSama = this.state.dataArrMakanan
+            dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
+            this.setState({dataArrMakanan:dataSama})
+        }
      }
 
      addMessage=(e)=>{
@@ -200,32 +299,41 @@ class DetailParcel extends Component {
          this.setState({arrMessage:e.target.value})
      }
      renderMakanan=()=>{
+        var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id
+        var filterprod=this.state.dataArrMakanan.filter((val)=>{
+            return val.categoryproduct_id === prodid
+        })
+        var total =0
+        for(var i=0; i<filterprod.length; i++){
+            total += filterprod[i].qty
+        }
+        console.log(filterprod,' ini filter prod 302')
+
          return this.state.dataMakanan.map((val,index)=>{
+
              return (
                  <>
                 <div className=" box-3 card product_item" key={val.id} >
                         <div className="cp_img">
                             <img src={val.image} alt="logo" className="img-parcel" />
                             <div className="hover"  >
+                             
                                 {
-                                    this.state.buttonMakanan?
+    
+                                    total==this.state.dataParcelByIdMakanan.qty ?
+                                    null:
                                     <>
-                                    <BiMinus onClick={()=>this.hapusDataMakanan(val.id)}/>  
-                                    {/* <BiPlus onClick={()=>this.AddDataMakanan(val.id)}/> */}
+                                    <BiPlus onClick={()=>this.AddDataMakanan(val.id)}/>
                                     </>
-                                    :
-                                    <>
-                                    {
-                                        this.state.arrMakanan.length==this.state.dataParcelByIdMakanan.qty ?
-                                        null:
-                                        <>
-                                        <BiPlus onClick={()=>this.AddDataMakanan(val.id)}/>
-                                        </>
-
-                                    }
-                                        <BiMinus onClick={()=>this.hapusDataMakanan(val.id)}/>      
-                                    </>
+                                
                                 }
+                                {
+                                    total==0 ?
+                                    null 
+                                    :
+                                    <BiMinus onClick={()=>this.hapusDataMakanan(val.id)}/>  
+                                }
+                             
                             </div>
                         </div>
                         <div className="product_details">
@@ -244,6 +352,14 @@ class DetailParcel extends Component {
      }
 
      renderMinuman=()=>{
+        var prodid= this.state.dataParcelByIdMinuman.categoryproduct_id
+        var filterprod=this.state.dataArrMakanan.filter((val)=>{
+            return val.categoryproduct_id === prodid
+        })
+        var total =0
+        for(var i=0; i<filterprod.length; i++){
+            total += filterprod[i].qty
+        }
          return this.state.dataMinuman.map((val,index)=>{
              return (
                  <>
@@ -251,25 +367,22 @@ class DetailParcel extends Component {
                         <div className="cp_img">
                             <img src={val.image} alt="logo" className="img-parcel" />
                             <div className="hover"  >
-                                {
-                                    this.state.buttonMinuman?
-                                    <>
-                                    <BiMinus onClick={()=>this.hapusDataMinuman(val.id)}/>  
-                                    {/* <BiPlus onClick={()=>this.AddDataMakanan(val.id)}/> */}
-                                    </>
-                                    :
-                                    <>
-                                    {
-                                        this.state.arrMinuman.length==this.state.dataParcelByIdMinuman.qty ?
-                                        null:
-                                        <>
-                                        <BiPlus onClick={()=>this.AddDataMinuman(val.id)}/>
-                                        </>
+                             
+                            {
+    
+                                total==this.state.dataParcelByIdMinuman.qty ?
+                                null:
+                                <>
+                                <BiPlus onClick={()=>this.AddDataMinuman(val.id)}/>
+                                </>
 
-                                    }
-                                        <BiMinus onClick={()=>this.hapusDataMinuman(val.id)}/>      
-                                    </>
-                                }
+                            }
+                            {
+                                total==0 ?
+                                null 
+                                :
+                                <BiMinus onClick={()=>this.hapusDataMinuman(val.id)}/>  
+                            }
                             </div>
                         </div>
                         <div className="product_details">
@@ -286,6 +399,14 @@ class DetailParcel extends Component {
      }
 
      renderChocolate=()=>{
+        var prodid= this.state.dataParcelByIdChocolate.categoryproduct_id
+        var filterprod=this.state.dataArrMakanan.filter((val)=>{
+            return val.categoryproduct_id === prodid
+        })
+        var total =0
+        for(var i=0; i<filterprod.length; i++){
+            total += filterprod[i].qty
+        }
          return this.state.dataChocolate.map((val,index)=>{
              return(
                  <>
@@ -293,25 +414,21 @@ class DetailParcel extends Component {
                         <div className="cp_img">
                             <img src={val.image} alt="logo" className="img-parcel" />
                             <div className="hover"  >
-                                {
-                                    this.state.buttonMinuman?
-                                    <>
-                                    <BiMinus onClick={()=>this.hapusDataChocolate(val.id)}/>  
-                                    {/* <BiPlus onClick={()=>this.AddDataMakanan(val.id)}/> */}
-                                    </>
-                                    :
-                                    <>
-                                    {
-                                        this.state.arrChocolate.length==this.state.dataParcelByIdChocolate.qty ?
-                                        null:
-                                        <>
-                                        <BiPlus onClick={()=>this.AddDataChocolate(val.id)}/>
-                                        </>
+                            {
+    
+                                total==this.state.dataParcelByIdChocolate.qty ?
+                                null:
+                                <>
+                                <BiPlus onClick={()=>this.AddDataChocolate(val.id)}/>
+                                </>
 
-                                    }
-                                        <BiMinus onClick={()=>this.hapusDataChocolate(val.id)}/>      
-                                    </>
-                                }
+                            }
+                            {
+                                total==0 ?
+                                null 
+                                :
+                                <BiMinus onClick={()=>this.hapusDataChocolate(val.id)}/>  
+                            } 
                             </div>
                         </div>
                         <div className="product_details">
@@ -329,21 +446,22 @@ class DetailParcel extends Component {
 
      saveMessage=()=>{
          console.log('button add message jalan')
- 
+            var sendToDb = this.state.dataArrMakanan
+            var messagesend=this.state.arrMessage
+            var arrProduct= sendToDb.map((val)=>val.parcel_id)
+            var qtyProduct = sendToDb.map((val)=>val.qty)
+            console.log(arrProduct)
+            console.log(qtyProduct)
 
-         var minuman = this.state.arrMinuman
-         var makanan= this.state.arrMakanan
-         var chocolate = this.state.arrChocolate
-         var sendtodb = minuman.concat(makanan,chocolate)
-         console.log(sendtodb)
+
          var obj = {
             user_id:"1",
             products_id:"0",
             parcel_id:"1",
             qty:"1",
-            productforparcel_id:[8,10,5],
-            qtyproductforparcel:[1,2,1],
-            message:'Stress anjg'
+            productforparcel_id:arrProduct,
+            qtyproductforparcel:qtyProduct,
+            message:messagesend
          }
          console.log(obj)
          Axios.post(`${API_URL_SQL}/transaksi/addtocart`,obj).then((res)=>{
@@ -354,13 +472,13 @@ class DetailParcel extends Component {
          })
 
      }
+    //  [
+    //      {parcelid :10,qty:1},
+    //      {parcelid:11,qty:1},
+    //  ]
     render() { 
-            console.log(this.state.arrMinuman, ' arr minuman')
-            // console.log(this.state.arrMakanan, ' arr makanan')
-            // console.log(this.state.arrChocolate, ' arr chocolate')
-            console.log(this.state.qtyMinuman,' line 335 qty minuman')
-            console.log(this.state.saveQtyMinuman,  ' qty minuman')
-            
+            console.log(this.state.dataArrMakanan)
+            console.log(this.state.dataMakanan)
             const {classes}= this.props
         return ( 
             <>
