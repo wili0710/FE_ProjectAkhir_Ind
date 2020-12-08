@@ -8,7 +8,9 @@ import { Badge } from '@material-ui/core';
 import { FullPageLoading } from '../components/loading';
 import { useTheme } from '@emotion/react';
 import { Link } from 'react-router-dom';
-import './cart.css'
+import './cart.css';
+import numeral from 'numeral';
+import { Button,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 
 
@@ -19,6 +21,9 @@ const CartPage=()=>{
     const [loading,setLoading]=useState(true)
     const [showCart,setShowCart]=useState(false)
     const [showMenuUser,setShowMenuUser]=useState(false)
+    const [showEdit,setShowEdit]=useState(false)
+
+    const toggleModalEdit=()=>setShowEdit(!showEdit)
 
     useEffect(()=>{
         fetchdata()
@@ -44,7 +49,7 @@ const CartPage=()=>{
                 <div style={{
                     display:"flex",
                     // justifyContent:"space-between",
-                    borderBottom:"1px solid lightgray",
+                    borderBottom:"1px solid #f3f4f5",
                     paddingTop:10,
                     paddingBottom:10
                 }}>
@@ -55,7 +60,7 @@ const CartPage=()=>{
                     </div>
                     <div>
                         <h6>{val.nama}</h6>
-                        <h7>Jumlah: {val.qty}</h7>
+                        <h6>Jumlah: {val.qty}</h6>
                     </div>
                     <div style={{
                         display:"flex",
@@ -64,8 +69,14 @@ const CartPage=()=>{
                         position:"absolute",
                         right:30
                     }}>
-                        <h7>Total</h7>
-                        <span>{val.hargatotal}</span>
+                        <h6>Total</h6>
+
+                        <span style={{
+                            color:"#fa5a1e",
+                            fontWeight:"700"
+                        }}>
+                            Rp {numeral(val.hargatotal).format('0,0')}
+                        </span>
                     </div>
                 </div>
             )
@@ -75,7 +86,7 @@ const CartPage=()=>{
                 <div style={{
                     display:"flex",
                     // justifyContent:"space-between",
-                    borderBottom:"1px solid lightgray",
+                    borderBottom:"1px solid #f3f4f5",
                     paddingTop:10,
                     paddingBottom:10
                 }}>
@@ -86,7 +97,7 @@ const CartPage=()=>{
                     </div>
                     <div>
                         <h6>{val.nama}</h6>
-                        <h7>Jumlah: {val.qty}</h7>
+                        <h6>Jumlah: {val.qty}</h6>
                     </div>
                     <div style={{
                         display:"flex",
@@ -95,8 +106,13 @@ const CartPage=()=>{
                         position:"absolute",
                         right:30
                     }}>
-                        <h7>Total</h7>
-                        <span>{val.hargatotal}</span>
+                        <h6>Total</h6>
+                        <span style={{
+                            color:"#fa5a1e",
+                            fontWeight:"700"
+                        }}>
+                            Rp {numeral(val.hargatotal).format('0,0')}
+                        </span>
                     </div>
                 </div>
             )
@@ -105,13 +121,14 @@ const CartPage=()=>{
         console.log(final)
         return final
     }
+
     const renderCartDetail=()=>{
         let arr1= Auth.cart.transaksidetailsatuan.map((val,index)=>{
             return (
                 <div style={{
                     display:"flex",
                     // justifyContent:"space-between",
-                    borderBottom:"1px solid lightgray",
+                    borderBottom:"1px solid #f3f4f5",
                     paddingTop:10,
                     paddingBottom:10,
                     // backgroundColor:"wheat",
@@ -124,7 +141,7 @@ const CartPage=()=>{
                     </div>
                     <div>
                         <h6>{val.nama}</h6>
-                        <h7>Jumlah: {val.qty}</h7>
+                        <h6>Jumlah: {val.qty}</h6>
                     </div>
                     <div style={{
                         display:"flex",
@@ -134,14 +151,20 @@ const CartPage=()=>{
                         right:30
                     }}>
                         <div style={{
-                            borderBottom:"1px lightgrey solid",
-                            cursor:"default"
+                            borderBottom:"1px #f3f4f5 solid",
+                            cursor:"default",
+                            marginBottom:10
                         }}>
                             <h6><span style={{color:"#158ae6",cursor:"pointer"}}>Edit</span> | 
                             <span style={{color:"red",cursor:"pointer"}} onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
                         </div>
-                        <h7>Total</h7>  
-                        <span>{val.hargatotal}</span>
+                        <h6>Total</h6>  
+                        <span style={{
+                            color:"#fa5a1e",
+                            fontWeight:"700"
+                        }}>
+                            Rp {numeral(val.hargatotal).format('0,0')}
+                        </span>                        
                     </div>
                 </div>
             )
@@ -152,16 +175,20 @@ const CartPage=()=>{
             })
             let renderdetailparcel=detailparcel.map((detail,index)=>{
                 return(
-                    <>
-                        <h7>{detail.namaproduct} : {detail.qtyproduct/detail.qtyparcel}</h7>
-                    </>
+                    <div style={{
+                        display:"flex"
+                    }}>
+                        <div>
+                            <h6>- {detail.namaproduct} : {detail.qtyproduct/detail.qtyparcel}</h6>
+                        </div>
+                    </div>
                 )
             })
             return (
                 <div style={{
                     display:"flex",
                     // justifyContent:"space-between",
-                    borderBottom:"1px solid lightgray",
+                    borderBottom:"1px solid #f3f4f5",
                     paddingTop:10,
                     paddingBottom:10
                 }}>
@@ -175,7 +202,7 @@ const CartPage=()=>{
                         flexDirection:"column"
                     }}>
                         <h6>{val.nama}</h6>
-                        <h7>Isi Parcel</h7>
+                        <h6>Isi Parcel</h6>
                         <div style={{
                             marginLeft:10,
                             display:"flex",
@@ -183,14 +210,17 @@ const CartPage=()=>{
                         }}>
                             {renderdetailparcel}
                         </div>
-                        <h7>Jumlah Parcel: {val.qty}</h7>
-                        <h7>Pesan Custom:</h7>
+                        <h6>Jumlah Parcel: {val.qty}</h6>
+                        <h6>Message Custom:</h6>
                         <div style={{
-                            marginLeft:10
+                            border:"3px #f3f4f5 solid",
+                            padding:20,
+                            marginTop:10,
+                            width:500
                         }}>
-                            <h7>
+                            <h6>
                                 "{val.message}"
-                            </h7>
+                            </h6> 
                         </div>
                     </div>
                     <div style={{
@@ -201,14 +231,20 @@ const CartPage=()=>{
                         right:30,
                     }}>
                         <div style={{
-                            borderBottom:"1px lightgrey solid",
-                            cursor:"default"
+                            borderBottom:"1px #f3f4f5 solid",
+                            cursor:"default",
+                            marginBottom:10
                         }}>
                             <h6><span style={{color:"#158ae6",cursor:"pointer"}}>Edit</span> | 
                             <span style={{color:"red",cursor:"pointer"}} onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
                         </div>
-                        <h7>Total</h7>
-                        <span>{val.hargatotal}</span>
+                        <h6>Total</h6>
+                        <span style={{
+                            color:"#fa5a1e",
+                            fontWeight:"700"
+                        }}>
+                            Rp {numeral(val.hargatotal).format('0,0')}
+                        </span>
                     </div>
                 </div>
             )
@@ -217,6 +253,7 @@ const CartPage=()=>{
         console.log(final)
         return final
     }
+
     const onClickRemove=(transaksi_id,transaksidetail_id)=>{
         try {
             Axios.post(`${API_URL_SQL}/transaksi/removefromcart`,{
@@ -234,6 +271,9 @@ const CartPage=()=>{
             console.log(error)
         }
     }
+
+
+
     if(loading){
         return(
             <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
@@ -241,7 +281,7 @@ const CartPage=()=>{
             </div>
         )
     }
-    console.log(Auth.cart)
+
     return(
         <div style={{
             display:"flex",
@@ -250,12 +290,29 @@ const CartPage=()=>{
             maxWidth:2000,
             justifyContent:"center",
         }}>
+            {/* MODAL Edit*/}
+            <Modal isOpen={showEdit} toggle={toggleModalEdit}>
+                <ModalHeader toggle={toggleModalEdit}>Modal title</ModalHeader>
+                <ModalBody>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </ModalBody>
+                <ModalFooter>
+                <Button color="primary" onClick={toggleModalEdit}>Do Something</Button>{' '}
+                <Button color="secondary" onClick={toggleModalEdit}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+            {/* End Modal Edit */}
             <div style={{
                 display:"flex",
                 justifyContent:"space-between",
                 backgroundColor:"#158ae6",
                 padding:15,
-                color:"white"
+                color:"white",
+                position:"fixed",
+                top:0,
+                width:"100%",
+                maxWidth:2000,
+                zIndex:1
             }}>
                 <div style={{
                     marginLeft:20
@@ -291,7 +348,7 @@ const CartPage=()=>{
                                 padding:10,
                                 paddingLeft:20,
                                 paddingRight:20,
-                                boxShadow:"lightgray 0px 1px 5px 1px",
+                                boxShadow:"#f3f4f5 0px 1px 5px 1px",
                                 backgroundColor:"white",
                                 display:"flex",
                                 flexDirection:"column",
@@ -301,7 +358,7 @@ const CartPage=()=>{
                                 <div style={{
                                     display:"flex",
                                     justifyContent:"space-between",
-                                    borderBottom:"lightgray solid 1px"
+                                    borderBottom:"#f3f4f5 solid 1px"
                                 }}>
                                     <h6>
                                         Keranjang ({Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length})
@@ -311,7 +368,7 @@ const CartPage=()=>{
                                             color:"#158ae6",
                                             fontWeight:"500",
                                             textDecorationLine:"none"
-                                            }}> <h7>Lihat Keranjang</h7></Link>
+                                            }}> <h6>Lihat Keranjang</h6></Link>
                                     </span>
                                 </div>
                                 <div>
@@ -352,7 +409,7 @@ const CartPage=()=>{
                                 padding:10,
                                 paddingLeft:20,
                                 paddingRight:20,
-                                boxShadow:"lightgray 0px 1px 5px 1px",
+                                boxShadow:"#f3f4f5 0px 1px 5px 1px",
                                 backgroundColor:"white",
                                 display:"flex",
                                 flexDirection:"column",
@@ -363,7 +420,7 @@ const CartPage=()=>{
                                 <div style={{
                                     display:"flex",
                                     justifyContent:"space-between",
-                                    borderBottom:"lightgray solid 1px"
+                                    borderBottom:"#f3f4f5 solid 1px"
                                 }}>
                                     <div>Setting</div>
 
@@ -371,7 +428,7 @@ const CartPage=()=>{
                                 <div style={{
                                     display:"flex",
                                     justifyContent:"space-between",
-                                    borderBottom:"lightgray solid 1px"
+                                    borderBottom:"#f3f4f5 solid 1px"
                                 }}>
                                     <div>Logout</div>
 
@@ -390,12 +447,14 @@ const CartPage=()=>{
                 flexDirection:"column",
                 alignItems:"center",
                 width:"100%",
-                maxWidth:2000
+                maxWidth:2000,
+                marginBottom:20
             }}>
                 <div style={{
                     display:"flex",
                     width:"80%",
                     // backgroundColor:"wheat",
+                    marginTop:50,
                     justifyContent:"center"
                 }}>
                     <div style={{
@@ -430,15 +489,68 @@ const CartPage=()=>{
                         </div>
                     </div>
                     <div style={{
-                        flexBasis:"50%"
+                        flexBasis:"50%",
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"center",
+                        position:"sticky",
+                        alignSelf:"flex-start",
+                        top:100
                     }}>
                         <div style={{
-                            padding:20
+                            padding:20,
+                            width:500
                         }}>
-                            aa
-                            {/* {renderRingkasanBelanja()} */}
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                border:"#f3f4f5 solid 1px",
+                                boxShadow:"#f3f4f5 0px 1px 5px 1px",
+                                padding:30
+                            }}>
+                                <div>
+                                    <h6>
+                                        Ringkasan Belanja
+                                    </h6>
+                                </div>
+                                <div style={{
+                                    display:"flex",
+                                    justifyContent:"space-between"
+                                }}>
+                                    <div>
+                                        Total Transaksi
+                                    </div>
+                                    <div>
+                                        <span style={{
+                                            color:"#fa5a1e",
+                                            fontWeight:"700"
+                                        }}>
+                                            Rp {numeral(Auth.cart.transaksi[0].totaltransaksi).format('0,0')}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style={{
+                                    // backgroundColor:"wheat",
+                                    display:"flex",
+                                    justifyContent:"center",
+                                    marginTop:20
+                                }}>
+                                    <Button style={{
+                                        width:200
+                                    }} color="primary">
+                                        <span style={{
+                                            fontWeight:500
+                                        }}>
+                                            Beli ({Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length})
+                                        </span>
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div className='p-1' style={{width:'100%',maxWidth:2000, marginLeft:20,borderTop:'1px solid lightgrey',position:"fixed",bottom:0,paddingBottom:10, backgroundColor:"white"}}>
+                    <span style={{fontSize:'14px'}}>© 2020, hearttoheart</span>
                 </div>
             </div>
         </div>
