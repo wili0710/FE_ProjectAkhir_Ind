@@ -1,0 +1,244 @@
+.outer.detail{
+    width:100%;
+    height:100vh;
+    /* background-color:red; */
+}
+.div-opt{
+    /* background-color:red; */
+    height:30px;
+    width:100%;
+    padding-left: 200px;
+    padding-right:200px;
+    margin-top:135px;
+    display:flex;
+    flex-direction: row;
+    border-bottom:1px solid gray;
+    align-items: center;
+}
+
+.div-opt:hover{
+    /* color:#0984e3; */
+    cursor: pointer;
+}
+.div-opt p{
+    margin-top:15px;
+}
+.icon-back{
+    font-size:30px;
+    color:gray;
+    text-decoration: none;
+    
+}
+.parcelname{
+    /* background-color: red; */
+    height:50px;
+    width:100%;
+    padding-left:200px;
+    padding-right:200px;
+    margin-top:10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom:1px solid gray;
+}
+
+
+
+/* BATAS RENDER */
+
+.render-parcel{
+    /* background-color: red; */
+    width:100%;
+    height:200px;
+    padding-left: 200px;
+    padding-right:200px;
+}
+
+
+
+.k-button{
+    background-color: #74b9ff;
+    width:100%;
+    height:50px;
+    margin-top:20px;
+    border-radius:10px;
+    display:flex;
+    /* justify-content: center; */
+    align-items: center;
+    
+}
+.k-button:hover{
+    cursor: pointer;
+    background-color: #0984e3;
+    
+}
+.k-button p{
+    font-size: 20px;
+    color:white;
+    margin-top:10px;
+}
+
+
+/* batas */
+
+.div-max{
+    height:100px;
+    width:100%;
+    background-color: red;
+}
+
+.box-3{
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:2px 2px 5px 2px gray;
+    flex-basis: 30%;
+    margin-right:10px;
+    margin-left:10px;
+    margin-top:50px;
+   }
+   .box-3:hover{
+       box-shadow:2px 2px 2px 2px #74b9ff;
+       cursor: pointer;
+   }
+
+   .card {
+    background: #fff;
+    margin-bottom: 30px;
+    transition: .5s;
+    border: 0;
+    border-radius: .55rem;
+    position: relative;
+    width: 100%;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+}
+
+.card .body {
+    font-size: 14px;
+    color: #424242;
+    padding: 20px;
+    font-weight: 400;
+}
+
+.product_item:hover .cp_img {
+    top: -40px
+    
+}
+
+.product_item:hover .cp_img img {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22)
+}
+
+.product_item:hover .cp_img .hover {
+    display: block
+}
+
+.product_item .cp_img {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%);
+    -webkit-transform: translate(-50%);
+    -ms-transform: translate(-50%);
+    -moz-transform: translate(-50%);
+    -o-transform: translate(-50%);
+    -khtml-transform: translate(-50%);
+    width: 100%;
+    padding: 15px;
+    transition: all 0.2s ease-in-out
+}
+
+.product_item .cp_img img {
+    transition: all 0.2s ease-in-out;
+    border-radius: 6px
+}
+
+.product_item .cp_img .hover {
+    display: none;
+    text-align: center;
+    margin-top: 10px
+}
+
+.product_item .product_details {
+    padding-top: 300px;
+    text-align: center
+}
+
+.product_item .product_details h5 {
+    margin-bottom: 5px
+}
+
+.product_item .product_details h5 a {
+    font-size: 16px;
+    color: #444
+}
+
+.product_item .product_details h5 a:hover {
+    text-decoration: none
+}
+
+.product_item .product_details .product_price {
+    margin: 0
+}
+
+.product_item .product_details .product_price li {
+    display: inline-block;
+    padding: 0 10px
+}
+
+.product_item .product_details .product_price .new_price {
+    font-weight: 600;
+    color: #ff4136
+}
+
+.product_item_list table tr td {
+    vertical-align: middle
+}
+
+.product_item_list table tr td h5 {
+    font-size: 15px;
+    margin: 0
+}
+
+.product_item_list table tr td .btn {
+    box-shadow: none !important
+}
+
+.img-parcel{
+    height:250px;
+    width:100%;
+    border-radius:5%;
+}
+
+.box-3{
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:2px 2px 5px 2px gray;
+    flex-basis: 30%;
+    margin-right:10px;
+    margin-left:10px;
+    margin-top:50px;
+   }
+
+   .button-add{
+       background-color:#74b9ff;
+       height:30px;
+       width:100px;
+       border-radius:10px;
+       border:1px solid gray;
+       display:flex;
+       justify-content: center;
+       align-items: center;
+       margin-top:10px;
+   }
+   .button-add p{
+       margin-top:10px;
+   }
+   .button-add:hover{
+       cursor: pointer;
+    background-color:#0984e3;
+   }
+
+   .icondp{
+       font-size:35px;
+       color:tomato;
+   }

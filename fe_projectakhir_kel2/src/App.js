@@ -16,6 +16,12 @@ import Parcel from './../src/pages/admin/parcel'
 import Product from './../src/pages/admin/product'
 import CategoryProduct from './../src/pages/admin/categoryProduct'
 import CategoryParcel from './../src/pages/admin/categoryParcel'
+import DataProduct from './../src/pages/Product/dataProduct'
+import DetailParcel from './../src/pages/Product/detailParcel'
+
+import CartPage from './pages/cart';
+import AdminReport from './pages/admin/adminreport';
+import Example from './pages/hapusaja';
 
 function App() {
   
@@ -24,35 +30,36 @@ function App() {
 
   const [loading,setLoading]=useState(true)
 
-  useEffect(()=>{
-    var id=localStorage.getItem('id')
-    if(id!==null){ 
-      Axios.get(`${API_URL_SQL}/auth/keeplogin/${id}`)
-      .then((res)=>{
-          dispatch({type:'LOGIN',payload:res.data.datauser,cart:res.data.cart})
-      }).catch((err)=>{
-          alert(err.response.data.message)
-      }).finally(()=>{
-          setLoading(false)
-      })
-    }else{
-      setLoading(false)
-    }
-  },[])
+  // useEffect(()=>{
+  //   var id=localStorage.getItem('id')
+  //   if(id!==null){ 
+  //     Axios.get(`${API_URL_SQL}/auth/keeplogin/${id}`)
+  //     .then((res)=>{
+  //         dispatch({type:'LOGIN',payload:res.data.datauser,cart:res.data.cart})
+  //     }).catch((err)=>{
+  //       console.log(err.response.data.message)
+  //         // alert(err.response.data.message)
+  //     }).finally(()=>{
+  //         setLoading(false)
+  //     })
+  //   }else{
+  //     setLoading(false)
+  //   }
+  // },[])
 
-  if(loading){
-    return(
-        <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
-            {FullPageLoading(loading,100,'#0095DA')}
-        </div>
-    )
-  }
+  // if(loading){
+  //   return(
+  //       <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+  //           {FullPageLoading(loading,100,'#0095DA')}
+  //       </div>
+  //   )
+  // }
   const renderProtectedAdminRoutes=()=>{
     if(1===1){
     // if(Auth.role==="Admin"){
       return(
         <>
-          <Route exact path='/adminpanel' component={User}/>
+          <Route exact path='/adminpanel' component={AdminReport}/>
           <Route exact path='/adminpanel/datauser' component={User}/>
           <Route exact path='/adminpanel/payment' component={AdminPayment}/>
           <Route exact path='/adminpanel/product' component={Product}/>
@@ -60,6 +67,8 @@ function App() {
           <Route exact path='/adminpanel/headerAdmin' component={HeaderAdmin}/>
           <Route exact path ='/adminpanel/categoryProduct' component={CategoryProduct}/>
           <Route exact path ='/adminpanel/categoryParcel' component={CategoryParcel}/>
+          {/* <Route exact path='/dataproduct' component={DataProduct}/>
+        <Route exact path='/detailParcel/:id' component={DetailParcel}/> */}
         </>
       )
     }
@@ -68,10 +77,13 @@ function App() {
   return (
     <>
       <Switch>
-      
         <Route exact path ='/' component={Home}/>
         <Route exact path ='/login' component={Login}/>
         <Route exact path ='/register' component={Register}/>
+        <Route exact path='/dataproduct' component={DataProduct}/>
+        <Route exact path='/detailParcel/:id' component={DetailParcel}/>
+        <Route exact path ='/cart' component={CartPage}/>
+        <Route exact path ='/hapusaja' component={Example}/>
         {renderProtectedAdminRoutes()}
         <Route path='*' component={ManageAdmin}/>
 

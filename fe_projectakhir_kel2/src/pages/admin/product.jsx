@@ -28,7 +28,6 @@ class Product extends Component {
         },
         fileImage:null,
         categoryProduct:[]
-
      }
 
      componentDidMount(){
@@ -50,9 +49,23 @@ class Product extends Component {
 
      }
 
-     onDelete=()=>{
+     onDelete=(id)=>{
          console.log('delete jalan')
+         let id2=id
+         Axios.post(`${API_URL_SQL}/product/deleteprod`,{
+             id:id2
+         })
+         .then((res)=>{
+             console.log(res.data)
+             console.log('berhasil delete')
+             this.setState({dataProduct:res.data})
+            
+         }).catch((err)=>{
+             console.log(err)
+         })      
      }
+
+
 
      renderProduct=()=>{
          return this.state.dataProduct.map((val,index)=>{
@@ -69,6 +82,7 @@ class Product extends Component {
                         <TableCell>{val.stok}</TableCell>
                         <TableCell>{val.deskripsi}</TableCell>
                         <TableCell>{val.categoryproduct_id}</TableCell>
+                        <TableCell>Rp.{val.hargapokok}</TableCell>
                         <TableCell>
                             <button onClick={()=>this.onDelete(val.id)}>Delete</button>
                         </TableCell>
@@ -92,7 +106,7 @@ class Product extends Component {
      renderCatProd=()=>{
          return this.state.categoryProduct.map((val,index)=>{
              return (
-                <option value={val.id}>Category : {val.id } </option>
+                <option value={val.id}>Category : {val.id } {val.nama} </option>
              )
          })
      }
@@ -190,6 +204,7 @@ class Product extends Component {
                                         <TableCell>Stock</TableCell>
                                         <TableCell>Description</TableCell>
                                         <TableCell>Category Product</TableCell>
+                                        <TableCell>Harga Pokok</TableCell>
                                         <TableCell>Action</TableCell>
                                     </TableRow>
                                 </TableHead>

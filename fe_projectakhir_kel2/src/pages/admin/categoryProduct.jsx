@@ -34,8 +34,18 @@ class CategoryProduct extends Component {
          console.log('butotn jalan')
          this.setState({setModalProduct:true})
      }
-     onDelete=()=>{
+     onDelete=(id)=>{
          console.log('delete data')
+        let id2=id
+         Axios.post(`${API_URL_SQL}/product/deletecatprod`,{
+            id:id2
+         })
+         .then((res)=>{
+             console.log(res.data)
+             this.setState({categoryProduct:res.data})
+         }).catch((err)=>{
+             console.log(err)
+         })
      }
      onSave=()=>{
          console.log('save button')
