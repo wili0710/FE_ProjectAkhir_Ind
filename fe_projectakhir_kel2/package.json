@@ -28,6 +28,7 @@
     "dropdown": "^0.2.0",
     "lodash.debounce": "^4.0.8",
     "material-ui-popup-state": "^1.6.1",
+    "node-sass": "^5.0.0",
     "moment": "^2.29.1",
     "numeral": "^2.0.6",
     "react": "^17.0.1",

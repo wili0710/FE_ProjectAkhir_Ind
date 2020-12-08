@@ -19,6 +19,8 @@ import CategoryParcel from './../src/pages/admin/categoryParcel'
 import DataProduct from './../src/pages/Product/dataProduct'
 import DetailParcel from './../src/pages/Product/detailParcel'
 
+import CartPage from './pages/cart';
+import AdminReport from './pages/admin/adminreport';
 
 function App() {
   
@@ -56,7 +58,7 @@ function App() {
     // if(Auth.role==="Admin"){
       return(
         <>
-          <Route exact path='/adminpanel' component={User}/>
+          <Route exact path='/adminpanel' component={AdminReport}/>
           <Route exact path='/adminpanel/datauser' component={User}/>
           <Route exact path='/adminpanel/payment' component={AdminPayment}/>
           <Route exact path='/adminpanel/product' component={Product}/>
@@ -79,6 +81,7 @@ function App() {
         <Route exact path ='/register' component={Register}/>
         <Route exact path='/dataproduct' component={DataProduct}/>
         <Route exact path='/detailParcel/:id' component={DetailParcel}/>
+        <Route exact path ='/cart' component={CartPage}/>
         {renderProtectedAdminRoutes()}
         <Route path='*' component={ManageAdmin}/>
 
