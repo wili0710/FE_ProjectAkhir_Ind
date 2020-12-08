@@ -463,10 +463,7 @@ class DetailParcel extends Component {
          })
 
      }
-    //  [
-    //      {parcelid :10,qty:1},
-    //      {parcelid:11,qty:1},
-    //  ]
+  
     render() { 
             console.log(this.state.dataArrMakanan)
             console.log(this.state.dataMakanan)
@@ -480,7 +477,7 @@ class DetailParcel extends Component {
                     </div>
 
                     <div className="parcelname">
-                        <h3>Parcel A LEBARAN MONYET</h3>
+                        <h3>{this.state.dataParcelByIdChocolate.nama}</h3>
                     </div>
 
                     <div className="render-parcel" >
