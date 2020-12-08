@@ -103,7 +103,7 @@ class dataProduct extends Component {
             console.log('jalam dalem map ' , val.id)
             return (
                 <div className="box-3 item " key={val.id} onClick={()=>this.onCheckData(val.id)} >
-                    <Link to={'/adminpanel/detailParcel/'+val.id}>
+                    <Link to={'/detailParcel/'+val.id}>
                         <div className="box">
                             <img src={val.gambar} alt="logo" className="img-parcel " />      
                             <div className="cover">

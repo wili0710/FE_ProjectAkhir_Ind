@@ -13,6 +13,7 @@ import Parcel from './../../../src/assets/parcel1.jpg';
 import {BiPlus,BiMinus} from 'react-icons/bi'
 import TextField from '@material-ui/core/TextField';
 import { CgInsertBefore } from 'react-icons/cg';
+import { Link } from 'react-router-dom'
 class DetailParcel extends Component {
     state = { 
         dataParcelByIdMakanan:[],
@@ -314,7 +315,7 @@ class DetailParcel extends Component {
                                     total==this.state.dataParcelByIdMakanan.qty ?
                                     null:
                                     <>
-                                    <BiPlus onClick={()=>this.AddDataMakanan(val.id)}/>
+                                    <BiPlus onClick={()=>this.AddDataMakanan(val.id)} className="icondp"/>
                                     </>
                                 
                                 }
@@ -322,7 +323,7 @@ class DetailParcel extends Component {
                                     total==0 ?
                                     null 
                                     :
-                                    <BiMinus onClick={()=>this.hapusDataMakanan(val.id)}/>  
+                                    <BiMinus onClick={()=>this.hapusDataMakanan(val.id)} className="icondp"/>  
                                 }
                              
                             </div>
@@ -364,7 +365,7 @@ class DetailParcel extends Component {
                                 total==this.state.dataParcelByIdMinuman.qty ?
                                 null:
                                 <>
-                                <BiPlus onClick={()=>this.AddDataMinuman(val.id)}/>
+                                <BiPlus onClick={()=>this.AddDataMinuman(val.id)} className="icondp"/>
                                 </>
 
                             }
@@ -372,7 +373,7 @@ class DetailParcel extends Component {
                                 total==0 ?
                                 null 
                                 :
-                                <BiMinus onClick={()=>this.hapusDataMinuman(val.id)}/>  
+                                <BiMinus onClick={()=>this.hapusDataMinuman(val.id)} className="icondp"/>  
                             }
                             </div>
                         </div>
@@ -410,7 +411,7 @@ class DetailParcel extends Component {
                                 total==this.state.dataParcelByIdChocolate.qty ?
                                 null:
                                 <>
-                                <BiPlus onClick={()=>this.AddDataChocolate(val.id)}/>
+                                <BiPlus onClick={()=>this.AddDataChocolate(val.id)} className="icondp"/>
                                 </>
 
                             }
@@ -418,7 +419,7 @@ class DetailParcel extends Component {
                                 total==0 ?
                                 null 
                                 :
-                                <BiMinus onClick={()=>this.hapusDataChocolate(val.id)}/>  
+                                <BiMinus onClick={()=>this.hapusDataChocolate(val.id)} className="icondp"/>  
                             } 
                             </div>
                         </div>
@@ -467,17 +468,20 @@ class DetailParcel extends Component {
     render() { 
             console.log(this.state.dataArrMakanan)
             console.log(this.state.dataMakanan)
+            console.log(this.state.dataParcelByIdChocolate)
             const {classes}= this.props
         return ( 
             <>
                 <div className="outer-detail">
                     <Header/>
-                    <div className="div-opt">
-                        <BsFillCaretLeftFill className="icon-back"/><p>back to Parcel</p>
-                    </div>
+                    <Link to='/dataproduct'>
+                        <div className="div-opt">
+                            <BsFillCaretLeftFill className="icon-back"/><p>back to Parcel</p>
+                        </div>
+                    </Link>
 
                     <div className="parcelname">
-                        <h3>{this.state.dataParcelByIdChocolate.nama}</h3>
+                        <h3>{this.state.dataParcelByIdChocolate.namaParcel}</h3>
                     </div>
 
                     <div className="render-parcel" >
