@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-    id: 0,
+    id: 1,
     name: 'Wili',
     email: 'wiliromarioakukom@gmail.com',
     role:'user',
