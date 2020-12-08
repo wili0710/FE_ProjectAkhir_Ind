@@ -1,33 +1,18 @@
 import React, { Component } from 'react';
 import './dataProduct.css'
-import Logo from './../../assets/logo.png'
-import { 
-    debounce,
-    draggableCard
-} from '../../helpers'
 import Zoom from 'react-reveal/Zoom';
-import {HiOutlinePhone} from  'react-icons/hi'
-import Dropdown from 'react-bootstrap/Dropdown';
 import classnames from 'classnames';
-import {FaRegMoneyBillAlt,FaUser,FaKey,FaLock} from 'react-icons/fa'
-import Popup from 'reactjs-popup';
-import {AiFillGithub} from 'react-icons/ai'
-import {RiReactjsFill} from 'react-icons/ri'
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
-import Parcel1 from './../../assets/parcel1.jpg'
-import Parcel2 from './../../assets/parcel2.jpg'
-import Parcel3 from './../../assets/parcel3.jpg'
-import Parcel4 from './../../assets/parcel4.jpg'
 import Header from './../../components/header/header'
-import { logo, d_user } from '../../assets';
 import { Link } from 'react-router-dom'
 import { API_URL, API_URL_SQL } from '../../helpers/apiUrl';
 import Axios from 'axios'
-
-import { 
-    icon,
-    illustration_1
-} from '../../assets'
+import {FullPageLoading} from './../../components/loading'
+import {connect} from 'react-redux';
+import Logo from './../../assets/logo.png'
+import { Badge } from '@material-ui/core';
+import {BiCart,BiUser} from 'react-icons/bi'
+import { red } from '@material-ui/core/colors';
 class dataProduct extends Component {
     state = {
         activeTab:"1",
@@ -37,6 +22,10 @@ class dataProduct extends Component {
         dataMinuman:[],
         dataMakanan:[],
         dataChocolate:[],
+        loadingParcel:true,
+        showCart:false,
+        showMenuUser:false
+
 
 
       }
@@ -51,6 +40,7 @@ class dataProduct extends Component {
         .then((res)=>{
             // console.log(res.data)
             this.setState({dataParcel:res.data})
+            // this.setState({loadingParcel:false})
         }).catch((err)=>{
             console.log(err)
         })
@@ -58,6 +48,7 @@ class dataProduct extends Component {
         .then((res)=>{
             // console.log(res.data, ' ini product all')
             this.setState({allDataParcel:res.data})
+            this.setState({loadingParcel:false})
         }).catch((err)=>{
             console.log(err)
         })
@@ -204,24 +195,109 @@ class dataProduct extends Component {
     onCheckDataMinuman=(id)=>{
         console.log(id)
         console.log('data')
+        let productid=id
+        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
+            user_id:1,
+            products_id:productid,
+            parcel_id:0,
+            qty:1
+        }).then((res)=>{
+            console.log(res.data)
+            console.log('data berhasil ditambah')
+        }).catch((err)=>{
+            console.log(err)
+        })
+
     }
 
     onCheckDataMakanan=(id)=>{
         console.log(id)
         console.log('data makanan')
+        let productid=id
+        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
+            user_id:1,products_id:productid,
+            parcel_id:0,
+            qty:1
+        }).then((res)=>{
+            console.log(res.data)
+            console.log('data berhasil ditambah')
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
 
     onCheckDataChocolate=(id)=>{
         console.log(id)
+        let productid=id
         console.log('data chocolate')
+        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
+            user_id:1,
+            products_id:productid,
+            parcel_id:0,
+            qty:1
+        }).then((res)=>{
+            console.log(res.data)
+            console.log('berhasil masuk ke cart')
+        }).catch((err)=>{
+            console.log(err)
+        })
+    
     }
 
     render() { 
+        console.log(this.props.name)
+        console.log(this.props.cart)
+
+        if(this.state.loadingParcel){
+            return (
+                <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+                {FullPageLoading(this.state.loadingParcel,100,'#0095DA')}
+            </div>
+            )
+        }
         return ( 
             <>
             <div className="outer-dp">
-                <Header/>
-
+                <div className="header-top">
+                    <div className="div-img">
+                        <img src={Logo} alt="Logo" className="logo-header"/>    
+                    </div>
+                    <div className="icon-user" 
+                    onMouseEnter={()=>this.setState({showMenuUser:true})} 
+                    onMouseLeave={()=>this.setState({showMenuUser:false})}>
+                        <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                        <p style={{fontSize:'15px', marginTop:'10px',color:'white'}}>
+                        Hallo, {this.props.name}</p>
+                        <div style={{position:'absolute',
+                            display:this.state.showMenuUser?"block":'none',
+                            paddingTop:10,
+                            width:100}}>
+                                <div className="menu-opt">
+                                    <div style={{
+                                        display:'flex',
+                                        justifyContent:'space-between',
+                                        borderBottom:'#f3f4f5 solid 1px',
+                                        marginTop:'50px',
+                                        backgroundColor:'red'
+                                        
+                                    }}>
+                                        <p>Setting</p>
+                                    </div>
+                                    <div style={{
+                                        display:'flex',
+                                        justifyContent:'space-between',
+                                        borderBottom:'#f3f4f5 solid 1px',
+                                        marginTop:'50px',
+                                        backgroundColor:'red'
+                                    }}>
+                                        <p>Logout</p>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>    
+               
                 <div className="navtab">
                         <Nav tabs>
                                 <NavItem className="cursor-nav">
@@ -254,18 +330,6 @@ class dataProduct extends Component {
                                 </NavItem>
 
                         </Nav>
-
-                        {
-                        this.state.activeTab ==0 ?
-                        <>
-                        <div className="promo">
-                            <div className>
-                                
-                            </div>
-                        </div>
-                        </>
-                        :
-                        <>
                         <TabContent activeTab={this.state.activeTab}>
                             
                             <TabPane  tabId="1" className="tab-row-1 tabpanel">
@@ -331,20 +395,17 @@ class dataProduct extends Component {
                                                          display:'flex',
                                                          flexWrap:'wrap'
                                                     }}>
-                                                    {this.renderChocolate()}
-                                                   
+                                                    {this.renderChocolate()}             
                                                     </div> 
-                                                       
                                             </div>
-                                            
                                         </Zoom>  
                                     </div>
                                 </Row>
                             </TabPane>
                          
                         </TabContent>
-                        </>
-                    }
+                    
+ 
                         
                 </div>
                 
@@ -354,5 +415,12 @@ class dataProduct extends Component {
          );
     }
 }
+
+const MapStatetoprops=({Auth,cart})=>{
+    return {
+        ...Auth,
+        ...cart
+    }
+}
  
-export default dataProduct;
+export default (connect(MapStatetoprops,{})(dataProduct));
