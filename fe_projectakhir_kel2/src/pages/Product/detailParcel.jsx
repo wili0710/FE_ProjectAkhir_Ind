@@ -29,20 +29,11 @@ class DetailParcel extends Component {
         ChocolateVisible:true,
         messageVisible:true,
         arrMakanan:[],
-        arrMinuman:[],
-        arrChocolate:[],
         arrMessage:'',
         buttonMakanan:false,
         buttonMinuman:false,
         buttonChocolate:false,
-        qtyMakanan:[],
-        qtyMinuman:[],
-        qtyChocolate:[],
-        saveQtyMinuman:0,
         dataArrMakanan:[],
-        dataArrMinuman:[],
-        
-
      }
      
 
