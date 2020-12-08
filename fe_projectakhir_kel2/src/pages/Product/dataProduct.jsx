@@ -30,7 +30,7 @@ import {
 } from '../../assets'
 class dataProduct extends Component {
     state = {
-        activeTab:0,
+        activeTab:"1",
         profilePict:'',
         dataParcel:[],
         allDataParcel:[],

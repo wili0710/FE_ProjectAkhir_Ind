@@ -21,6 +21,7 @@ import DetailParcel from './../src/pages/Product/detailParcel'
 
 import CartPage from './pages/cart';
 import AdminReport from './pages/admin/adminreport';
+import Example from './pages/hapusaja';
 
 function App() {
   
@@ -80,6 +81,7 @@ function App() {
         <Route exact path ='/login' component={Login}/>
         <Route exact path ='/register' component={Register}/>
         <Route exact path ='/cart' component={CartPage}/>
+        <Route exact path ='/hapusaja' component={Example}/>
         {renderProtectedAdminRoutes()}
         <Route path='*' component={ManageAdmin}/>
 
