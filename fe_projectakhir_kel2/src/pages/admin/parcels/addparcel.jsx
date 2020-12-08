@@ -1,20 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './addparcel.scss';
 import Axios from 'axios';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setTempParcel, setReadyParcel } from '../../../redux/Actions';
-// import { HeaderAdmin } from '../../components';
-// import {  } from '../../../custom'
 import { 
-    Courier,
-    cat_2
-} from '../../../assets';
+    setTempParcel,
+    setReadyParcel,
+    uploadParcel
+} from '../../../redux/Actions';
 import { 
     API_URL_SQL,
     priceFormatter,
     draggableCard
 } from '../../../helpers';
+import { 
+    Courier,
+    cat_2
+} from '../../../assets';
 
 const mapStatetoProps=(state)=>{
     return {
@@ -22,7 +24,7 @@ const mapStatetoProps=(state)=>{
     };
 };
 
-export default connect(mapStatetoProps,{setTempParcel,setReadyParcel}) (class AddParcel extends Component {
+export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParcel}) (class AddParcel extends React.Component {
     state = {
         //* Initial Parcel Input Values *// 
         id_category_parcel      : 0,
@@ -35,9 +37,6 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel}) (class Ad
         index_add_cat_product   : -1,
         item_category           : 0,
         item_qty                : "",
-    
-        //* Initial Parcel Ready to Deploy State *//
-        ready_topush            : [],
     };
     /* end of State */
     
@@ -286,11 +285,10 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel}) (class Ad
         };
     };
     
-    onDeleteAddItem = () => {
-        const temp_parcel = this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item;
-        console.log(temp_parcel)
-        // temp_item.splice(index,1);
-        // this.setState({temp_item});
+    onDeleteAddItem = (index) => {
+        const temp_item = this.props.Parcel.init_Parcel;
+        temp_item[this.state.index_add_cat_product].item.splice(index,1)
+        this.props.setTempParcel(temp_item)
     };
     
     onCancelAddItem = () => {
@@ -301,28 +299,40 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel}) (class Ad
     };
 
     onFinishAddItem = () => {
-        const temp_parcel = this.props.Parcel.init_Parcel;
-        if(this.props.Parcel.ready_Parcel.length){
-            const ready_parcel = this.props.Parcel.ready_Parcel;
-            const newready_parcel = temp_parcel[this.state.index_add_cat_product]
-            ready_parcel.push(newready_parcel)
-            // console.log(ready_parcel,temp_parcel)
-            temp_parcel.splice(this.state.index_add_cat_product, 1);
-            this.props.setReadyParcel(ready_parcel,temp_parcel)
-            this.setState({
-                index_add_cat_product   : -1,
-                item_category           : 0,
-            });
-        }else{
-            const ready_parcel = temp_parcel[this.state.index_add_cat_product];
-            temp_parcel.splice(this.state.index_add_cat_product, 1);
-            // console.log(ready_parcel,temp_parcel)
-            this.props.setReadyParcel([ready_parcel],temp_parcel)
-            this.setState({
-                index_add_cat_product   : -1,
-                item_category           : 0
-            });
-        };
+        console.log(this.props.Parcel.init_Parcel[this.state.index_add_cat_product])
+        const data = {
+            nama                : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].name,  
+            harga               : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].price,   
+            categoryparcel_id   : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].category,
+            item                : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item,
+            gambar              : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].gambar,
+        }
+        this.props.uploadParcel(data)
+
+
+        
+        // const temp_parcel = this.props.Parcel.init_Parcel;
+        // if(this.props.Parcel.ready_Parcel.length){
+        //     const ready_parcel = this.props.Parcel.ready_Parcel;
+        //     const newready_parcel = temp_parcel[this.state.index_add_cat_product]
+        //     ready_parcel.push(newready_parcel)
+        //     // console.log(ready_parcel,temp_parcel)
+        //     temp_parcel.splice(this.state.index_add_cat_product, 1);
+        //     this.props.setReadyParcel(ready_parcel,temp_parcel)
+        //     this.setState({
+        //         index_add_cat_product   : -1,
+        //         item_category           : 0,
+        //     });
+        // }else{
+        //     const ready_parcel = temp_parcel[this.state.index_add_cat_product];
+        //     temp_parcel.splice(this.state.index_add_cat_product, 1);
+        //     // console.log(ready_parcel,temp_parcel)
+        //     this.props.setReadyParcel([ready_parcel],temp_parcel)
+        //     this.setState({
+        //         index_add_cat_product   : -1,
+        //         item_category           : 0
+        //     });
+        // };
     };
     
     renderTempParcel = (val,index) => {
@@ -528,7 +538,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel}) (class Ad
                                                     <div className="content">
                                                         <div className="itemhead">
                                                                 <div className="id"> SET {index+1}</div>
-                                                                <button onClick={this.onDeleteAddItem}>X</button>
+                                                                <button onClick={()=>this.onDeleteAddItem(index)}>X</button>
                                                             </div>
                                                         <div className="category"> 
                                                                 Any

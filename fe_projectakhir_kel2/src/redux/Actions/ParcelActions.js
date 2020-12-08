@@ -48,7 +48,8 @@ export const setTempParcel = (arr_TempParcel) => {
             // console.log(data)
             dispatch({type:'LOAD',payload:data});
         } catch (error) {
-            console.log(error);
+            console.log(error)
+            dispatch({type:'ERROR',payload:error.message})
         };
     };
 };
@@ -65,6 +66,32 @@ export const setReadyParcel = (arr_readyParcel,arr_TempParcel) => {
             dispatch({type:'LOAD',payload:data})
         } catch (error) {
             console.log(error)
+            dispatch({type:'ERROR',payload:error.message})
         };
     };
 };
+
+export const uploadParcel = (data) => {
+    return (dispatch) => {
+        dispatch({type:'LOADING'});
+        try {
+            // console.log(data)
+            const {nama,harga,categoryparcel_id,gambar,item} = data
+            Axios.post(`${API_URL_SQL}/parcel/addparcel`, {
+                        nama,
+                        harga,
+                        categoryparcel_id,
+                        gambar,
+                        item
+                    }).then((result)=>{
+                        console.log(result)
+                    }).catch((error)=>{
+                        dispatch({type:'ERROR',payload:error.response.data.message})
+                    });
+        } catch (error) {
+            console.log(error)
+            dispatch({type:'ERROR',payload:error.message})
+        };
+    };
+};
+

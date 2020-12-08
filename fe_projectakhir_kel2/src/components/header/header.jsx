@@ -1,11 +1,16 @@
 import React from 'react';
-import './header.css'
+import './header.scss'
 import { logo, d_user } from '../../assets';
 import { Link } from 'react-router-dom'
+import { useSelector} from 'react-redux'
 
 
 export default () => {
+    const Auth = useSelector(state => state.Auth);
+    console.log(Auth)
+
     const [profilePic,setProfilePic]=('');
+
 
     return (
         <header>
