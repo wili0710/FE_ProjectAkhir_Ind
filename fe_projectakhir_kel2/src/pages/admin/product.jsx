@@ -83,6 +83,7 @@ class Product extends Component {
                         <TableCell>{val.stok}</TableCell>
                         <TableCell>{val.deskripsi}</TableCell>
                         <TableCell>{val.categoryproduct_id}</TableCell>
+                        <TableCell>Rp.{val.hargapokok}</TableCell>
                         <TableCell>
                             <button onClick={()=>this.onDelete(val.id)}>Delete</button>
                         </TableCell>
@@ -204,6 +205,7 @@ class Product extends Component {
                                         <TableCell>Stock</TableCell>
                                         <TableCell>Description</TableCell>
                                         <TableCell>Category Product</TableCell>
+                                        <TableCell>Harga Pokok</TableCell>
                                         <TableCell>Action</TableCell>
                                     </TableRow>
                                 </TableHead>

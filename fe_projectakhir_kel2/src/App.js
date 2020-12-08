@@ -16,6 +16,9 @@ import Parcel from './../src/pages/admin/parcel'
 import Product from './../src/pages/admin/product'
 import CategoryProduct from './../src/pages/admin/categoryProduct'
 import CategoryParcel from './../src/pages/admin/categoryParcel'
+import DataProduct from './../src/pages/Product/dataProduct'
+import DetailParcel from './../src/pages/Product/detailParcel'
+
 
 function App() {
   
@@ -31,7 +34,8 @@ function App() {
       .then((res)=>{
           dispatch({type:'LOGIN',payload:res.data.datauser,cart:res.data.cart})
       }).catch((err)=>{
-          alert(err.response.data.message)
+        console.log(err.response.data.message)
+          // alert(err.response.data.message)
       }).finally(()=>{
           setLoading(false)
       })
@@ -60,6 +64,8 @@ function App() {
           <Route exact path='/adminpanel/headerAdmin' component={HeaderAdmin}/>
           <Route exact path ='/adminpanel/categoryProduct' component={CategoryProduct}/>
           <Route exact path ='/adminpanel/categoryParcel' component={CategoryParcel}/>
+          <Route exact path='/adminpanel/dataproduct' component={DataProduct}/>
+          <Route exact path='/adminpanel/detailParcel/:id' component={DetailParcel}/>
         </>
       )
     }
