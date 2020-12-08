@@ -5,6 +5,7 @@ import {FaUserCog,FaMoneyCheckAlt} from 'react-icons/fa'
 import {CgArrowRightR} from 'react-icons/cg'
 import {MdAddShoppingCart} from 'react-icons/md'
 import {GiMilkCarton} from 'react-icons/gi'
+import {HiDocumentReport} from 'react-icons/hi'
 import {FiLogOut} from 'react-icons/fi'
 import {Link,NavLink} from 'react-router-dom'
 class HeaderAdmin extends Component {
@@ -23,8 +24,8 @@ class HeaderAdmin extends Component {
                         <Link to='/adminpanel/' style={{textDecoration:'none'}}>
                             <div className="container-option">
                                     <div className="inside-option">
-                                        <FaUserCog className="icon-size"/>  
-                                        <p className="option-word">Dashboard</p> 
+                                        <HiDocumentReport className="icon-size"/>  
+                                        <p className="option-word">Report</p> 
                                         <CgArrowRightR  className="icon-size2"/>
                                     </div>
                             </div>

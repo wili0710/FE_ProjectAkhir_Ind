@@ -28,7 +28,6 @@ class Product extends Component {
         },
         fileImage:null,
         categoryProduct:[]
-
      }
 
      componentDidMount(){

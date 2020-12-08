@@ -1,10 +1,9 @@
 const INITIAL_STATE = {
     id: 0,
-    username: '',
-    password: '',
-    email: '',
-    role:'',
-    isLogin: false,
+    name: 'Wili',
+    email: 'wiliromarioakukom@gmail.com',
+    role:'user',
+    isLogin: true,
     isLoading: false,
     error: '',
     cart:[],
@@ -26,7 +25,8 @@ export default (state=INITIAL_STATE, action)=>{
         
         case 'Error':
             return {...state,error:action.payload,isLoading:false}
-    
+        case 'CART':
+            return {...state,cart:action.cart}
 
         default :
         return state
