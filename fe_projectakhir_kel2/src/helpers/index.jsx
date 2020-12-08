@@ -8,32 +8,61 @@ export function debounce(funct, delay = 100) {
     };
 };
 
-export function draggableCard() {
-    const slider = document.querySelector('.cardBx');
+export function draggableCard(classname="",dir="left"||"top",speed=Number) {
+    const slider = document.querySelector(classname);
     let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    /* end of state */
-    slider.addEventListener('mousedown', (e) => {
-        slider.classList.toggle('active');
-        isDown = true;
-        startX = (e.pageX - slider.offsetLeft);
-        scrollLeft = slider.scrollLeft;
-    });
-    slider.addEventListener('mouseleave', () => {
-        isDown = false;
-        slider.classList.remove('active');
-    });
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.classList.remove('active');
-    });
-    slider.addEventListener('mousemove', (e) => {
-        if(!isDown) return;
-        /* end of protection */    
-
-        e.preventDefault();
-        slider.scrollLeft = scrollLeft - (((e.pageX - slider.offsetLeft) - startX) * 2); //--> multiply to setup scrolling speed
-    });
+    let initPos;
+    let scrollDir;
+    if(dir === "left") {
+        slider.addEventListener('mousedown', (e) => {
+            slider.classList.toggle('active');
+            isDown = true;
+            initPos = (e.pageX - slider.offsetLeft);
+            scrollDir = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
+        slider.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            /* *** */ 
+            e.preventDefault();
+            slider.scrollLeft = scrollDir - (((e.pageX - slider.offsetLeft) - initPos) * speed); //--> multiply to setup scrolling speed
+        });
+    }else if(dir === "top") {
+        slider.addEventListener('mousedown', (e) => {
+            slider.classList.toggle('active');
+            isDown = true;
+            initPos = (e.pageY - slider.offsetTop);
+            scrollDir = slider.scrollTop;
+        });
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
+        slider.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            /* *** */    
+            e.preventDefault();
+            slider.scrollTop = scrollDir - (((e.pageY - slider.offsetTop) - initPos) * speed); //--> multiply to setup scrolling speed
+        });
+    }
 };
+
+export function priceFormatter(num) {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(num);
+};
+
+export const API_URL_SQL = `http://localhost:8000`;

@@ -71,7 +71,7 @@ class Home extends React.Component {
     };
 
     componentDidMount() {
-        draggableCard();
+        draggableCard(".cardBx","left",2);
         this.setState({listPackage:packages});
     };
 
@@ -91,8 +91,8 @@ class Home extends React.Component {
     };
 
     componentDidUpdate() {
-        console.log(this.state.listPackage);
-        console.log(this.state.filteredPackage);
+        // console.log(this.state.listPackage);
+        // console.log(this.state.filteredPackage);
     };
 
     render() { 
