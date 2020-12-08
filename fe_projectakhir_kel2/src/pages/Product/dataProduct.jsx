@@ -36,7 +36,7 @@ class dataProduct extends Component {
         allDataParcel:[],
         dataMinuman:[],
         dataMakanan:[],
-        dataChocolate:[]
+        dataChocolate:[],
 
 
       }
@@ -252,20 +252,7 @@ class dataProduct extends Component {
                                         Chocolate
                                     </NavLink>
                                 </NavItem>
-                                <NavItem className="cursor-nav">
-                                    <NavLink
-                                        className={classnames({ active: this.state.activeTab === '5' })}
-                                        onClick={() => { this.toggle('5'); }}>
-                                        Beer
-                                    </NavLink>
-                                </NavItem>
-                                <NavItem className="cursor-nav">
-                                    <NavLink
-                                        className={classnames({ active: this.state.activeTab === '6' })}
-                                        onClick={() => { this.toggle('6'); }}>
-                                        Flower
-                                    </NavLink>
-                                </NavItem>
+
                         </Nav>
 
                         {
@@ -273,13 +260,14 @@ class dataProduct extends Component {
                         <>
                         <div className="promo">
                             <div className>
-
+                                
                             </div>
                         </div>
                         </>
                         :
                         <>
                         <TabContent activeTab={this.state.activeTab}>
+                            
                             <TabPane  tabId="1" className="tab-row-1 tabpanel">
                                 <Row className="tabpanel">
                                     <div className="container-prod">
@@ -298,6 +286,7 @@ class dataProduct extends Component {
                                     </div>
                                 </Row>
                             </TabPane>
+                            
                             <TabPane  tabId="2" className="tab-row-2 tabpanel">
                                 <Row className="tabpanel-2">
                                     <div className="container-prod">
@@ -352,51 +341,7 @@ class dataProduct extends Component {
                                     </div>
                                 </Row>
                             </TabPane>
-                            <TabPane  tabId="5" className="tab-row-2 tabpanel">
-                                <Row className="tabpanel-5">
-                                    <div className="container-prod">
-                                        <Zoom>
-                                        <div className="box-2">
-                                                    <div className="box-cont-2 row">
-                                                        <div className=" box-3 ">
-                                                            <img src={Parcel4} alt="logo" style={{height:'150px',width:'100%'}}/>
-                                                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus sint molestias quas. </p>
-                                                        </div>
-                                                        <div className=" box-3 ">
-                                                            <img src={Parcel2} alt="logo" style={{height:'150px',width:'100%'}}/>
-                                                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus sint molestias quas. </p>
-                                                        </div>
-                                                        <div className=" box-3 ">
-                                                            <img src={Parcel3} alt="logo" style={{height:'150px',width:'100%'}}/>
-                                                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus sint molestias quas. </p>
-                                                        </div>
-                                                        <div className=" box-3 ">
-                                                            <img src={Parcel4} alt="logo" style={{height:'150px',width:'100%'}}/>
-                                                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus sint molestias quas. </p>
-                                                        </div>
-                                                        <div className=" box-3 ">
-                                                            <img src={Parcel1} alt="logo" style={{height:'150px',width:'100%'}}/>
-                                                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus sint molestias quas. </p>
-                                                        </div>
-                                                        <div className=" box-3 ">
-                                                            <img src={Parcel2} alt="logo" style={{height:'150px',width:'100%'}}/>
-                                                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus sint molestias quas. </p>
-                                                        </div>
-                                                        <div className=" box-3 ">
-                                                            <img src={Parcel1} alt="logo" style={{height:'150px',width:'100%'}}/>
-                                                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus sint molestias quas. </p>
-                                                        </div>
-                                                        <div className=" box-3 ">
-                                                            <img src={Parcel3} alt="logo" style={{height:'150px',width:'100%'}}/>
-                                                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus sint molestias quas. </p>
-                                                        </div>
-                                                    </div>
-                                            </div>
-                                            
-                                        </Zoom>  
-                                    </div>
-                                </Row>
-                            </TabPane>
+                         
                         </TabContent>
                         </>
                     }
