@@ -30,7 +30,7 @@ import {
 } from '../../assets'
 class dataProduct extends Component {
     state = {
-        activeTab:0,
+        activeTab:"1",
         profilePict:'',
         dataParcel:[],
         allDataParcel:[],
@@ -217,6 +217,16 @@ class dataProduct extends Component {
     }
 
     render() { 
+
+        if(this.state.loading){
+            return (
+                <>
+                    <div>
+                        loading
+                    </div>
+                </>
+            )
+        }
         return ( 
             <>
             <div className="outer-dp">
@@ -280,6 +290,7 @@ class dataProduct extends Component {
                         :
                         <>
                         <TabContent activeTab={this.state.activeTab}>
+                            
                             <TabPane  tabId="1" className="tab-row-1 tabpanel">
                                 <Row className="tabpanel">
                                     <div className="container-prod">
@@ -298,6 +309,7 @@ class dataProduct extends Component {
                                     </div>
                                 </Row>
                             </TabPane>
+                            
                             <TabPane  tabId="2" className="tab-row-2 tabpanel">
                                 <Row className="tabpanel-2">
                                     <div className="container-prod">
