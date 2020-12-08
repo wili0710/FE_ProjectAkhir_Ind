@@ -26,6 +26,8 @@
 .icon-back{
     font-size:30px;
     color:gray;
+    text-decoration: none;
+    
 }
 .parcelname{
     /* background-color: red; */
@@ -234,4 +236,9 @@
    .button-add:hover{
        cursor: pointer;
     background-color:#0984e3;
+   }
+
+   .icondp{
+       font-size:35px;
+       color:tomato;
    }

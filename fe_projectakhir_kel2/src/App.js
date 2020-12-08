@@ -30,30 +30,30 @@ function App() {
 
   const [loading,setLoading]=useState(true)
 
-  useEffect(()=>{
-    var id=localStorage.getItem('id')
-    if(id!==null){ 
-      Axios.get(`${API_URL_SQL}/auth/keeplogin/${id}`)
-      .then((res)=>{
-          dispatch({type:'LOGIN',payload:res.data.datauser,cart:res.data.cart})
-      }).catch((err)=>{
-        console.log(err.response.data.message)
-          // alert(err.response.data.message)
-      }).finally(()=>{
-          setLoading(false)
-      })
-    }else{
-      setLoading(false)
-    }
-  },[])
+  // useEffect(()=>{
+  //   var id=localStorage.getItem('id')
+  //   if(id!==null){ 
+  //     Axios.get(`${API_URL_SQL}/auth/keeplogin/${id}`)
+  //     .then((res)=>{
+  //         dispatch({type:'LOGIN',payload:res.data.datauser,cart:res.data.cart})
+  //     }).catch((err)=>{
+  //       console.log(err.response.data.message)
+  //         // alert(err.response.data.message)
+  //     }).finally(()=>{
+  //         setLoading(false)
+  //     })
+  //   }else{
+  //     setLoading(false)
+  //   }
+  // },[])
 
-  if(loading){
-    return(
-        <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
-            {FullPageLoading(loading,100,'#0095DA')}
-        </div>
-    )
-  }
+  // if(loading){
+  //   return(
+  //       <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+  //           {FullPageLoading(loading,100,'#0095DA')}
+  //       </div>
+  //   )
+  // }
   const renderProtectedAdminRoutes=()=>{
     if(1===1){
     // if(Auth.role==="Admin"){
@@ -67,8 +67,8 @@ function App() {
           <Route exact path='/adminpanel/headerAdmin' component={HeaderAdmin}/>
           <Route exact path ='/adminpanel/categoryProduct' component={CategoryProduct}/>
           <Route exact path ='/adminpanel/categoryParcel' component={CategoryParcel}/>
-          <Route exact path='/adminpanel/dataproduct' component={DataProduct}/>
-          <Route exact path='/adminpanel/detailParcel/:id' component={DetailParcel}/>
+          {/* <Route exact path='/dataproduct' component={DataProduct}/>
+        <Route exact path='/detailParcel/:id' component={DetailParcel}/> */}
         </>
       )
     }
@@ -80,6 +80,8 @@ function App() {
         <Route exact path ='/' component={Home}/>
         <Route exact path ='/login' component={Login}/>
         <Route exact path ='/register' component={Register}/>
+        <Route exact path='/dataproduct' component={DataProduct}/>
+        <Route exact path='/detailParcel/:id' component={DetailParcel}/>
         <Route exact path ='/cart' component={CartPage}/>
         <Route exact path ='/hapusaja' component={Example}/>
         {renderProtectedAdminRoutes()}
