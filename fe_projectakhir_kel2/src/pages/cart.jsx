@@ -6,6 +6,9 @@ import Logo from './../assets/logo.png'
 import {BiCart,BiUser} from 'react-icons/bi'
 import { Badge } from '@material-ui/core';
 import { FullPageLoading } from '../components/loading';
+import { useTheme } from '@emotion/react';
+import { Link } from 'react-router-dom';
+import './cart.css'
 
 
 
@@ -14,6 +17,8 @@ const CartPage=()=>{
     const Auth=useSelector(state=>state.Auth) 
     const dispatch=useDispatch()
     const [loading,setLoading]=useState(true)
+    const [showCart,setShowCart]=useState(false)
+    const [showMenuUser,setShowMenuUser]=useState(false)
 
     useEffect(()=>{
         fetchdata()
@@ -27,9 +32,204 @@ const CartPage=()=>{
                 // console.log(res.data)
                 dispatch({type:'LOGIN',cart:res.data})
                 setLoading(false)
+                
             })
-            
-
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const renderCart=()=>{
+        let arr1= Auth.cart.transaksidetailsatuan.map((val,index)=>{
+            return (
+                <div style={{
+                    display:"flex",
+                    // justifyContent:"space-between",
+                    borderBottom:"1px solid lightgray",
+                    paddingTop:10,
+                    paddingBottom:10
+                }}>
+                    <div style={{
+                        marginRight:10
+                    }}>
+                        <img src={val.image} width="50" height="50"/>
+                    </div>
+                    <div>
+                        <h6>{val.nama}</h6>
+                        <h7>Jumlah: {val.qty}</h7>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"flex-end",
+                        position:"absolute",
+                        right:30
+                    }}>
+                        <h7>Total</h7>
+                        <span>{val.hargatotal}</span>
+                    </div>
+                </div>
+            )
+        })
+        let arr2= Auth.cart.transaksiparcel.map((val,index)=>{
+            return (
+                <div style={{
+                    display:"flex",
+                    // justifyContent:"space-between",
+                    borderBottom:"1px solid lightgray",
+                    paddingTop:10,
+                    paddingBottom:10
+                }}>
+                    <div style={{
+                        marginRight:10
+                    }}>
+                        <img src={val.gambar} width="50" height="50"/>
+                    </div>
+                    <div>
+                        <h6>{val.nama}</h6>
+                        <h7>Jumlah: {val.qty}</h7>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"flex-end",
+                        position:"absolute",
+                        right:30
+                    }}>
+                        <h7>Total</h7>
+                        <span>{val.hargatotal}</span>
+                    </div>
+                </div>
+            )
+        })
+        let final=[arr2,arr1]
+        console.log(final)
+        return final
+    }
+    const renderCartDetail=()=>{
+        let arr1= Auth.cart.transaksidetailsatuan.map((val,index)=>{
+            return (
+                <div style={{
+                    display:"flex",
+                    // justifyContent:"space-between",
+                    borderBottom:"1px solid lightgray",
+                    paddingTop:10,
+                    paddingBottom:10,
+                    // backgroundColor:"wheat",
+                    height:100
+                }}>
+                    <div style={{
+                        marginRight:10
+                    }}>
+                        <img src={val.image} width="50" height="50"/>
+                    </div>
+                    <div>
+                        <h6>{val.nama}</h6>
+                        <h7>Jumlah: {val.qty}</h7>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"flex-end",
+                        position:"absolute",
+                        right:30
+                    }}>
+                        <div style={{
+                            borderBottom:"1px lightgrey solid",
+                            cursor:"default"
+                        }}>
+                            <h6><span style={{color:"#158ae6",cursor:"pointer"}}>Edit</span> | 
+                            <span style={{color:"red",cursor:"pointer"}} onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
+                        </div>
+                        <h7>Total</h7>  
+                        <span>{val.hargatotal}</span>
+                    </div>
+                </div>
+            )
+        })
+        let arr2= Auth.cart.transaksiparcel.map((val,index)=>{
+            let detailparcel=Auth.cart.transaksidetailparcel.filter((filtering)=>{
+                return filtering.transaksidetail_id==val.transaksidetail_id
+            })
+            let renderdetailparcel=detailparcel.map((detail,index)=>{
+                return(
+                    <>
+                        <h7>{detail.namaproduct} : {detail.qtyproduct/detail.qtyparcel}</h7>
+                    </>
+                )
+            })
+            return (
+                <div style={{
+                    display:"flex",
+                    // justifyContent:"space-between",
+                    borderBottom:"1px solid lightgray",
+                    paddingTop:10,
+                    paddingBottom:10
+                }}>
+                    <div style={{
+                        marginRight:10
+                    }}>
+                        <img src={val.gambar} width="50" height="50"/>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column"
+                    }}>
+                        <h6>{val.nama}</h6>
+                        <h7>Isi Parcel</h7>
+                        <div style={{
+                            marginLeft:10,
+                            display:"flex",
+                            flexDirection:"column"
+                        }}>
+                            {renderdetailparcel}
+                        </div>
+                        <h7>Jumlah Parcel: {val.qty}</h7>
+                        <h7>Pesan Custom:</h7>
+                        <div style={{
+                            marginLeft:10
+                        }}>
+                            <h7>
+                                "{val.message}"
+                            </h7>
+                        </div>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"flex-end",
+                        position:"absolute",
+                        right:30,
+                    }}>
+                        <div style={{
+                            borderBottom:"1px lightgrey solid",
+                            cursor:"default"
+                        }}>
+                            <h6><span style={{color:"#158ae6",cursor:"pointer"}}>Edit</span> | 
+                            <span style={{color:"red",cursor:"pointer"}} onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
+                        </div>
+                        <h7>Total</h7>
+                        <span>{val.hargatotal}</span>
+                    </div>
+                </div>
+            )
+        })
+        let final=[arr2,arr1]
+        console.log(final)
+        return final
+    }
+    const onClickRemove=(transaksi_id,transaksidetail_id)=>{
+        try {
+            Axios.post(`${API_URL_SQL}/transaksi/removefromcart`,{
+                transaksi_id:transaksi_id,
+                transaksidetail_id:transaksidetail_id,
+                user_id:Auth.id
+            })
+            .then((res)=>{
+                console.log(res.data)
+                dispatch({type:'LOGIN',cart:res.data})
+                setLoading(false)
+                console.log(Auth.cart)
+            })
         } catch (error) {
             console.log(error)
         }
@@ -41,12 +241,13 @@ const CartPage=()=>{
             </div>
         )
     }
+    console.log(Auth.cart)
     return(
         <div style={{
             display:"flex",
             flexDirection:"column",
             width:"100%",
-            maxWidth:1440,
+            maxWidth:2000,
             justifyContent:"center",
         }}>
             <div style={{
@@ -64,23 +265,181 @@ const CartPage=()=>{
                 <div style={{
                     display:"flex",
                     justifyContent:"space-around",
+                    alignIte:"center",
                     flexBasis:"13%"
                 }}>
-                    <div>
+                    <div style={{
+                        position:"relative",
+                        
+                    }} onMouseEnter={()=>setShowCart(true)} onMouseLeave={()=>setShowCart(false)}>
                         <Badge color="error" badgeContent={Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length}>
-                            <BiCart color="white" size="20"/>
+                            <BiCart color="white" size="20" style={{cursor:"pointer"}}/>
                         </Badge>
+                        <div style={{
+                            position:"absolute",
+                            display:showCart?"block":"none",
+                            right:-100,
+                            paddingTop:10,
+                            width:350,
+                            
+                        }}>
+                            <div style={{
+                                border:'1 solid white',
+                                borderBottomLeftRadius:10,
+                                borderBottomRightRadius:10,
+                                color:"black",
+                                padding:10,
+                                paddingLeft:20,
+                                paddingRight:20,
+                                boxShadow:"lightgray 0px 1px 5px 1px",
+                                backgroundColor:"white",
+                                display:"flex",
+                                flexDirection:"column",
+                                animation: "growOut 500ms ease-in-out forwards",
+                                transformOrigin: "top center"
+                            }}>
+                                <div style={{
+                                    display:"flex",
+                                    justifyContent:"space-between",
+                                    borderBottom:"lightgray solid 1px"
+                                }}>
+                                    <h6>
+                                        Keranjang ({Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length})
+                                    </h6>
+                                    <span>
+                                        <Link to="/cart" style={{
+                                            color:"#158ae6",
+                                            fontWeight:"500",
+                                            textDecorationLine:"none"
+                                            }}> <h7>Lihat Keranjang</h7></Link>
+                                    </span>
+                                </div>
+                                <div>
+                                    {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
+                                    renderCart()
+                                    // null
+                                    :
+                                    <div style={{
+                                        display:"flex",
+                                        justifyContent:"center",
+                                        padding:10
+                                    }}>
+                                        <span>Masih Kosong</span>    
+                                    </div>
+                                    }
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                     <div style={{
                         borderLeft: '1px solid white',
-                        paddingLeft:10 
-                    }}>
-                        <BiUser color="white" size="20"/> Halo, {Auth.name}
+                        paddingLeft:10,
+                        position:"relative",
+                    }}onMouseEnter={()=>setShowMenuUser(true)} onMouseLeave={()=>setShowMenuUser(false)}>
+                        <BiUser color="white" size="20" style={{cursor:"pointer"}}/> Halo, {Auth.name}
+                        <div style={{
+                            position:"absolute",
+                            display:showMenuUser?"block":"none",
+                            paddingTop:10,
+                            width:100,
+                        }}>
+                            <div style={{
+                                border:'1 solid white',
+                                borderBottomLeftRadius:10,
+                                borderBottomRightRadius:10,
+                                color:"black",
+                                padding:10,
+                                paddingLeft:20,
+                                paddingRight:20,
+                                boxShadow:"lightgray 0px 1px 5px 1px",
+                                backgroundColor:"white",
+                                display:"flex",
+                                flexDirection:"column",
+                                animation: "growOut 300ms ease-in-out forwards",
+                                transformOrigin: "top center"
+                                // animation: "growDown 300ms ease-in-out"
+                            }}>
+                                <div style={{
+                                    display:"flex",
+                                    justifyContent:"space-between",
+                                    borderBottom:"lightgray solid 1px"
+                                }}>
+                                    <div>Setting</div>
+
+                                </div>
+                                <div style={{
+                                    display:"flex",
+                                    justifyContent:"space-between",
+                                    borderBottom:"lightgray solid 1px"
+                                }}>
+                                    <div>Logout</div>
+
+                                </div>
+                                <div>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>            
-            <div>
-                aaa
+            <div style={{
+                display:"flex",
+                flexDirection:"column",
+                alignItems:"center",
+                width:"100%",
+                maxWidth:2000
+            }}>
+                <div style={{
+                    display:"flex",
+                    width:"80%",
+                    // backgroundColor:"wheat",
+                    justifyContent:"center"
+                }}>
+                    <div style={{
+                        flexBasis:"50%"
+                    }}>
+                        <div style={{
+                            padding:20,
+                            position:"relative",
+                            borderBottom:"#f3f4f5 solid 10px",
+                            paddingBottom:10,
+                            marginBottom:10
+                        }}>
+                        <div style={{
+                            borderBottom:"#f3f4f5 solid 10px",
+                            paddingBottom:10,
+                            marginBottom:10
+                        }}>
+                            <h6>Keranjang:</h6>
+                        </div>
+                            {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
+                            renderCartDetail()
+                            // null
+                            :
+                            <div style={{
+                                display:"flex",
+                                justifyContent:"center",
+                                padding:10
+                            }}>
+                                <span>Masih Kosong</span>    
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div style={{
+                        flexBasis:"50%"
+                    }}>
+                        <div style={{
+                            padding:20
+                        }}>
+                            aa
+                            {/* {renderRingkasanBelanja()} */}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
