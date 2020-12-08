@@ -1,4 +1,4 @@
-@import url("../../styles/colors.css");
+@import url("../../../styles/colors.css");
 
 @mixin flexin($direction, $justify, $align) {
     display        : flex;
@@ -19,6 +19,7 @@ $borderset: 1px dashed var(--tertiary);
 *:not(input){
     transition: .5s;
 }
+
 // section //
 .subheader {
     @include flexin(null, center, center);
@@ -60,10 +61,10 @@ $borderset: 1px dashed var(--tertiary);
                 margin        : 0 20px;
                 transition    : 0.5s;
 
-                &:hover:not(.active) {
+                &:hover:not(.active, span) {
                     color         : var(--dk_tertiary);
-                    letter-spacing: 2px;
-                    font-weight   : 600;
+                    // letter-spacing: 2px;
+                    // font-weight   : 600;
                 }
             }
             div.active {

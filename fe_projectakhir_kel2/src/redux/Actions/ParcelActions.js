@@ -6,22 +6,65 @@ export const loadCategories = () => {
         dispatch({type:'LOADING'});
         try {
             Axios.get(`${API_URL_SQL}/product/getallcatprod`)
-            .then((category_products)=>{
+            .then((Product_Category)=>{
                 Axios.get(`${API_URL_SQL}/product/getallcatparcel`)
-                .then((category_parcel)=>{
-                    const data={
-                        Product_Category:category_products.data,
-                        Parcel_Category:category_parcel.data
-                    };
-                    dispatch({type:'LOAD',payload:data});
+                .then((Parcel_Category)=>{
+                    Axios.get(`${API_URL_SQL}/product/getallproduct`)
+                    .then((Product)=>{
+                        Axios.get(`${API_URL_SQL}/parcel/getallparcel`)
+                        .then((Parcel)=>{   
+                            const data={
+                                Product_Category    : Product_Category.data,
+                                Parcel_Category     : Parcel_Category.data,
+                                Product             : Product.data,
+                                Parcel              : Parcel.data
+                            };
+                            dispatch({type:'LOAD',payload:data});
+                        }).catch((error)=>{
+                            dispatch({type:'Error',payload:error.response.data.message});
+                        })
+                    }).catch((error)=>{
+                        dispatch({type:'Error',payload:error.response.data.message});
+                    });
                 }).catch((error)=>{
-                    dispatch({type:'Error',payload:error.response.data.message})
+                    dispatch({type:'Error',payload:error.response.data.message});
                 });
             }).catch((error)=>{
-                dispatch({type:'Error',payload:error.response.data.message})
+                dispatch({type:'Error',payload:error.response.data.message});
             });
         } catch (error) {
+            console.log(error);
+        };
+    };
+};
+
+export const setTempParcel = (arr_TempParcel) => {
+    return (dispatch) => {
+        dispatch({type:'LOADING'});
+        try {
+            const data={
+                init_Parcel:arr_TempParcel
+            }
+            // console.log(data)
+            dispatch({type:'LOAD',payload:data});
+        } catch (error) {
+            console.log(error);
+        };
+    };
+};
+
+export const setReadyParcel = (arr_readyParcel,arr_TempParcel) => {
+    return (dispatch) => {
+        dispatch({type:'LOADING'});
+        try {
+            const data={
+                ready_Parcel:arr_readyParcel,
+                init_Parcel:arr_TempParcel
+            };
+            // console.log(data)
+            dispatch({type:'LOAD',payload:data})
+        } catch (error) {
             console.log(error)
-        }
-    }
-}
+        };
+    };
+};
