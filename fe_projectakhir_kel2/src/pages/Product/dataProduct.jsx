@@ -37,7 +37,7 @@ class dataProduct extends Component {
         dataMinuman:[],
         dataMakanan:[],
         dataChocolate:[],
-
+        loading:true
 
       }
       toggle=(tab)=>{
@@ -56,12 +56,12 @@ class dataProduct extends Component {
         })
         Axios.post(`${API_URL_SQL}/product/getDataParcelByAll`)
         .then((res)=>{
-            // console.log(res.data, ' ini product all')
-            this.setState({allDataParcel:res.data})
+            console.log(res.data, ' ini product all')
+            this.setState({allDataParcel:res.data,loading:false})
         }).catch((err)=>{
             console.log(err)
         })
-
+        console.log("jaln jalan")
         Axios.post(`${API_URL_SQL}/product/getDataProductMinuman`)
         .then((res)=>{
             console.log(res.data,'line 65')
@@ -93,33 +93,38 @@ class dataProduct extends Component {
     }
 
     renderParcel=()=>{
-        console.log('function jalan')
-        return this.state.dataParcel.map((val,index)=>{
-          var render=this.state.allDataParcel.filter(function(parcel){
-    
-              return parcel.parcel_id == val.id
-          })
-        //   console.log(render, ' ini render line 76')
-            console.log('jalam dalem map ' , val.id)
-            return (
-                <div className="box-3 item " key={val.id} onClick={()=>this.onCheckData(val.id)} >
-                    <Link to={'/detailParcel/'+val.id}>
-                        <div className="box">
-                            <img src={val.gambar} alt="logo" className="img-parcel " />      
-                            <div className="cover">
-                                <p className="name">{val.nama}</p>
-                                <p className="title">Rp.{val.harga}</p>
-                                <p className="social">Custom Parcel:</p>
-                                <p className="social">{render[0].nama} : {render[0].qty}</p>
-                                <p className="social">{render[1].nama} : {render[1].qty}</p>
-                                <p className="social">{render[2].nama} : {render[2].qty}</p>
-                            </div>          
-                        </div>
-                    </Link>
-                    <p className="nama-parcel">{val.nama}</p>
-                </div>
-            )
-        })
+        console.log(this.state.loading)
+        if(this.state.loading){
+            return null
+        }else{
+            console.log(this.state.allDataParcel)
+            return this.state.dataParcel.map((val,index)=>{
+              var render=this.state.allDataParcel.filter(function(parcel){
+        
+                  return parcel.parcel_id == val.id
+              })
+            //   console.log(render, ' ini render line 76')
+                console.log('jalam dalem map ' , val.id)
+                return (
+                    <div className="box-3 item " key={val.id} onClick={()=>this.onCheckData(val.id)} >
+                        <Link to={'/detailParcel/'+val.id}>
+                            <div className="box">
+                                <img src={val.gambar} alt="logo" className="img-parcel " />      
+                                <div className="cover">
+                                    <p className="name">{val.nama}</p>
+                                    <p className="title">Rp.{val.harga}</p>
+                                    <p className="social">Custom Parcel:</p>
+                                    <p className="social">{render[0].nama} : {render[0].qty}</p>
+                                    <p className="social">{render[1].nama} : {render[1].qty}</p>
+                                    <p className="social">{render[2].nama} : {render[2].qty}</p>
+                                </div>          
+                            </div>
+                        </Link>
+                        <p className="nama-parcel">{val.nama}</p>
+                    </div>
+                )
+            })
+        }
     }
 
     renderChocolate=()=>{

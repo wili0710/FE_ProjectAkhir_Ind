@@ -9,6 +9,17 @@ const INITIAL_STATE = {
     cart:[],
     dataProduct:[],
     dataJSON:{}
+
+    // id: 0,
+    // name: '',
+    // email: '',
+    // role:'',
+    // isLogin: false,
+    // isLoading: false,
+    // error: '',
+    // cart:[],
+    // dataProduct:[],
+    // dataJSON:{}
     
 }
 
