@@ -1,0 +1,205 @@
+@import '../../styles/mixins.scss';
+@import '../../styles/variables.scss';
+
+/* general setup */
+img {
+    position  : relative;
+    width     : 100%;
+    height    : 100%;
+    object-fit: cover;
+}
+
+/* section*/
+.banner {
+    background-color: $primary;
+    position        : relative;
+    margin-top      : 45px;
+    padding         : 20px 50px;
+    width           : 100%;
+    z-index         : 0;
+
+    .content {
+        background-color: $secondarys;
+        width           : 100%;
+        border-bottom   : 4px solid $tertiary;
+
+        .textBx {
+            max-width: 40%;
+
+            .imgBx {
+                width: 70px;
+            }
+
+            h2 {
+                color         : $dk_gray;
+                margin        : 40px 0;
+                line-height   : 40px;
+                font-weight   : 500;
+                letter-spacing: 1px;
+            }
+
+            h5 {
+                color      : $dk_gray;
+                width      : 80%;
+                margin     : 40px 0;
+                font-weight: 400;
+                line-height: 30px;
+                font-family: 'Cambria', sans-serif;
+            }
+
+            span {
+                font-family: 'Fredoka One', cursive;
+            }
+
+            .primary {
+                color: $primary;
+            }
+
+            .tertiary {
+                color: $tertiary;
+            }
+        }
+
+        .illustrationBx {
+            width: 600px;
+        }
+    }
+
+    .lowerContent {
+        @include flexin($cl, flex-start, $cn);
+        width           : 100%;
+        height          : 250px;
+        background-size : cover;
+        background-image: url('../../assets/pattern.png');
+
+        input {
+            text-align   : center;
+            margin-top   : -30px;
+            height       : 60px;
+            width        : 600px;
+            border-radius: 30px;
+            z-index      : 1;
+            border       : 5px solid $tertiary;
+        }
+
+        .packages {
+            @include flexin($r, $sp, $cn);
+            margin-top: 30px;
+        }
+
+        .packageBx {
+            background-color: $white;
+            height          : 300px;
+            width           : 300px;
+            border-radius   : 25px;
+            box-shadow      : 2px 2px 2px;
+        }
+    }
+
+    .upperContent {
+        @include flexin($r, $sp, $cn);
+        padding: 50px 70px;
+    }
+}
+
+/* section*/
+.packages {
+    .bg {
+        background-color: $primary;
+        padding-bottom  : 15px;
+    }
+}
+
+/* section*/
+.products {
+    background-color: $primary;
+    position        : relative;
+    padding         : 20px;
+
+
+    .content {
+        position: relative;
+        border  : 1px dashed $lt_primary;
+        padding : 30px 40px;
+
+        p {
+            font-family   : 'Cambria', sans-serif;
+            color         : $lt_primary;
+            letter-spacing: -.1px;
+            padding       : 10px 70px;
+            text-align    : center;
+        }
+
+        .productBx {
+            @include flexin($r, $cn, $cn);
+            position: relative;
+
+            .leftBx {
+                @include flexin($cl, $cn, $cn);
+                background-color: $white;
+                position        : relative;
+                padding         : 20px;
+                width           : 15%;
+                height          : 100%;
+                margin          : 0 10px;
+                border-radius   : 5px;
+            }
+
+            .rightBx {
+                @include flexin($cl, $cn, $cn);
+                background-color: $white;
+                position        : relative;
+                width           : 85%;
+                padding         : 10px 20px;
+                border-radius   : 5px;
+
+                .border {
+                    position: relative;
+                    width   : 100%;
+                    margin  : 10px 0;
+                    border: $borderset !important;
+
+                    .search {
+                        @include flexin($r, $cn, $cn);
+                        position: relative;
+                        width   : 100%;
+                        height  : 10%;
+                        padding : 10px;
+                        border-bottom: $borderset;;
+
+                        .cat {
+                            margin-right  : 20px;
+                            text-align    : center;
+                            font-weight   : 800;
+                            letter-spacing: 1px;
+                        }
+
+                        input {
+                            position: relative;
+                            width   : 100%;
+                            padding : 5px 30px;
+                        }
+                    }
+
+                    .list {
+                        position: relative;
+                        height  : 90%;
+                        width   : 100%;
+
+                        .cardlist {
+                            width: 100%;
+                            padding: 10px;
+                            
+                            .card{
+                                background-color: $white;
+                                width: 150px;
+                                height: 200px;
+                                margin: 0 10px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

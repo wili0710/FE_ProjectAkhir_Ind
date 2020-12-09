@@ -1,5 +1,4 @@
 @import '../../styles/mixins.scss';
-@import url('../../styles/colors.css');
 @import '../../styles/variables.scss';
 
 header {
@@ -12,6 +11,7 @@ header {
     width           : 100%;
     padding         : 10px 130px;
     z-index         : 500;
+    border-bottom   : 4px solid $tertiary;
 
     img {
         position  : relative;

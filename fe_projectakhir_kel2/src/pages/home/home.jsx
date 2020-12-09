@@ -1,5 +1,5 @@
 import React from 'react';
-import './home.css'
+import './home.scss'
 import { 
     debounce,
     draggableCard
@@ -123,14 +123,110 @@ class Home extends React.Component {
                     </div>   
                 </section>
                 <section className="packages">
+                    <div className="bg">
                 {
                     this.state.filteredPackage.length?
                     packageCarousel(this.state.filteredPackage)
                     :
                     packageCarousel(this.state.listPackage)
                 }
+                    </div>
                 </section>
-
+                <section className="products">
+                    <div className="content">
+                        <p>
+                            We also provide you with items you need to show the closest one for you your love.
+                            Single product to help you give them your best cook or giving them things their like to 
+                            let them know that you always be there for theme. 
+                            <br/> 
+                            Don't worry all you need to do is choose and wait for them to be arrived in front of your house!
+                        </p>
+                        <div className="productBx">
+                            <div className="leftBx">
+                                Select Category: 
+                                <label>
+                                    Syrup
+                                    <input type="checkbox" name=""/>
+                                </label>
+                                <label>
+                                    Snack
+                                    <input type="checkbox" name=""/>
+                                </label>
+                                <label>
+                                    Chocolate
+                                    <input type="checkbox" name=""/>
+                                </label>
+                                <label>
+                                    Breads
+                                    <input type="checkbox" name=""/>
+                                </label>
+                            </div>
+                            <div className="rightBx">
+                                <div className="border">
+                                    <div className="search">
+                                        <div className="cat">
+                                            Sirup
+                                        </div>
+                                        <input type="text" name="search" placeholder="insert product's name you want to search"/>
+                                    </div>
+                                    <div className="list">
+                                        <div className="cardlist">
+                                            <div className="card">
+                                                a
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="border">
+                                    <div className="search">
+                                        <div className="cat">
+                                            Snack
+                                        </div>
+                                        <input type="text" name="search" placeholder="insert product's name you want to search"/>
+                                    </div>
+                                    <div className="list">
+                                        <div className="cardlist">
+                                            <div className="card">
+                                                a
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="border">
+                                    <div className="search">
+                                        <div className="cat">
+                                            Chocolate
+                                        </div>
+                                        <input type="text" name="search" placeholder="insert product's name you want to search"/>
+                                    </div>
+                                    <div className="list">
+                                        <div className="cardlist">
+                                            <div className="card">
+                                                a
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="border">
+                                    <div className="search">
+                                        <div className="cat">
+                                            Breads
+                                        </div>
+                                        <input type="text" name="search" placeholder="insert product's name you want to search"/>
+                                    </div>
+                                    <div className="list">
+                                        <div className="cardlist">
+                                            <div className="card">
+                                                a
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </>
         );
     };
