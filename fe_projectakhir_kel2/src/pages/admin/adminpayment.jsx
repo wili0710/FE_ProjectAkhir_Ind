@@ -88,10 +88,10 @@ const AdminPayment=()=>{
                         smallImage: {
                             alt: 'Payment',
                             isFluidWidth: true,
-                            src: val.image
+                            src: API_URL_SQL+val.image
                         },
                         largeImage: {
-                            src: val.image,
+                            src: API_URL_SQL+val.image,
                             width: 600,
                             height: 600
                         },
@@ -105,7 +105,7 @@ const AdminPayment=()=>{
             </TableCell>
             <TableCell style={{width:170}} align="center">{moment(val.tanggaltransaksi).format('Do MMMM YYYY')}</TableCell>
             <TableCell style={{width:170}} align="center">{moment(val.tglexp).format('Do MMMM YYYY')}</TableCell>
-            <TableCell style={{width:160}} align="center">{numeral(val.totaltransaksi).format('0,0.0')}</TableCell>
+            <TableCell style={{width:160}} align="center">Rp {numeral(val.totalpayment).format('0,0.0')}</TableCell>
             <TableCell style={{width:110}} align="center">
               <button onClick={()=>onConfirmClick(val.payment_id,val.transaksi_id)}>Confirm</button>
             </TableCell>

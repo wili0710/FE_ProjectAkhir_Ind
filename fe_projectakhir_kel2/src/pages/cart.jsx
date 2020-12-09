@@ -6,13 +6,13 @@ import Logo from './../assets/logo.png'
 import {BiCart,BiUser} from 'react-icons/bi'
 import { Badge } from '@material-ui/core';
 import { FullPageLoading } from '../components/loading';
-import { useTheme } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import './cart.css';
 import numeral from 'numeral';
-import { Button,Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import { Button} from 'reactstrap';
 import Skeleton from '@material-ui/lab/Skeleton';
-import Swal from 'sweetalert2'
+import ReactImageMagnify from 'react-image-magnify';
+
 
 
 
@@ -31,9 +31,10 @@ const CartPage=()=>{
     const [open,setOpen]=useState(0)
     const [komposisiParcel,setKomposisiParcel]=useState([])
     const [statusPerCategory,setStatusPerCategory]=useState([])
-    const [showConfirmOne,setShowConfirmOne]=useState(false)
     const [message,setMessage]=useState()
     const [qtyParcel,setQtyParcel]=useState()
+    const [editSatuan,setEditSatuan]=useState()
+    const [qtySatuan,setQtySatuan]=useState()
 
     const toggleModalEdit=()=>setShowEdit(!showEdit)
 
@@ -51,6 +52,7 @@ const CartPage=()=>{
             // Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             await Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             .then((res)=>{
+                console.log(res.data)
                 dispatch({type:'CART',cart:res.data})
                 setLoading(false)
                 
@@ -60,6 +62,33 @@ const CartPage=()=>{
         }
     }
 
+    // Pembayaran
+    const [showPembayaran,setShowPembayaran]=useState(false)
+    const [image,setImage]=useState()
+
+    const clickSendBukti=(transaksi_id,users_id)=>{
+        console.log(transaksi_id,users_id)
+        let data={transaksi_id,users_id,image}
+        let formData=new FormData()
+        let options={
+            header:{
+                'Content-type':'multipart/form-data'
+            }
+        }
+        formData.append('bukti',image)
+        console.log(formData,image)
+        formData.append('data',JSON.stringify({transaksi_id:transaksi_id,users_id:users_id}))
+
+        Axios.post(`${API_URL_SQL}/payment/uploadpaymenttransfer`,formData,options)
+        .then((res)=>{
+
+        }).catch((err)=>{
+            console.log(err)
+        })
+        setShowPembayaran(!showPembayaran)
+    }
+
+    // End Pembayaran
     const onClickOpenEditParcel=(dataforedit)=>{
         console.log(dataforedit)
         setQtyParcel(dataforedit[0].qty)
@@ -448,7 +477,23 @@ const CartPage=()=>{
                     </div>
                     <div>
                         <h6>{val.nama}</h6>
-                        <h6>Jumlah: {val.qty}</h6>
+                        {
+                            editSatuan===val.transaksidetail_id?
+                            <h6>
+                                Jumlah: 
+                                <input onChange={(e)=>{
+                                    if(e.target.value<=0){
+                                        setQtySatuan(1)
+                                    }else{
+                                        setQtySatuan(e.target.value)
+                                    }
+                                }} type="number" defaultValue={val.qty} value={qtySatuan}
+                                style={{marginLeft:20,width:50, border:"lighgray 1px solid",outline:"#f4f6f8"}}/>
+                            </h6>
+                            :
+                            <h6>Jumlah: {val.qty}</h6>
+
+                        }
                     </div>
                     <div style={{
                         display:"flex",
@@ -462,9 +507,26 @@ const CartPage=()=>{
                             cursor:"default",
                             marginBottom:10
                         }}>
-                            <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{setItemEdit(val);toggleModalEdit()}}>Edit</span> | 
-                            <span style={{color:"red",cursor:"pointer"}} 
-                            onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
+                            {
+                                editSatuan===val.transaksidetail_id?
+                                <>
+                                    <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{
+                                        setEditSatuan();setEditSatuan(!editSatuan);clickSaveSatuan(val.products_id,val.transaksidetail_id)
+                                        }}>Save</span>
+                                        | 
+                                    <span style={{color:"red",cursor:"pointer"}} 
+                                    onClick={()=>setEditSatuan()}> Cancel</span></h6>
+                                </>
+                                :
+                                <>
+                                    <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{
+                                        setItemEdit(val);setQtySatuan(val.qty);setEditSatuan(val.transaksidetail_id)
+                                        }}>Edit</span>
+                                        | 
+                                    <span style={{color:"red",cursor:"pointer"}} 
+                                    onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
+                                </>
+                            }
                         </div>
                         <h6>Total</h6>  
                         <span style={{
@@ -576,7 +638,22 @@ const CartPage=()=>{
         } catch (error) {
         }
     }
-
+    const clickSaveSatuan=(products_id,transaksidetail_id)=>{
+        let senttobe={
+            user_id:`${Auth.id}`,
+            products_id:`${products_id}`,
+            parcel_id:`0`,
+            qty:`${qtySatuan}`,
+            transaksidetail_id:`${transaksidetail_id}`
+        }
+        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,senttobe)
+            .then((res)=>{
+                console.log(res.data)
+                dispatch({type:'CART',cart:res.data})
+            }).catch((err)=>{
+                console.log(err)
+            })
+    }
     const onClickSaveParcel=(transaksidetail_id,parcel_id)=>{
         console.log(komposisiParcel)
         let products_id=komposisiParcel.map((val,index)=>{
@@ -629,6 +706,133 @@ const CartPage=()=>{
             maxWidth:2000,
             justifyContent:"center",
         }}>
+            {/* MODAL Pembayaran */}
+            {
+                showPembayaran?
+                <>
+                    <div style={{
+                        height:"100%",
+                        width:"100%",
+                        backgroundColor:"rgba(0, 0, 0, 0.5)",
+                        position:"fixed",
+                        zIndex:2,
+                        top:0
+                    }} onClick={()=>setShowPembayaran(!showPembayaran)}>
+                    </div>
+                    <div style={{
+                        backgroundColor:"white",
+                        width:"50%",
+                        // minHeight:"70%",
+                        height:"fit-content",
+                        display:"flex",
+                        flexDirection:"column",
+                        borderRadius:10,
+                        position:"fixed",
+                        zIndex:3,
+                        margin: "auto", /* Will not center vertically and won't work in IE6/7. */
+                        left: 0,
+                        right: 0,
+                        top:0,
+                        bottom:0,
+                        
+                    }}>
+                        <div style={{
+                            borderBottom:"10px solid #f4f6f8",
+                            padding:20
+                        }}>
+                            <div style={{
+                                display:"flex",
+                                justifyContent:"space-between"
+                            }}>
+                                <h3>Pembayaran</h3>
+                                <span style={{
+                                    color:"#fa5a1e",
+                                    fontWeight:"700",
+                                    fontSize:20
+                                }}>
+                                    {Auth.cart.transaksi.length==1?
+                                        <>
+                                            Total : Rp {numeral(Auth.cart.transaksi[0].totaltransaksi).format('0,0')}
+                                        </>
+                                        :
+                                        null
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                        <div style={{
+                            display:"flex",
+                            width:"100%",
+                        }}>
+                            <div style={{
+                                width:"30%",
+                                borderRight:"10px solid #f4f6f8",
+                                padding:20
+                            }}>
+                                <div style={{
+                                    padding:10
+                                }}>
+                                    Transfer
+                                </div>
+                            </div>
+                            <div style={{
+                                padding:20,
+                                display:"flex",
+                                flexDirection:"column",
+                                // justifyContent:"center",
+                                // alignItems:"center",
+                                height:"100%",
+                                width:"70%"
+                            }}>
+                                <div style={{padding:5}}>
+                                    <h4>Pembayaran Dengan Transfer</h4>
+                                </div>
+                                <div style={{padding:5}}> 
+                                    <h6>Silakan transfer ke Rekening</h6>
+                                    <span>- Bank ABCD No.Rekening: 1310025105 A/n hearttoheart</span>
+                                </div>
+                                <div style={{padding:5}}>
+                                    <h6>Upload Bukti Pembayaran :</h6>
+                                </div>
+                                <div style={{padding:5}}>   
+                                    <input onChange={(e)=>setImage(e.target.files[0])} type="file"/>
+                                    {
+                                        image?
+                                        <ReactImageMagnify {...{
+                                            smallImage: {
+                                                alt: 'Payment',
+                                                // isFluidWidth: true,
+                                                width:50,
+                                                height:100,
+                                                src: URL.createObjectURL(image)
+                                            },
+                                            largeImage: {
+                                                src: URL.createObjectURL(image) ,
+                                                width:800,
+                                                height: 800
+                                            },
+                                            enlargedImageContainerDimensions:{
+                                                width:"1600%",
+                                                height:"300%"
+                                            }
+                                        }} />
+                                        :
+                                        null
+                                    }
+                                </div>
+                                <div style={{padding:5}}>
+                                    <Button color="primary" onClick={()=>clickSendBukti(Auth.cart.transaksi[0].id,Auth.id)}>Upload Bukti Pembayaran</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+                
+                
+                :
+                null
+            }
+            {/* End Modal Pembayaran */}
             {/* MODAL EDIT */}
             {
                 showEdit?
@@ -674,7 +878,13 @@ const CartPage=()=>{
                                 <div style={{
                                     marginLeft:20
                                 }}>
-                                    Qty : <input onChange={(e)=>setQtyParcel(e.target.value)} type="number" defaultValue={itemEdit[0].qty} style={{width:50, border:"none",outline:"none"}}/>
+                                    Qty : <input onChange={(e)=>{
+                                        if(e.target.value<=0){
+                                            setQtyParcel(1)
+                                        }else{
+                                            setQtyParcel(e.target.value)
+                                        }
+                                    }} value={qtyParcel} type="number" defaultValue={itemEdit[0].qty} style={{width:50, border:"none",outline:"none"}}/>
                                 </div>
                             </div>
                             
@@ -793,7 +1003,9 @@ const CartPage=()=>{
                                 display:"flex",
                                 flexDirection:"column",
                                 animation: "growOut 500ms ease-in-out forwards",
-                                transformOrigin: "top center"
+                                transformOrigin: "top center",
+                                overflowY:"scroll",
+                                maxHeight:500
                             }}>
                                 <div style={{
                                     display:"flex",
@@ -966,7 +1178,13 @@ const CartPage=()=>{
                                             color:"#fa5a1e",
                                             fontWeight:"700"
                                         }}>
+                                            {Auth.cart.transaksi.length==1?
+                                        <>
                                             Rp {numeral(Auth.cart.transaksi[0].totaltransaksi).format('0,0')}
+                                        </>
+                                        :
+                                        null
+                                    }
                                         </span>
                                     </div>
                                 </div>
@@ -976,15 +1194,19 @@ const CartPage=()=>{
                                     justifyContent:"center",
                                     marginTop:20
                                 }}>
-                                    <Button style={{
-                                        width:200
-                                    }} color="primary">
-                                        <span style={{
-                                            fontWeight:500
-                                        }}>
-                                            Beli ({Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length})
-                                        </span>
-                                    </Button>
+                                    {Auth.cart.transaksi.length==1?
+                                        <Button style={{
+                                            width:200
+                                        }} onClick={()=>setShowPembayaran(!showPembayaran)} color="primary">
+                                            <span style={{
+                                                fontWeight:500
+                                            }}>
+                                                Bayar ({Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length})
+                                            </span>
+                                        </Button>
+                                        :
+                                        null
+                                    }
                                 </div>
                             </div>
                         </div>
