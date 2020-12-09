@@ -4,6 +4,7 @@ const INITIAL_STATE = {
     Parcel_Category     : [],
     Product_Category    : [],
     init_Parcel         : [],
+    ready_Parcel        : [],
     msg_Error           : "",
     isLoading           : false
 };
