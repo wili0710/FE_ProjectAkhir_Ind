@@ -59,7 +59,7 @@ class DetailParcel extends Component {
      componentDidMount(){
          Axios.get(`${API_URL_SQL}/product/getDataParcelById/${this.props.match.params.id}`)
          .then((res)=>{
-            console.log(res.data,' line 37')
+            console.log(res.data,' line 62')
             this.setState({
             dataParcelByIdMakanan:res.data[1],
             dataParcelByIdMinuman:res.data[0],
@@ -499,6 +499,7 @@ class DetailParcel extends Component {
             var messagesend=this.state.arrMessage
             var arrProduct= sendToDb.map((val)=>val.parcel_id)
             var qtyProduct = sendToDb.map((val)=>val.qty)
+            var parcelid=this.state.dataParcelByIdChocolate.parcel_id
             console.log(arrProduct)
             console.log(qtyProduct)
 
@@ -506,7 +507,7 @@ class DetailParcel extends Component {
          var obj = {
             user_id:"1",
             products_id:"0",
-            parcel_id:"1",
+            parcel_id:parcelid,
             qty:"1",
             productforparcel_id:arrProduct,
             qtyproductforparcel:qtyProduct,
@@ -526,7 +527,7 @@ class DetailParcel extends Component {
     render() { 
             console.log(this.state.dataArrMakanan)
             console.log(this.state.dataMakanan)
-            console.log(this.state.dataParcelByIdChocolate)
+            console.log(this.state.dataParcelByIdChocolate.parcel_id)
             const {classes}= this.props
         return ( 
             <>
