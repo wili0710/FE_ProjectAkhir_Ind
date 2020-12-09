@@ -1,33 +1,22 @@
 import React, { Component } from 'react';
 import './dataProduct.css'
-import Logo from './../../assets/logo.png'
-import { 
-    debounce,
-    draggableCard
-} from '../../helpers'
 import Zoom from 'react-reveal/Zoom';
-import {HiOutlinePhone} from  'react-icons/hi'
-import Dropdown from 'react-bootstrap/Dropdown';
 import classnames from 'classnames';
-import {FaRegMoneyBillAlt,FaUser,FaKey,FaLock} from 'react-icons/fa'
-import Popup from 'reactjs-popup';
-import {AiFillGithub} from 'react-icons/ai'
-import {RiReactjsFill} from 'react-icons/ri'
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
-import Parcel1 from './../../assets/parcel1.jpg'
-import Parcel2 from './../../assets/parcel2.jpg'
-import Parcel3 from './../../assets/parcel3.jpg'
-import Parcel4 from './../../assets/parcel4.jpg'
 import Header from './../../components/header/header'
-import { logo, d_user } from '../../assets';
 import { Link } from 'react-router-dom'
 import { API_URL, API_URL_SQL } from '../../helpers/apiUrl';
 import Axios from 'axios'
+import {FullPageLoading} from './../../components/loading'
+import {connect} from 'react-redux';
+import Logo from './../../assets/logo.png'
+import { Badge } from '@material-ui/core';
+import {BiCart,BiUser} from 'react-icons/bi'
+import { red } from '@material-ui/core/colors';
+import Swal from 'sweetalert2';
+import {Dropdown} from 'react-bootstrap'
+import {AiOutlineLogout,AiFillHome} from 'react-icons/ai'
 
-import { 
-    icon,
-    illustration_1
-} from '../../assets'
 class dataProduct extends Component {
     state = {
         activeTab:"1",
@@ -37,7 +26,11 @@ class dataProduct extends Component {
         dataMinuman:[],
         dataMakanan:[],
         dataChocolate:[],
-        loading:true
+        loadingParcel:true,
+        showCart:false,
+        showMenuUser:false
+
+
 
       }
       toggle=(tab)=>{
@@ -51,13 +44,15 @@ class dataProduct extends Component {
         .then((res)=>{
             // console.log(res.data)
             this.setState({dataParcel:res.data})
+            // this.setState({loadingParcel:false})
         }).catch((err)=>{
             console.log(err)
         })
         Axios.post(`${API_URL_SQL}/product/getDataParcelByAll`)
         .then((res)=>{
-            console.log(res.data, ' ini product all')
-            this.setState({allDataParcel:res.data,loading:false})
+            // console.log(res.data, ' ini product all')
+            this.setState({allDataParcel:res.data})
+            this.setState({loadingParcel:false})
         }).catch((err)=>{
             console.log(err)
         })
@@ -91,6 +86,7 @@ class dataProduct extends Component {
     onCheckData=(id)=>{
         console.log(id)
     }
+
 
     renderParcel=()=>{
         console.log(this.state.loading)
@@ -209,24 +205,141 @@ class dataProduct extends Component {
     onCheckDataMinuman=(id)=>{
         console.log(id)
         console.log('data')
+        let productid=id
+        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
+            user_id:1,
+            products_id:productid,
+            parcel_id:0,
+            qty:1
+        }).then((res)=>{
+            console.log(this.state.dataMinuman.id)
+            console.log('data berhasil ditambah')
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Menambahkan Product',
+                text: 'Berhasil Menambahkan Product'                    
+            })
+        }).catch((err)=>{
+            console.log(err)
+        })
+
     }
 
     onCheckDataMakanan=(id)=>{
         console.log(id)
         console.log('data makanan')
+        let productid=id
+        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
+            user_id:1,products_id:productid,
+            parcel_id:0,
+            qty:1
+        }).then((res)=>{
+            console.log(res.data)
+            console.log('data berhasil ditambah')
+            Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
+                id:productid
+            }).then((res)=>{
+                console.log(res.data)
+                Swal.fire({
+                    title: 'Sweet!',
+                    text: 'Berhasil Menambahkan Data',
+                    imageUrl: `${API_URL_SQL+res.data.image}`,
+                    imageWidth: 400,
+                    imageHeight: 200,
+                    imageAlt: '',
+                  })
+
+            }).catch((err)=>{
+                console.log(err)
+            })
+          
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
 
     onCheckDataChocolate=(id)=>{
         console.log(id)
+        let productid=id
         console.log('data chocolate')
+        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
+            user_id:1,
+            products_id:productid,
+            parcel_id:0,
+            qty:1
+        }).then((res)=>{
+            console.log(res.data)
+            console.log('berhasil masuk ke cart')
+            Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
+                id:productid
+            }).then((res)=>{
+                Swal.fire({
+                    title: 'Sweet!',
+                    text: 'Berhasil Menambahkan Data',
+                    src: `${API_URL_SQL+res.data.image}`,
+                    imageWidth: 400,
+                    imageHeight: 200,
+                    imageAlt: '',
+                  })
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }).catch((err)=>{
+            console.log(err)
+        })
+    
+    }
+
+    onLogoutClick=()=>{
+        console.log('logout jalan')
     }
 
     render() { 
+        console.log(this.props.name)
+        console.log(this.props.cart)
+
+        if(this.state.loadingParcel){
+            return (
+                <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+                {FullPageLoading(this.state.loadingParcel,100,'#0095DA')}
+            </div>
+            )
+        }
         return ( 
             <>
             <div className="outer-dp">
-                <Header/>
+                <div className="header-top d-flex bd-highlight">
+                    <div className="div-img p-2 flex-grow-1 bd-highlight">
+                        <img src={Logo} alt="Logo" className="logo-header"/>    
+                    </div>
+                    
+                    <div className="icon-user p-2 bd-highlight">
+                        <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
+                            <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                                <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                            </Dropdown.Toggle>
 
+                            <Dropdown.Menu>
+                                <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
+                                    <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
+                                    Logout
+                                    </Dropdown.Item>
+                                <Dropdown.Item href="/cart">
+                                        <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                        Cart
+                                </Dropdown.Item>
+                                <Dropdown.Item href="/">
+                                    <AiFillHome color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                    Home                         
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        <p style={{fontSize:'15px', marginTop:'10px',color:'white'}}>
+                        Hallo, {this.props.name}</p>
+                       
+                    </div>
+                </div>    
+               
                 <div className="navtab">
                         <Nav tabs>
                                 <NavItem className="cursor-nav">
@@ -259,18 +372,6 @@ class dataProduct extends Component {
                                 </NavItem>
 
                         </Nav>
-
-                        {
-                        this.state.activeTab ==0 ?
-                        <>
-                        <div className="promo">
-                            <div className>
-                                
-                            </div>
-                        </div>
-                        </>
-                        :
-                        <>
                         <TabContent activeTab={this.state.activeTab}>
                             
                             <TabPane  tabId="1" className="tab-row-1 tabpanel">
@@ -336,20 +437,17 @@ class dataProduct extends Component {
                                                          display:'flex',
                                                          flexWrap:'wrap'
                                                     }}>
-                                                    {this.renderChocolate()}
-                                                   
+                                                    {this.renderChocolate()}             
                                                     </div> 
-                                                       
                                             </div>
-                                            
                                         </Zoom>  
                                     </div>
                                 </Row>
                             </TabPane>
                          
                         </TabContent>
-                        </>
-                    }
+                    
+ 
                         
                 </div>
                 
@@ -359,5 +457,12 @@ class dataProduct extends Component {
          );
     }
 }
+
+const MapStatetoprops=({Auth,cart})=>{
+    return {
+        ...Auth,
+        ...cart
+    }
+}
  
-export default dataProduct;
+export default (connect(MapStatetoprops,{})(dataProduct));

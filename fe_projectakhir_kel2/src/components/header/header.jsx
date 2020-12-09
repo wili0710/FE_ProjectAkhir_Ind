@@ -2,9 +2,11 @@ import React from 'react';
 import './header.css'
 import { logo, d_user } from '../../assets';
 import { Link } from 'react-router-dom'
+import {connect} from 'react-redux';
 
 
-export default () => {
+
+export default  () => {
     const [profilePic,setProfilePic]=('');
 
     return (

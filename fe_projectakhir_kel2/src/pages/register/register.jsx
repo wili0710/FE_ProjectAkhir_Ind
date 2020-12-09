@@ -8,6 +8,7 @@ import { AiFillEye,AiFillEyeInvisible } from 'react-icons/ai';
 import {useSelector,useDispatch} from 'react-redux'
 import {Redirect, Link} from 'react-router-dom'
 
+
 const Register=(props)=>{
 
     const Auth=useSelector(state=>state.Auth) 
@@ -209,7 +210,7 @@ const Register=(props)=>{
 
     if(loading){
         return(
-            <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+              <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
                 {FullPageLoading(loading,100,'#0095DA')}
             </div>
         )

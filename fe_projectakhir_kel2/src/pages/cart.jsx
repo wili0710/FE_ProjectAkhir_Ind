@@ -756,8 +756,7 @@ const CartPage=()=>{
                 top:0,
                 width:"100%",
                 maxWidth:2000,
-                zIndex:1
-            }}>
+                zIndex:1}}>
                 <div style={{
                     marginLeft:20
                 }}>
@@ -766,13 +765,10 @@ const CartPage=()=>{
                 <div style={{
                     display:"flex",
                     justifyContent:"space-around",
-                    alignIte:"center",
-                    flexBasis:"13%"
-                }}>
+                    alignItems:"center",
+                    flexBasis:"13%"}}>
                     <div style={{
-                        position:"relative",
-                        
-                    }} onMouseEnter={()=>setShowCart(true)} onMouseLeave={()=>setShowCart(false)}>
+                        position:"relative",}} onMouseEnter={()=>setShowCart(true)} onMouseLeave={()=>setShowCart(false)}>
                         <Badge color="error" badgeContent={Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length}>
                             <BiCart color="white" size="20" style={{cursor:"pointer"}}/>
                         </Badge>
@@ -829,7 +825,6 @@ const CartPage=()=>{
                                     </div>
                                     }
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -837,7 +832,8 @@ const CartPage=()=>{
                         borderLeft: '1px solid white',
                         paddingLeft:10,
                         position:"relative",
-                    }}onMouseEnter={()=>setShowMenuUser(true)} onMouseLeave={()=>setShowMenuUser(false)}>
+                        }}
+                        onMouseEnter={()=>setShowMenuUser(true)} onMouseLeave={()=>setShowMenuUser(false)}>
                         <BiUser color="white" size="20" style={{cursor:"pointer"}}/> Halo, {Auth.name}
                         <div style={{
                             position:"absolute",
@@ -885,7 +881,8 @@ const CartPage=()=>{
                         </div>
                     </div>
                 </div>
-            </div>            
+            </div>  
+
             <div style={{
                 display:"flex",
                 flexDirection:"column",
