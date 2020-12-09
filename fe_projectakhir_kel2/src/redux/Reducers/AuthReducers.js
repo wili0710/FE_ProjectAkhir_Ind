@@ -3,7 +3,7 @@ const INITIAL_STATE = {
     name: 'Wili',
     email: 'wiliromarioakukom@gmail.com',
     role:'user',
-    isLogin: false,
+    isLogin: true,
     isLoading: false,
     error: '',
     cart:[],

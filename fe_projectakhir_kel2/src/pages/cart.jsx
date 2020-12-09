@@ -1004,7 +1004,7 @@ const CartPage=()=>{
                                 flexDirection:"column",
                                 animation: "growOut 500ms ease-in-out forwards",
                                 transformOrigin: "top center",
-                                overflowY:"scroll",
+                                overflowY:"auto",
                                 maxHeight:500
                             }}>
                                 <div style={{
