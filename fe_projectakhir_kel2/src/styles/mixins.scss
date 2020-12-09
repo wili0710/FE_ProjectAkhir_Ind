@@ -1,0 +1,13 @@
+@mixin flexin($direction:row, $justify:center, $align:center) {
+    display        : flex !important;
+    flex-direction : $direction;
+    justify-content: $justify;
+    align-items    : $align;
+}
+
+@mixin bordering($top, $left, $right, $bottom) {
+    border-top   : $top;
+    border-left  : $left;
+    border-right : $right;
+    border-bottom: $bottom;
+}

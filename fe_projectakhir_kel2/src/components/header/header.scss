@@ -1,95 +1,150 @@
+@import '../../styles/mixins.scss';
 @import url('../../styles/colors.css');
+@import '../../styles/variables.scss';
 
 header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    padding: 30px 130px;
-    display: flex !important;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--primary);
-    z-index: 500;
-}
-header .logoBx {
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-header .logoBx .imgBx {
-    position: relative;
-    width: 100%;
-    height: auto;
-}
-header .logoBx .imgBx img,
-header .userBx .imgBx img {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-header .logoBx .slogan {
-    margin-top: 2px;
-    color: var(--secondarys);
-}
-header .logoBx .slogan span {
-    font-weight: bolder;
-}
-header .userBx {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-header .userBx .buttonBx .buttonBorder {
-    width: 100px;
-    height: 45px;
-    border: 1px dashed;
-    border-radius: 8px;
-    border-color: var(--secondarys);
-    margin-left: -5px;
-    margin-bottom: -40px;
-    transition: .3s;
-}
-header .userBx .buttonBx button {
-    width: 100px;
-    height: 45px;
-    font-family: 'Fredoka One', cursive;
-    color: var(--secondarys); 
-    border: 2px solid;
-    border-radius: 8px;
-    border-color: var(--secondarys);
-    background-color: transparent;
-    transition: .3s;
-}
-header .userBx .buttonBx:hover .buttonBorder {
-    width: 90px;
-    height: 35px;
-    border: 4px solid;
-    margin-bottom: -40px;
-    margin-left: 5px;
-    border-radius: 6px;
-    border-color: transparent;
-    background-color: var(--dk_tertiary); 
-}
-header .userBx .buttonBx:hover button {
-    color: var(--secondarys);
-    letter-spacing: 1.2px;
-    font-size: 16px;
-    border: 1.8px dashed;
-    border-color: var(--secondarys);
-}
-header .userBx .buttonBx button:focus {
-    outline: none;
-}
-header .userBx .imgBx {
-    position: relative;
-    height: 70px;
-    width: 70px;
-    margin-left: 20px;
-    border-radius: 100%;
-    background-color: var(--dk_tertiary);
+    @include flexin ($r, space-between, $cn);
+    background-color: $primary;
+    position        : fixed;
+    top             : 0;
+    left            : 0;
+    right           : 0;
+    width           : 100%;
+    padding         : 10px 130px;
+    z-index         : 500;
+
+    img {
+        position  : relative;
+        width     : 100%;
+        height    : 100%;
+        object-fit: cover;
+    }
+
+    .navBx {
+        color    : $white;
+        font-size: 14px;
+
+        span {
+            color         : $tertiary;
+            font-weight   : 600;
+            font-size     : 16px;
+            vertical-align: -5%;
+            padding       : 5px 10px 5px 2px;
+            border-right  : $lt_primary 1px dashed;
+
+            &:hover {
+                color: $lt_primary;
+            }
+        }
+    }
+
+    .logoBx {
+        @include flexin($cl, $cn, $cn);
+        width     : 150px;
+        align-self: center;
+
+        .imgBx {
+            position: relative;
+            width   : 100%;
+            height  : auto;
+        }
+
+        .slogan {
+            color      : $secondarys;
+            font-family: 'Cambria', sans-serif;
+            margin-top : 2px;
+            font-size  : 12px;
+
+            span {
+                font-weight: 600;
+            }
+        }
+    }
+
+    .userBx {
+        @include flexin($r, $cn, $cn);
+        position: relative;
+
+        .usermenuBx {
+            border-right: 1px dashed $lt_primary;
+            padding     : 8px;
+        }
+
+        .username {
+            color      : $white;
+            position   : relative;
+            font-size  : 10px;
+            margin-left: 10px;
+
+            span {
+                border-bottom : $borderset;
+                color         : $white;
+                position      : relative;
+                vertical-align: -20%;
+                font-size     : 20px;
+                margin-left   : 5px;
+                font-weight   : 600;
+
+
+                &:hover {
+                    border-bottom: 1px solid $tertiary;
+                    cursor       : pointer;
+                }
+            }
+        }
+
+        .buttonBx {
+
+            .buttonBorder {
+                margin-bottom: -40px;
+                margin-left  : -5px;
+                width        : 100px;
+                height       : 45px;
+                border-radius: 8px;
+                border       : 1px dashed $secondarys;
+            }
+
+            button {
+                color           : $secondarys;
+                background-color: transparent;
+                border-radius   : 8px;
+                width           : 100px;
+                height          : 45px;
+                border          : 2px solid $secondarys;
+                font-family     : 'Fredoka One', cursive;
+            }
+
+            &:hover {
+
+                .buttonBorder {
+                    background-color: $dk_tertiary;
+                    border-radius   : 6px;
+                    margin-bottom   : -40px;
+                    margin-left     : 5px;
+                    width           : 90px;
+                    height          : 35px;
+                }
+
+                button {
+                    color         : $secondarys;
+                    letter-spacing: 1.2px;
+                    font-size     : 16px;
+                    border        : 1.8px dashed $secondarys;
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+            }
+        }
+
+        .imgBx {
+            background-color: $dk_tertiary;
+            position        : relative;
+            border-radius   : 100%;
+            margin-left     : 20px;
+            height          : 40px;
+            width           : 40px;
+        }
+    }
 }

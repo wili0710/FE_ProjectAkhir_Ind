@@ -1,18 +1,6 @@
 @import url("../../../styles/colors.css");
-
-@mixin flexin($direction, $justify, $align) {
-    display        : flex;
-    flex-direction : $direction;
-    justify-content: $justify;
-    align-items    : $align;
-}
-
-@mixin bordering($top, $left, $right, $bottom) {
-    border-top   : $top;
-    border-left  : $left;
-    border-right : $right;
-    border-bottom: $bottom;
-}
+@import '../../../styles/mixins.scss';
+@import '../../../styles/variables.scss';
 
 $borderset: 1px dashed var(--tertiary);
 
@@ -63,8 +51,6 @@ $borderset: 1px dashed var(--tertiary);
 
                 &:hover:not(.active, span) {
                     color         : var(--dk_tertiary);
-                    // letter-spacing: 2px;
-                    // font-weight   : 600;
                 }
             }
             div.active {
