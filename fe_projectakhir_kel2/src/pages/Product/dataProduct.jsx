@@ -13,6 +13,10 @@ import Logo from './../../assets/logo.png'
 import { Badge } from '@material-ui/core';
 import {BiCart,BiUser} from 'react-icons/bi'
 import { red } from '@material-ui/core/colors';
+import Swal from 'sweetalert2';
+import {Dropdown} from 'react-bootstrap'
+import {AiOutlineLogout,AiFillHome} from 'react-icons/ai'
+
 class dataProduct extends Component {
     state = {
         activeTab:"1",
@@ -82,6 +86,7 @@ class dataProduct extends Component {
     onCheckData=(id)=>{
         console.log(id)
     }
+
 
     renderParcel=()=>{
         console.log('function jalan')
@@ -202,8 +207,13 @@ class dataProduct extends Component {
             parcel_id:0,
             qty:1
         }).then((res)=>{
-            console.log(res.data)
+            console.log(this.state.dataMinuman.id)
             console.log('data berhasil ditambah')
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Menambahkan Product',
+                text: 'Berhasil Menambahkan Product'                    
+            })
         }).catch((err)=>{
             console.log(err)
         })
@@ -221,6 +231,23 @@ class dataProduct extends Component {
         }).then((res)=>{
             console.log(res.data)
             console.log('data berhasil ditambah')
+            Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
+                id:productid
+            }).then((res)=>{
+                console.log(res.data)
+                Swal.fire({
+                    title: 'Sweet!',
+                    text: 'Berhasil Menambahkan Data',
+                    imageUrl: `${API_URL_SQL+res.data.image}`,
+                    imageWidth: 400,
+                    imageHeight: 200,
+                    imageAlt: '',
+                  })
+
+            }).catch((err)=>{
+                console.log(err)
+            })
+          
         }).catch((err)=>{
             console.log(err)
         })
@@ -238,10 +265,28 @@ class dataProduct extends Component {
         }).then((res)=>{
             console.log(res.data)
             console.log('berhasil masuk ke cart')
+            Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
+                id:productid
+            }).then((res)=>{
+                Swal.fire({
+                    title: 'Sweet!',
+                    text: 'Berhasil Menambahkan Data',
+                    src: `${API_URL_SQL+res.data.image}`,
+                    imageWidth: 400,
+                    imageHeight: 200,
+                    imageAlt: '',
+                  })
+            }).catch((err)=>{
+                console.log(err)
+            })
         }).catch((err)=>{
             console.log(err)
         })
     
+    }
+
+    onLogoutClick=()=>{
+        console.log('logout jalan')
     }
 
     render() { 
@@ -258,43 +303,35 @@ class dataProduct extends Component {
         return ( 
             <>
             <div className="outer-dp">
-                <div className="header-top">
-                    <div className="div-img">
+                <div className="header-top d-flex bd-highlight">
+                    <div className="div-img p-2 flex-grow-1 bd-highlight">
                         <img src={Logo} alt="Logo" className="logo-header"/>    
                     </div>
-                    <div className="icon-user" 
-                    onMouseEnter={()=>this.setState({showMenuUser:true})} 
-                    onMouseLeave={()=>this.setState({showMenuUser:false})}>
-                        <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                    
+                    <div className="icon-user p-2 bd-highlight">
+                        <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
+                            <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                                <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
+                                    <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
+                                    Logout
+                                    </Dropdown.Item>
+                                <Dropdown.Item href="/cart">
+                                        <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                        Cart
+                                </Dropdown.Item>
+                                <Dropdown.Item href="/">
+                                    <AiFillHome color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                    Home                         
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                         <p style={{fontSize:'15px', marginTop:'10px',color:'white'}}>
                         Hallo, {this.props.name}</p>
-                        <div style={{position:'absolute',
-                            display:this.state.showMenuUser?"block":'none',
-                            paddingTop:10,
-                            width:100}}>
-                                <div className="menu-opt">
-                                    <div style={{
-                                        display:'flex',
-                                        justifyContent:'space-between',
-                                        borderBottom:'#f3f4f5 solid 1px',
-                                        marginTop:'50px',
-                                        backgroundColor:'red'
-                                        
-                                    }}>
-                                        <p>Setting</p>
-                                    </div>
-                                    <div style={{
-                                        display:'flex',
-                                        justifyContent:'space-between',
-                                        borderBottom:'#f3f4f5 solid 1px',
-                                        marginTop:'50px',
-                                        backgroundColor:'red'
-                                    }}>
-                                        <p>Logout</p>
-                                    </div>
-                                </div>
-                            
-                        </div>
+                       
                     </div>
                 </div>    
                

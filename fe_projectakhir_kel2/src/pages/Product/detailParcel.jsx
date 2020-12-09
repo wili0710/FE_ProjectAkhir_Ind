@@ -10,10 +10,15 @@ import { Window } from '@progress/kendo-react-dialogs';
  import { Button, ButtonGroup, DropDownButton, DropDownButtonItem,
     SplitButton, SplitButtonItem, Chip, ChipList, Toolbar, ToolbarItem } from '@progress/kendo-react-buttons';
 import Parcel from './../../../src/assets/parcel1.jpg';
-import {BiPlus,BiMinus} from 'react-icons/bi'
+import {BiPlus,BiMinus,BiCart,BiUser} from 'react-icons/bi'
 import TextField from '@material-ui/core/TextField';
 import { CgInsertBefore } from 'react-icons/cg';
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2';
+import {Dropdown} from 'react-bootstrap'
+import Logo from './../../assets/logo.png'
+import {AiOutlineLogout,AiFillHome,AiFillDelete} from 'react-icons/ai'
+import {connect} from 'react-redux';
 class DetailParcel extends Component {
     state = { 
         dataParcelByIdMakanan:[],
@@ -102,6 +107,11 @@ class DetailParcel extends Component {
          for(var i=0; i<filterprod.length; i++){
              total += filterprod[i].qty
          }
+         Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menghapus Product',
+            text: 'Berhasil Menambahkan Product'                    
+        })
     
           if(total <= this.state.dataParcelByIdMinuman.qty){
              var dataArrMakanan = this.state.dataArrMakanan
@@ -133,6 +143,11 @@ class DetailParcel extends Component {
          for(var i=0; i<filterprod.length; i++){
              total += filterprod[i].qty
          }
+         Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menghapus Product',
+            text: 'Berhasil Menghapus Product'                    
+        })
     
           if(total <= this.state.dataParcelByIdMakanan.qty){
              var dataArrMakanan = this.state.dataArrMakanan
@@ -162,6 +177,11 @@ class DetailParcel extends Component {
          for(var i=0; i<filterprod.length; i++){
              total += filterprod[i].qty
          }
+         Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menghapus Product',
+            text: 'Berhasil Menghapus Product'                    
+        })
     
           if(total <= this.state.dataParcelByIdChocolate.qty){
              var dataArrMakanan = this.state.dataArrMakanan
@@ -180,6 +200,14 @@ class DetailParcel extends Component {
 
          }
      }
+     onDeleteProduct=(id)=>{
+        console.log('delete product')
+        console.log(id, ' line 205')
+        var dataCart = this.state.dataArrMakanan
+        dataCart.splice(id,1)
+        console.log(dataCart, 'ini datacart 207')
+        this.setState({dataArrMakanan:dataCart})
+    }
 
      
      
@@ -193,10 +221,16 @@ class DetailParcel extends Component {
             console.log(id,194) // 9
             return val.parcel_id==id
         })
+
         var findMakanan=this.state.dataMakanan
         var find = findMakanan.findIndex((val=>{
             return val.id == id
         }))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menambahkan Product',
+            text: 'Berhasil Menambahkan Product'                    
+        })
 
         console.log(a)
         if(a== -1){
@@ -236,6 +270,11 @@ class DetailParcel extends Component {
          var find = findMinuman.findIndex((val=>{
              return val.id == id
          }))
+         Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menambahkan Product',
+            text: 'Berhasil Menambahkan Product'                    
+        })
  
          if(a== -1){
              var arrMakanan2= this.state.dataArrMakanan
@@ -263,6 +302,11 @@ class DetailParcel extends Component {
             console.log(val.parcel_id,'193') // 10
             console.log(id,194) // 9
             return val.parcel_id==id
+        })
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menambahkan Data',
+            text: 'Berhasil Menambahkan Data'                    
         })
         var findChocolate=this.state.dataChocolate
         var find = findChocolate.findIndex((val=>{
@@ -309,15 +353,12 @@ class DetailParcel extends Component {
                         <div className="cp_img">
                             <img src={val.image} alt="logo" className="img-parcel" />
                             <div className="hover"  >
-                             
                                 {
-    
                                     total==this.state.dataParcelByIdMakanan.qty ?
                                     null:
                                     <>
                                     <BiPlus onClick={()=>this.AddDataMakanan(val.id)} className="icondp"/>
                                     </>
-                                
                                 }
                                 {
                                     total==0 ?
@@ -436,6 +477,22 @@ class DetailParcel extends Component {
          })
      }
 
+     renderCartProduct=()=>{
+         return this.state.dataArrMakanan.map((val,index)=>{
+             return (
+                 <>
+                 <tr>
+                    <td>{val.namaProduct}</td>
+                    <td> {val.qty}</td>
+                    <td onClick={()=>this.onDeleteProduct(index)}>
+                        <AiFillDelete className="delete-icon"/>
+                    </td>
+                 </tr>
+                 </>
+             )
+         })
+     }
+
      saveMessage=()=>{
          console.log('button add message jalan')
             var sendToDb = this.state.dataArrMakanan
@@ -464,6 +521,7 @@ class DetailParcel extends Component {
          })
 
      }
+     
   
     render() { 
             console.log(this.state.dataArrMakanan)
@@ -473,7 +531,41 @@ class DetailParcel extends Component {
         return ( 
             <>
                 <div className="outer-detail">
-                    <Header/>
+                    <div className="header-top d-flex bd-highlight">
+                        <div className="div-img p-2 flex-grow-1 bd-highlight">
+                            <img src={Logo} alt="Logo" className="logo-header"/>    
+                        </div>
+                        
+                        <div className="icon-user p-2 bd-highlight">
+                            <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
+                                <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                                    <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
+                                        <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
+                                        Logout
+                                        </Dropdown.Item>
+                                    <Dropdown.Item href="/cart">
+                                            <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                            Cart
+                                    </Dropdown.Item>
+                                    <Dropdown.Item href="/">
+                                        <AiFillHome color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                        Home                         
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                            <p style={{fontSize:'15px', marginTop:'10px',color:'white'}}>
+                            Hallo, {this.props.name}</p>
+                        
+                        </div>
+                    </div>   
+
+
+
+                    {/* END HEADER */}
                     <Link to='/dataproduct'>
                         <div className="div-opt">
                             <BsFillCaretLeftFill className="icon-back"/><p>back to Parcel</p>
@@ -484,58 +576,111 @@ class DetailParcel extends Component {
                         <h3>{this.state.dataParcelByIdChocolate.namaParcel}</h3>
                     </div>
 
-                    <div className="render-parcel" >
+                    <div className="body-render">
+                        <div className="render-parcel" >
 
-                            <div className="k-button" onClick={this.toggleDialog}>
-                                <p>1.Pilih Makanan Yang Kamu Mau</p>
-                            </div>
-                            {this.state.visible && <div onClose={this.toggleDialog}>
-                                <div style={{display:'flex',flexWrap:'wrap'
-                                                    }}>
-                                    {this.renderMakanan()}
+                                <div className="k-button" onClick={this.toggleDialog}>
+                                    <p style={{marginLeft:'20px'}}>1.Pilih Makanan Yang Kamu Mau</p>
                                 </div>
+                                {this.state.visible && <div onClose={this.toggleDialog}>
+                                    <div style={{display:'flex',flexWrap:'wrap'
+                                                        }}>
+                                        {this.renderMakanan()}
+                                    </div>
 
+                            </div>
+                            }
+                                <div className="k-button" onClick={this.toggleDialogMinuman}>
+                                    <p style={{marginLeft:'20px'}}>2.Pilih Minuman Yang Kamu Mau</p>
+                                </div>
+                                {this.state.MinumanVisible && <div onClose={this.toggleDialogMinuman}>
+                                    <div style={{display:'flex',flexWrap:'wrap'
+                                                        }}>
+                                        {this.renderMinuman()}
+                                    </div>
+                                </div>
+                                }
+                                <div className="k-button" onClick={this.toggleDialogChocolate}>
+                                    <p style={{marginLeft:'20px'}}>3.Pilih Chocolate Yang Kamu Mau</p>
+                                </div>
+                                {this.state.ChocolateVisible && <div onClose={this.toggleDialogChocolate}>
+                                    <div style={{display:'flex',flexWrap:'wrap'
+                                                        }}>
+                                        {this.renderChocolate()}
+                                    </div>
+                                </div>
+                                }
+                                <div className="k-button" onClick={this.toggleDialogMessage}>
+                                    <p style={{marginLeft:'20px'}}>4.Isi Pesan Yang Kamu mau</p>
+                                </div>
+                                {this.state.messageVisible && <div onClose={this.toggleDialogMessage}>
+                                    <div style={{display:'flex',flexWrap:'wrap',flexDirection:'column'
+                                                        }}>
+                                        <input type='text' className="form-control" onChange={(e)=>this.addMessage(e)} style={{transition:'500ms',width:'350px',marginTop:'10px'}}/>
+                                        
+                                    </div>
+                                </div>
+                                }
+
+                                <div style={{marginTop:'50px'}}>
+                                    card parcel
+                                </div>
+                        
                         </div>
-                        }
-                            <div className="k-button" onClick={this.toggleDialogMinuman}>
-                                <p>2.Pilih Minuman Yang Kamu Mau</p>
-                            </div>
-                            {this.state.MinumanVisible && <div onClose={this.toggleDialogMinuman}>
-                                <div style={{display:'flex',flexWrap:'wrap'
-                                                    }}>
-                                    {this.renderMinuman()}
+
+                        <div className="render-kanan">
+                                <div className="header-kanan">
+                                    <img src={Logo} alt="Logo" className="logo-header-kanan" />  
                                 </div>
-                            </div>
-                            }
-                            <div className="k-button" onClick={this.toggleDialogChocolate}>
-                                <p>3.Pilih Chocolate Yang Kamu Mau</p>
-                            </div>
-                            {this.state.ChocolateVisible && <div onClose={this.toggleDialogChocolate}>
-                                <div style={{display:'flex',flexWrap:'wrap'
-                                                    }}>
-                                    {this.renderChocolate()}
+                                <div className="cart-kanan">
+                                    <p style={{fontSize:'25px',fontWeight:'700',color:'tomato'}}>CART</p>
                                 </div>
-                            </div>
-                            }
-                            <div className="k-button" onClick={this.toggleDialogMessage}>
-                                <p>4.Isi Pesan Yang Kamu mau</p>
-                            </div>
-                            {this.state.messageVisible && <div onClose={this.toggleDialogMessage}>
-                                <div style={{display:'flex',flexWrap:'wrap'
-                                                    }}>
-                                      <input type='email' className="form-control" onChange={(e)=>this.addMessage(e)} style={{transition:'500ms'}}/>
-                                      <div className="button-add" onClick={this.saveMessage}>
-                                         <p>Save</p>
-                                      </div>
+                                <div className="message-kanan">
+                                    <p style={{fontSize:'15px',fontWeight:'700',color:'tomato'}}>Message:</p>
+                                    <p style={{marginTop:'-20px'}}>
+                                        {this.state.arrMessage}
+                                    </p>
                                 </div>
-                            </div>
-                            }
-                    
+
+                                <div className="cart-details">
+                                    <p style={{fontSize:'15px',fontWeight:'700',color:'tomato'}}>Cart Details:</p>
+                                </div>
+
+                                <div className="render-data-kanan">
+                                    <p style={{fontSize:'25px', marginLeft:'50px'}}>{this.state.dataParcelByIdChocolate.namaParcel}</p>
+                                    <p>Details Package:</p>
+                                    
+                                        <table>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Qty</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            
+                                            {this.renderCartProduct()}
+                                            
+                                        </table>
+                                    
+                                </div>
+                                <div className="button-add" onClick={this.saveMessage}>
+                                            <p>Beli</p>
+                                </div>
+                               
+                            
+                        </div>
+
                     </div>
+
                 </div>
             </>
          );
     }
 }
 
-export default DetailParcel;
+const MapStatetoprops=({Auth,cart})=>{
+    return {
+        ...Auth
+    }
+}
+
+export default (connect(MapStatetoprops,{})(DetailParcel))

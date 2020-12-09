@@ -8,6 +8,7 @@ import { AiFillEye,AiFillEyeInvisible } from 'react-icons/ai';
 import {useSelector,useDispatch} from 'react-redux'
 import {Redirect, Link} from 'react-router-dom'
 
+
 const Register=(props)=>{
 
     const Auth=useSelector(state=>state.Auth) 

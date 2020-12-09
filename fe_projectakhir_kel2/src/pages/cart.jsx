@@ -34,7 +34,7 @@ const CartPage=()=>{
             // Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=1`)
             .then((res)=>{
-                // console.log(res.data)
+                console.log(res.data)   
                 dispatch({type:'LOGIN',cart:res.data})
                 setLoading(false)
                 
