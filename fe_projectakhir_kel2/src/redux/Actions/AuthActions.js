@@ -1,6 +1,21 @@
 import Axios from 'axios'
 import {API_URL_SQL} from './../../helpers/apiUrl'
 
+export const LoginFunc =(obj)=>{
+    return {
+        type:'LOGIN',
+        payload:obj
+    }
+}
+
+export const AddcartAction=(cart)=>{
+    return{
+        type:'CART',
+        cart:cart
+    }    
+    
+}
+
 export const LoginThunk=(email,password)=>{
     return (dispatch)=>{
         dispatch({type:'LOADING'})
@@ -8,11 +23,7 @@ export const LoginThunk=(email,password)=>{
                 email,
                 password
             }).then((res)=>{
-                    console.log(res.data)
-                    console.log(res.data[0].user[0].id)
-                    console.log(res.data[0])
-                    console.log(res.data[1])
-                    
+                console.log('new keep login berhasil')
                     localStorage.setItem('id',res.data[0].user[0].id)
                     dispatch({type:'LOGIN',payload:res.data[0].user[0],cart:res.data[1]})
             }).catch((err)=>{

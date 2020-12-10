@@ -38,6 +38,9 @@ export default (state=INITIAL_STATE, action)=>{
             return {...state,error:action.payload,isLoading:false}
         case 'CART':
             return {...state,cart:action.cart}
+        
+        case 'ADDCART':
+            return {...state,cart:action.cart}    
 
         default :
         return state
