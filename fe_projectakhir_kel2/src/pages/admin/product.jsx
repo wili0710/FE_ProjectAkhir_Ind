@@ -1,4 +1,4 @@
-import React, { Component,createRef } from 'react';
+import React, { Component,createRef, useCallback } from 'react';
 import './product.css'
 import HeaderAdmin from './../../components/header/headerAdmin'
 
@@ -14,6 +14,8 @@ import Axios from 'axios'
 import { API_URL_SQL } from '../../helpers/apiUrl';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
+import InputBase from '@material-ui/core/InputBase';
+
 class Product extends Component {
     state = { 
         dataProduct:[],
@@ -24,10 +26,13 @@ class Product extends Component {
             harga:createRef(),
             stok:createRef(),
             deskripsi:createRef(),
-            catProduct:createRef()
+            catProduct:createRef(),
+            isOpen:false
         },
         fileImage:null,
-        categoryProduct:[]
+        categoryProduct:[],
+        searchData:'',
+        testSearching:[]
      }
 
      componentDidMount(){
@@ -154,9 +159,35 @@ class Product extends Component {
          console.log('selesai upload')
      }
 
+     filterSearch=(input)=>{
+         console.log(input, ' ini input')
+         var filterdata = this.state.dataProduct.filter((val)=>{
+             return val.nama.toLowerCase().includes(input.toLowerCase())
+         })
+         this.setState({testSearching:filterdata})
+     }
+
+     onChangeSearch=(e)=>{
+         console.log(e.target.value)
+         if(e.target.value){
+             this.setState({searchData:e.target.value})
+         }
+         
+     }
+
+     updateQuery=()=>{
+         var searchData= this.state.searchData
+         this.filterSearch(searchData)
+     }
+     delayedQuery=useCallback(debounce(updateQuery,1000),[this.state.searchData])
+
+     componentDidUpdate(){
+         this.delayedQuery()
+     }
+
      toggle = () => this.setState({setModalAdd:false});
     render() { 
-        console.log(this.state.categoryProduct)
+        console.log(this.state.dataProduct)
         return ( 
             <>
                 <Modal isOpen={this.state.setModalAdd} toggle={this.toggle}>
@@ -187,9 +218,16 @@ class Product extends Component {
                             <p style={{fontWeight:'600'}}>Product</p>
                         </div>
                     </div>
+                    <div className="header-bawah">
                         <div className="btn-add" onClick={this.onAddData}>
                            <p>Add Data</p>
                         </div>
+                        <div className="searching">
+                
+                            <input type='text' onChange = {(e)=>this.onChangeSearch(e)} onFocus = {()=>this.setState({isOpen:true})} onBlur ={()=>setTimeout(() => {this.setState()}, 100)} placeholder='Search' style={{marginBottom:'5px'}} className="input-search" />
+
+                        </div>
+                    </div>
                     <div className="container-data">
 
                         <TableContainer>
