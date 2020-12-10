@@ -69,7 +69,7 @@ function App(props) {
           <Route exact path='/adminpanel/datauser' component={User}/>
           <Route exact path='/adminpanel/payment' component={AdminPayment}/>
           <Route exact path='/adminpanel/product' component={Product}/>
-          <Route exact path='/adminpanel/parcel' component={Parcel}/>
+          <Route path='/adminpanel/parcel' component={Parcel}/>
           <Route exact path='/adminpanel/headerAdmin' component={HeaderAdmin}/>
           <Route exact path ='/adminpanel/categoryProduct' component={CategoryProduct}/>
           <Route exact path ='/adminpanel/categoryParcel' component={CategoryParcel}/>

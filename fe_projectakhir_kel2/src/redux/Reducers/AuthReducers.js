@@ -3,12 +3,23 @@ const INITIAL_STATE = {
     name: 'Wili',
     email: 'wiliromarioakukom@gmail.com',
     role:'user',
-    isLogin: false,
+    isLogin: true,
     isLoading: false,
     error: '',
     cart:[],
     dataProduct:[],
     dataJSON:{}
+
+    // id: 0,
+    // name: '',
+    // email: '',
+    // role:'',
+    // isLogin: false,
+    // isLoading: false,
+    // error: '',
+    // cart:[],
+    // dataProduct:[],
+    // dataJSON:{}
     
 }
 
