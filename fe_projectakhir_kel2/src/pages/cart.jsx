@@ -14,31 +14,36 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import ReactImageMagnify from 'react-image-magnify';
 
 
-
-
 const CartPage=()=>{
     const Auth=useSelector(state=>state.Auth) 
     const dispatch=useDispatch()
+
     const [loading,setLoading]=useState(true)
-    const [showCart,setShowCart]=useState(false)
-    const [showMenuUser,setShowMenuUser]=useState(false)
-    const [showEdit,setShowEdit]=useState(false)
-    const [itemEdit,setItemEdit]=useState()
-    const [limitProduct,setLimitProduct]=useState([])
-    const [listProduct,setListProduct]=useState([])
     const [loadingEdit,setLoadingEdit]=useState(true)
     const [loadingEdit2,setLoadingEdit2]=useState(true)
+
+    const [showCart,setShowCart]=useState(false)                    // Show Dropdown Caart
+    const [showMenuUser,setShowMenuUser]=useState(false)            // Show Dropdown User
+    const [showEdit,setShowEdit]=useState(false)
     const [open,setOpen]=useState(0)
-    const [komposisiParcel,setKomposisiParcel]=useState([])
-    const [statusPerCategory,setStatusPerCategory]=useState([])
-    const [message,setMessage]=useState()
-    const [qtyParcel,setQtyParcel]=useState()
-    const [editSatuan,setEditSatuan]=useState()
+
+    const [itemEdit,setItemEdit]=useState()                         // Item / Transaksi Detail yg ingin di edit, 
+    const [komposisiParcel,setKomposisiParcel]=useState([])         // Komposisi parcel saat ini
+    const [message,setMessage]=useState()                           // Custom Message
+    const [limitProduct,setLimitProduct]=useState([])               // Limit Product per category di Parcel tersebut
+    const [listProduct,setListProduct]=useState([])                 // List product dari category yg terpakai
+    const [statusPerCategory,setStatusPerCategory]=useState([])     // Status per category apakah sudah kena limit, 0 atau belum.
+    
+    const [qtyParcel,setQtyParcel]=useState()                       // qty Parcelnya
+    
+    // Untuk edit item satuan, bukan yg parcel
+    const [editSatuan,setEditSatuan]=useState()             
     const [qtySatuan,setQtySatuan]=useState()
 
     const toggleModalEdit=()=>setShowEdit(!showEdit)
 
     useEffect(()=>{
+        console.log(Auth)
         fetchdata()
     },[])
 
@@ -63,8 +68,8 @@ const CartPage=()=>{
     }
 
     // Pembayaran
-    const [showPembayaran,setShowPembayaran]=useState(false)
-    const [image,setImage]=useState()
+    const [showPembayaran,setShowPembayaran]=useState(false)        // Show PopUp / Modal Pembayaran
+    const [image,setImage]=useState()                               // Set Image
 
     const clickSendBukti=(transaksi_id,users_id)=>{
         console.log(transaksi_id,users_id)
@@ -88,9 +93,9 @@ const CartPage=()=>{
         setShowPembayaran(!showPembayaran)
     }
 
-    // End Pembayaran
+    // End Pembayaran, dataforedit diambil dari transaksi detail yg ingin di edit
     const onClickOpenEditParcel=(dataforedit)=>{
-        console.log(dataforedit)
+
         setQtyParcel(dataforedit[0].qty)
         setMessage(dataforedit[0].message)
         setLoadingEdit(true)
@@ -102,6 +107,7 @@ const CartPage=()=>{
         setShowEdit(!showEdit)        
     }
 
+    // Mengambil limit yg ditentukan di parcel id yg terpakai
     const getLimitProduct=async(dataforedit)=>{
         try {
             const getlimit= await Axios.get(`${API_URL_SQL}/product/getDataParcelById/${dataforedit[0].parcel_id}`)
@@ -120,23 +126,64 @@ const CartPage=()=>{
             console.log(error)
         }
     }
+    
+    // Mengambil list product dari kategori yg ada di limit / yang ada di parcel id
+    const getProductList=async(arrlimit,dataforedit)=>{
+
+        // dari dataforedit di pindah ke komposisiParcel
+        const komposisiparcelnow=dataforedit[1].map((val,index)=>{
+            return {
+                products_id:val.products_id,
+                category:val.category,
+                nama:val.namaproduct,
+                qty:val.qtyproduct/val.qtyparcel
+            }
+        })
+
+        setKomposisiParcel(komposisiparcelnow)
+
+        // Mengambil categoryproduct id dari array limit
+        const arrCategoryId=arrlimit.map((val,index)=>{
+            return val.categoryproduct_id
+        })
+
+        
+
+        try {
+
+            // mengambil product dari masing-masing kategori yg digunakan
+            const gettobe=await Axios.post(`${API_URL_SQL}/product/getAllProductByCategory/`,{categoryproduct_id:arrCategoryId})
+            console.log(gettobe.data)
+            setListProduct(gettobe.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // Untuk Menentukan Status dari QTY per category apakah limit, 0 atau belum
     const inStatusPerCategory=async()=>{
 
+        // Memilah dari komposisiParcel dijadikan percategory di dalam saring
         let saring=limitProduct.map((val,index)=>{
             let komposisi=komposisiParcel.filter((filtering)=>{
 
                 return filtering.category==val.category
             })
+
+            // Jika ada category yang belum memiliki item sama sekali, maka dibikin qty:0 supaya tidak undefined
             if(komposisi.length==0){
                 return [{
                     category:val.category,
                     qty:0
                 }]
+
+            // jika ada item di category tersebut, maka langsung di return
             }else{
                 return komposisi
             }
         })
 
+        // Menjumlah total qty dari item yg ada di category masing-masing yang terpakai di parcel
         let qtypercategory=saring.map((val,index)=>{
             let qty=0
             val.map((value,index)=>{
@@ -147,6 +194,8 @@ const CartPage=()=>{
                 qty:qty
             }
         })
+
+        // Saatnya ditentukan apakah masing masing kategori sudah kena limit, masih 0 atau belum keduanya.
         let letstatusPerCategory=qtypercategory.map((val,index)=>{
             if(val.qty>=limitProduct[index].limitqty){
                 return{
@@ -175,35 +224,12 @@ const CartPage=()=>{
         setStatusPerCategory(letstatusPerCategory)
     }
 
-    const getProductList=async(arrlimit,dataforedit)=>{
-        console.log(dataforedit)
-        const komposisiparcelnow=dataforedit[1].map((val,index)=>{
-            return {
-                products_id:val.products_id,
-                category:val.category,
-                nama:val.namaproduct,
-                qty:val.qtyproduct/val.qtyparcel
-            }
-        })
-
-        setKomposisiParcel(komposisiparcelnow)
-        const arrCategoryId=arrlimit.map((val,index)=>{
-            return val.categoryproduct_id
-        })
-
-        
-
-        try {
-            const gettobe=await Axios.post(`${API_URL_SQL}/product/getAllProductByCategory/`,{categoryproduct_id:arrCategoryId})
-            console.log(gettobe.data)
-            setListProduct(gettobe.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    // Render isi parcel di modal edit
     const renderIsiParcel=()=>{
-        console.log(statusPerCategory)
+
         return komposisiParcel.map((val,index)=>{
+
+            // Untuk menentukan status limit, 0 atau belum di + -
             let status=statusPerCategory.filter((filtering)=>{
                 return filtering.category===val.category
             })
@@ -251,13 +277,18 @@ const CartPage=()=>{
     const clickMinus=(nama)=>{
 
         let minusInput=komposisiParcel.map((val,index)=>{
+
+            // Jika nama sesuai, maka -1
             if(val.nama==nama){
                 return{...val,qty:val.qty-1}
+            
+            // Jika tidak maka ya udah
             }else{
                 return {...val}
             }
         })
 
+        // Menghilangkan yg qty 0
         let deletezero=minusInput.filter((filtering)=>{
             return filtering.qty>0
         })
@@ -265,9 +296,10 @@ const CartPage=()=>{
         setKomposisiParcel(deletezero)
     }
     const clickPlus=(nama,category,products_id)=>{
-        let newkomposisi
-        console.log(products_id)
+
         let plusInput=komposisiParcel.map((val,index)=>{
+
+            // Jika sesuai maka +1
             if(val.nama==nama){
                 return{...val,qty:val.qty+1}
             }else{
@@ -282,8 +314,9 @@ const CartPage=()=>{
             return filtering.nama===nama
         })
 
+        // Jika belum limit di category produk tersebut dan produk itu tidak ada, maka tambah produk tersebut
         if(!isMax[0].isAtLimit&&isInKomposisi.length===0){
-            newkomposisi={
+            let newkomposisi={
                 products_id:products_id,
                 category:category,
                 nama:nama,
@@ -291,11 +324,13 @@ const CartPage=()=>{
             }
             plusInput.push(newkomposisi)
         }
-        console.log(plusInput)
+
         setKomposisiParcel(plusInput)
     }
+
+    // Render product dari kategori yg digunakan
     const renderProductList=()=>{
-        console.log(komposisiParcel)
+
         if(statusPerCategory){
             return limitProduct.map((val,index)=>{
                 let listprod=listProduct.filter((filtering)=>{
@@ -306,6 +341,7 @@ const CartPage=()=>{
                     return filtering.category==val.category
                 })
     
+                // Render Product
                 let maplistprod=listprod.map((val,index)=>{
                     return (
                         <div style={{
@@ -349,6 +385,8 @@ const CartPage=()=>{
                         </div>
                     )
                 })
+
+                // render row masing masing category
                 return (
                     <div style={{
                         display:"flex",
@@ -380,6 +418,8 @@ const CartPage=()=>{
 
         }
     }
+
+    // Render isi cart dropdown
     const renderCart=()=>{
         let arr1= Auth.cart.transaksidetailsatuan.map((val,index)=>{
             return (
@@ -458,6 +498,7 @@ const CartPage=()=>{
         return final
     }
 
+    // Render isi cart di cartPage
     const renderCartDetail=()=>{
         let arr1= Auth.cart.transaksidetailsatuan.map((val,index)=>{
             return (
@@ -638,6 +679,7 @@ const CartPage=()=>{
         } catch (error) {
         }
     }
+    
     const clickSaveSatuan=(products_id,transaksidetail_id)=>{
         let senttobe={
             user_id:`${Auth.id}`,
@@ -878,13 +920,14 @@ const CartPage=()=>{
                                 <div style={{
                                     marginLeft:20
                                 }}>
-                                    Qty : <input onChange={(e)=>{
+                                    Ganti Qty : <input onChange={(e)=>{
                                         if(e.target.value<=0){
                                             setQtyParcel(1)
                                         }else{
                                             setQtyParcel(e.target.value)
                                         }
                                     }} value={qtyParcel} type="number" defaultValue={itemEdit[0].qty} style={{width:50, border:"none",outline:"none"}}/>
+                                    
                                 </div>
                             </div>
                             
