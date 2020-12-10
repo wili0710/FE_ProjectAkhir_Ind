@@ -57,13 +57,13 @@ function App(props) {
   }
   },[])
 
-  // if(loading){
-  //   return(
-  //       <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
-  //           {FullPageLoading(loading,100,'#0095DA')}
-  //       </div>
-  //   )
-  // }
+  if(loading){
+    return(
+        <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+            {FullPageLoading(loading,100,'#0095DA')}
+        </div>
+    )
+  }
   const renderProtectedAdminRoutes=()=>{
     if(1===1){
     // if(Auth.role==="Admin"){
