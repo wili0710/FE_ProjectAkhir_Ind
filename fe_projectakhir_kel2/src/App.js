@@ -18,12 +18,13 @@ import CategoryProduct from './../src/pages/admin/categoryProduct'
 import CategoryParcel from './../src/pages/admin/categoryParcel'
 import DataProduct from './../src/pages/Product/dataProduct'
 import DetailParcel from './../src/pages/Product/detailParcel'
-
+import {connect} from 'react-redux';
 import CartPage from './pages/cart';
 import AdminReport from './pages/admin/adminreport';
 import Example from './pages/hapusaja';
+import {LoginFunc,AddcartAction} from './redux/Actions'
 
-function App() {
+function App(props) {
   
   const Auth=useSelector(state=>state.Auth)
   const dispatch=useDispatch()
@@ -32,6 +33,24 @@ function App() {
 
   useEffect(()=>{
   console.log(Auth.id)
+  var id = localStorage.getItem('id')
+  console.log(id)
+  if(id){
+    Axios.post(`${API_URL_SQL}/auth/newkeeplogin`,{
+      id
+    }).then((res)=>{
+      console.log('newkeeplogin jalan')
+      props.LoginFunc(res.data[0].user)
+      props.AddcartAction(res.data[1])
+    }).catch((err)=>{
+      console.log(err)
+    }).finally(()=>{
+      setLoading(false)
+    })
+  }else {
+    console.log('masuk ke else')
+    setLoading(false)
+  }
   },[])
 
   // if(loading){
@@ -85,5 +104,4 @@ const Mapstatetoprops=({Auth})=>{
   }
 }
 
-export default App;
-// export default withStyles(Styles)(connect(Mapstatetoprops,{LoginThunk})(Login));
+export default connect(Mapstatetoprops,{LoginFunc, AddcartAction}) (App);
