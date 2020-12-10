@@ -39,7 +39,7 @@ const CartPage=()=>{
     // Untuk edit item satuan, bukan yg parcel
     const [editSatuan,setEditSatuan]=useState()             
     const [qtySatuan,setQtySatuan]=useState()
-``
+
     const toggleModalEdit=()=>setShowEdit(!showEdit)
 
     useEffect(()=>{
@@ -56,7 +56,7 @@ const CartPage=()=>{
             // Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             await Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             .then((res)=>{
-                console.log(res.data)
+                console.log(res.data,' line 55')
                 dispatch({type:'CART',cart:res.data})
                 setLoading(false)
                 
@@ -1088,7 +1088,7 @@ const CartPage=()=>{
                         position:"relative",
                         }}
                         onMouseEnter={()=>setShowMenuUser(true)} onMouseLeave={()=>setShowMenuUser(false)}>
-                        <BiUser color="white" size="20" style={{cursor:"pointer"}}/> Halo, {Auth.name}
+                        <BiUser color="white" size="20" style={{cursor:"pointer"}}/> Halo, {Auth.nama}
                         <div style={{
                             position:"absolute",
                             display:showMenuUser?"block":"none",

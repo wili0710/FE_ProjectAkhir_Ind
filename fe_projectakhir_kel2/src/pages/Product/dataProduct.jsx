@@ -335,7 +335,7 @@ class dataProduct extends Component {
                             </Dropdown.Menu>
                         </Dropdown>
                         <p style={{fontSize:'15px', marginTop:'10px',color:'white'}}>
-                        Hallo, {this.props.name}</p>
+                        Hallo, {this.props.nama}</p>
                        
                     </div>
                 </div>    

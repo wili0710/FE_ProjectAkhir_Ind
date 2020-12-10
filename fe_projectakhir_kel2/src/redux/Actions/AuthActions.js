@@ -1,10 +1,11 @@
 import Axios from 'axios'
 import {API_URL_SQL} from './../../helpers/apiUrl'
 
-export const LoginFunc =(obj)=>{
+export const LoginFunc =(obj,cart)=>{
     return {
         type:'LOGIN',
-        payload:obj
+        payload:obj,
+        cart:cart
     }
 }
 
