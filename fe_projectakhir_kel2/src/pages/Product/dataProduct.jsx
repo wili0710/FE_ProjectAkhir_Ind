@@ -230,7 +230,6 @@ class dataProduct extends Component {
 
     onCheckDataMakanan=(id)=>{
         console.log(id)
-        console.log('data makanan')
         let productid=id
         let userid=this.props.id
         console.log(userid)
@@ -267,7 +266,6 @@ class dataProduct extends Component {
     onCheckDataChocolate=(id)=>{
         console.log(id)
         let productid=id
-        console.log('data chocolate')
         let userid=this.props.id
         console.log(userid)
         Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{

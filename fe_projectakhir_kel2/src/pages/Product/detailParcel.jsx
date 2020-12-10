@@ -326,10 +326,11 @@ class DetailParcel extends Component {
          this.setState({arrMessage:e.target.value})
      }
      renderMakanan=()=>{
-        var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id
+        var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id // product_id
         var filterprod=this.state.dataArrMakanan.filter((val)=>{
             return val.categoryproduct_id === prodid
         })
+        console.log(filterprod, '333')
         var total =0
         for(var i=0; i<filterprod.length; i++){
             total += filterprod[i].qty
@@ -485,34 +486,100 @@ class DetailParcel extends Component {
      }
 
      saveMessage=()=>{
+
+
+        
          console.log('button add message jalan')
-            var sendToDb = this.state.dataArrMakanan
+            var limitMinuman = this.state.dataParcelByIdMinuman.qty
+            var limitMakanan= this.state.dataParcelByIdMakanan.qty
+            var limitChocolate= this.state.dataParcelByIdChocolate.qty
+            
             var messagesend=this.state.arrMessage
+            var parcelid=this.state.dataParcelByIdChocolate.parcel_id
+            var sendToDb = this.state.dataArrMakanan
             var arrProduct= sendToDb.map((val)=>val.parcel_id)
             var qtyProduct = sendToDb.map((val)=>val.qty)
-            var parcelid=this.state.dataParcelByIdChocolate.parcel_id
+
+
+
+           
+            console.log(filterprodminuman,' line 519')
+            var totalQtyMinuman = 0
+            var totalQtyMakanan = 0
+            var totalQtyChocolate = 0
+
+            // looping minuman
+            var productidminuman= this.state.dataParcelByIdMinuman.categoryproduct_id // product_id
+            console.log(this.state.dataArrMakanan)
+            var filterprodminuman = this.state.dataArrMakanan.filter((val)=>{
+                return val.categoryproduct_id === productidminuman
+            })
+
+            for(var i =0; i<filterprodminuman.length; i++){
+                totalQtyMinuman += filterprodminuman[i].qty
+            }
+
+            // looping makanan
+            var productidmakanan= this.state.dataParcelByIdMakanan.categoryproduct_id
+            var  filterprodmakanan= this.state.dataArrMakanan.filter((val)=>{
+                return val.categoryproduct_id === productidmakanan
+            })
+
+            for(var i =0; i<filterprodmakanan.length; i++){
+                totalQtyMakanan += filterprodmakanan[i].qty
+            }
+
+            // looping chocolate
+            var productidchocolate=this.state.dataParcelByIdChocolate.categoryproduct_id
+            var filterprodchocolate= this.state.dataArrMakanan.filter((val)=>{
+                return val.categoryproduct_id === productidchocolate
+            })
+
+            for(var i=0; i<filterprodchocolate.length; i++){
+                totalQtyChocolate += filterprodchocolate[i].qty
+            }
+
+            console.log(totalQtyMinuman,' total qty minuman')
+            console.log(totalQtyChocolate,' total qty chocolate')
+            console.log(totalQtyMakanan,' total qty Makanan')
+
+
+            if(totalQtyMinuman == limitMinuman && totalQtyMakanan == limitMakanan && totalQtyChocolate == limitChocolate){
+                console.log('true')
+                var obj = {
+                    user_id:userid,
+                    products_id:"0",
+                    parcel_id:parcelid,
+                    qty:"1",
+                    productforparcel_id:arrProduct,
+                    qtyproductforparcel:qtyProduct,
+                    message:messagesend
+                 }
+                //  console.log(obj)
+                //  Axios.post(`${API_URL_SQL}/transaksi/addtocart`,obj).then((res)=>{
+                //      console.log('nberhasil')
+                //     console.log(res.data)
+                //  }).catch((err)=>{
+                //      console.log(err)
+                //  })
+
+            }else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Check Kembali Barang Anda',
+                    text: 'Ada Barang Yang Kurang'                    
+                })
+            }
+            
             console.log(arrProduct)
-            console.log(qtyProduct)
+            console.log(qtyProduct[0])
+            console.log(qtyProduct[1])
+            console.log(qtyProduct[2])
             let userid=this.props.id
             console.log(userid)
 
 
-         var obj = {
-            user_id:userid,
-            products_id:"0",
-            parcel_id:parcelid,
-            qty:"1",
-            productforparcel_id:arrProduct,
-            qtyproductforparcel:qtyProduct,
-            message:messagesend
-         }
-         console.log(obj)
-         Axios.post(`${API_URL_SQL}/transaksi/addtocart`,obj).then((res)=>{
-             console.log('nberhasil')
-            console.log(res.data)
-         }).catch((err)=>{
-             console.log(err)
-         })
+       
 
      }
      
@@ -520,7 +587,7 @@ class DetailParcel extends Component {
     render() { 
             // console.log(this.state.dataArrMakanan)
             // console.log(this.state.dataMakanan)
-            // console.log(this.state.dataParcelByIdChocolate.parcel_id)
+            console.log(this.state.dataParcelByIdMinuman.qty ,' ini maksimal beli minuman')
             // console.log(this.props.id, 'line 531')
             
             const {classes}= this.props
@@ -658,11 +725,11 @@ class DetailParcel extends Component {
                                         </table>
                                     
                                 </div>
-                                <Link to='/cart'>
+                                
                                     <div className="button-add" onClick={this.saveMessage}>
                                         <p>Beli</p>
                                     </div>
-                                </Link>
+                                
                                
                             
                         </div>
