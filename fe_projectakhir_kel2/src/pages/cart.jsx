@@ -226,7 +226,7 @@ const CartPage=()=>{
 
     // Render isi parcel di modal edit
     const renderIsiParcel=()=>{
-
+        console.log(statusPerCategory)
         return komposisiParcel.map((val,index)=>{
 
             // Untuk menentukan status limit, 0 atau belum di + -

@@ -11,6 +11,7 @@ import { Window } from '@progress/kendo-react-dialogs';
     SplitButton, SplitButtonItem, Chip, ChipList, Toolbar, ToolbarItem } from '@progress/kendo-react-buttons';
 import Parcel from './../../../src/assets/parcel1.jpg';
 import {BiPlus,BiMinus,BiCart,BiUser} from 'react-icons/bi'
+import {FcCheckmark} from 'react-icons/fc'
 import TextField from '@material-ui/core/TextField';
 import { CgInsertBefore } from 'react-icons/cg';
 import { Link } from 'react-router-dom'
@@ -40,6 +41,12 @@ class DetailParcel extends Component {
         buttonMinuman:false,
         buttonChocolate:false,
         dataArrMakanan:[],
+        checklistMinuman:false,
+        checklistMakanan:false,
+        checklistChocolate:false,
+        renderCartMinuman:[],
+        renderCartMakanan:[],
+        renderCartChocolate:[]
      }
      
 
@@ -209,7 +216,6 @@ class DetailParcel extends Component {
      
      
      AddDataMakanan=(id)=>{
-
         var dataArrMakanan = this.state.dataArrMakanan
         
         var a = dataArrMakanan.findIndex((val)=>{
@@ -235,8 +241,7 @@ class DetailParcel extends Component {
                 categoryproduct_id:this.state.dataParcelByIdMakanan.categoryproduct_id,
                 namaProduct:this.state.dataMakanan[find].nama
             })
-            
-            
+                
             this.setState({dataArrMakanan:arrMakanan2})
         }else {
 
@@ -247,14 +252,32 @@ class DetailParcel extends Component {
             // addData={...addData,qty:addData.qty+1}
             this.setState({dataArrMakanan:dataSama})
         }
-        }
+        var totalQtyMakanan =0
+        var limitMakanan = this.state.dataParcelByIdMakanan.qty
+       var productidmakanan= this.state.dataParcelByIdMakanan.categoryproduct_id // product_id
+       console.log(this.state.dataArrMakanan)
+       var filterprodmakanan = this.state.dataArrMakanan.filter((val)=>{
+           return val.categoryproduct_id === productidmakanan
+       })
+       for(var i =0; i<filterprodmakanan.length; i++){
+           totalQtyMakanan += filterprodmakanan[i].qty
+       }
+       if(totalQtyMakanan == limitMakanan){
+           console.log('checklistmakanan true 266')
+           this.setState({checklistMakanan:true,renderCartMakanan:filterprodmakanan})
+       }else {
+           this.setState({renderCartMakanan:filterprodmakanan})
+       }
+       console.log(totalQtyMakanan,' total qty minuman 323')
+
+    }
 
      AddDataMinuman=(id)=>{
-         
+        
 
          var dataArrMakanan = this.state.dataArrMakanan
          console.log(dataArrMakanan,' ini dataArrMakanan')
-         var a = dataArrMakanan.findIndex((val)=>{
+         var indexMinuman = dataArrMakanan.findIndex((val)=>{ // find index si product minuman
 
              return val.parcel_id==id
          })
@@ -268,7 +291,7 @@ class DetailParcel extends Component {
             text: 'Berhasil Menambahkan Product'                    
         })
  
-         if(a== -1){
+         if(indexMinuman== -1){
              var arrMakanan2= this.state.dataArrMakanan
              arrMakanan2.push({
                  parcel_id:id,
@@ -280,16 +303,38 @@ class DetailParcel extends Component {
          }else {
              
              var dataSama = this.state.dataArrMakanan
-             dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
+             dataSama[indexMinuman]= {...dataSama[indexMinuman],qty:dataSama[indexMinuman].qty+1}
              this.setState({dataArrMakanan:dataSama})
          }
+
+         var totalQtyMinuman =0
+         var limitMinuman = this.state.dataParcelByIdMinuman.qty
+        var productidminuman= this.state.dataParcelByIdMinuman.categoryproduct_id // product_id
+        console.log(this.state.dataArrMakanan)
+        var filterprodminuman = this.state.dataArrMakanan.filter((val)=>{
+            return val.categoryproduct_id === productidminuman
+        })
+        console.log(filterprodminuman)
+        for(var i =0; i<filterprodminuman.length; i++){
+            totalQtyMinuman += filterprodminuman[i].qty
+        }
+        if(totalQtyMinuman == limitMinuman){
+            console.log('checklistminuman true 266')
+            this.setState({checklistMinuman:true,renderCartMinuman:filterprodminuman})
+        }else {
+            this.setState({renderCartMinuman:filterprodminuman})
+        }
+        console.log(totalQtyMinuman,' total qty minuman 323')
+         
+        // batas ngitung total qtyminuman
+
+
      }
 
      AddDataChocolate=(id)=>{
         
 
-        var dataArrMakanan = this.state.dataArrMakanan
-        
+        var dataArrMakanan = this.state.dataArrMakanan // data array chocolate 
         var a = dataArrMakanan.findIndex((val)=>{
 
             return val.parcel_id==id
@@ -311,7 +356,7 @@ class DetailParcel extends Component {
                 categoryproduct_id:this.state.dataParcelByIdChocolate.categoryproduct_id,
                 namaProduct:this.state.dataChocolate[find].nama
             })
-                this.setState({dataArrMakanan:arrMakanan2})
+                this.setState({dataArrMakanan:arrMakanan2, })
 
         }else {
             
@@ -319,6 +364,29 @@ class DetailParcel extends Component {
             dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
             this.setState({dataArrMakanan:dataSama})
         }
+
+
+            var totalQtyChocolate =0
+            var limitChocolate = this.state.dataParcelByIdChocolate.qty
+        var productidminuman= this.state.dataParcelByIdChocolate.categoryproduct_id // product_id
+        console.log(this.state.dataArrMakanan)
+        var filterprodchocolate = this.state.dataArrMakanan.filter((val)=>{
+            return val.categoryproduct_id === productidminuman
+        })
+        console.log(filterprodchocolate)
+        for(var i =0; i<filterprodchocolate.length; i++){
+            totalQtyChocolate += filterprodchocolate[i].qty
+        }
+        if(totalQtyChocolate == limitChocolate){
+            console.log('checklistminuman true 266')
+            this.setState({checklistChocolate:true,renderCartChocolate:filterprodchocolate})
+        }else {
+            this.setState({renderCartChocolate:filterprodchocolate})
+        }
+        console.log(totalQtyChocolate,' total qty minuman 323')
+        
+       // batas ngitung total qtyminuman
+        
      }
 
      addMessage=(e)=>{
@@ -469,26 +537,111 @@ class DetailParcel extends Component {
          })
      }
 
-     renderCartProduct=()=>{
-         return this.state.dataArrMakanan.map((val,index)=>{
-             return (
-                 <>
-                 <tr>
-                    <td>{val.namaProduct}</td>
-                    <td> {val.qty}</td>
-                    <td onClick={()=>this.onDeleteProduct(index)}>
-                        <AiFillDelete className="delete-icon"/>
-                    </td>
-                 </tr>
-                 </>
-             )
-         })
+     renderCartMinuman=()=>{
+        var checkMinuman= this.state.checklistMinuman
+        return this.state.renderCartMinuman.map((val,index)=>{
+            if(checkMinuman){
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                           <td><FcCheckmark/></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }else {
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                        <td></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }
+        })
+     }
+     
+     renderCartMakanan=()=>{
+        var checkMakanan= this.state.checklistMakanan
+        return this.state.renderCartMakanan.map((val,index)=>{
+            console.log(index)
+            if(checkMakanan){
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                           <td><FcCheckmark/></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }else {
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                        <td></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }
+        })
+         
      }
 
+     renderCartChocolate=()=>{
+        var checkChocolate= this.state.checklistChocolate
+        return this.state.renderCartChocolate.map((val,index)=>{
+            console.log(index)
+            if(checkChocolate){
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                           <td><FcCheckmark/></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }else {
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                        <td></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }
+        })
+     }
+
+    
+
      saveMessage=()=>{
-
-
-        
          console.log('button add message jalan')
             var limitMinuman = this.state.dataParcelByIdMinuman.qty
             var limitMakanan= this.state.dataParcelByIdMakanan.qty
@@ -499,7 +652,7 @@ class DetailParcel extends Component {
             var sendToDb = this.state.dataArrMakanan
             var arrProduct= sendToDb.map((val)=>val.parcel_id)
             var qtyProduct = sendToDb.map((val)=>val.qty)
-
+            var userid=this.props.id
 
 
            
@@ -514,7 +667,6 @@ class DetailParcel extends Component {
             var filterprodminuman = this.state.dataArrMakanan.filter((val)=>{
                 return val.categoryproduct_id === productidminuman
             })
-
             for(var i =0; i<filterprodminuman.length; i++){
                 totalQtyMinuman += filterprodminuman[i].qty
             }
@@ -555,13 +707,13 @@ class DetailParcel extends Component {
                     qtyproductforparcel:qtyProduct,
                     message:messagesend
                  }
-                //  console.log(obj)
-                //  Axios.post(`${API_URL_SQL}/transaksi/addtocart`,obj).then((res)=>{
-                //      console.log('nberhasil')
-                //     console.log(res.data)
-                //  }).catch((err)=>{
-                //      console.log(err)
-                //  })
+                 console.log(obj)
+                 Axios.post(`${API_URL_SQL}/transaksi/addtocart`,obj).then((res)=>{
+                     console.log('nberhasil')
+                    console.log(res.data)
+                 }).catch((err)=>{
+                     console.log(err)
+                 })
 
             }else {
                 Swal.fire({
@@ -575,7 +727,7 @@ class DetailParcel extends Component {
             console.log(qtyProduct[0])
             console.log(qtyProduct[1])
             console.log(qtyProduct[2])
-            let userid=this.props.id
+            
             console.log(userid)
 
 
@@ -690,49 +842,54 @@ class DetailParcel extends Component {
                                 </div>
                         
                         </div>
+                        
+                        
 
-                        <div className="render-kanan">
-                                <div className="header-kanan">
-                                    <img src={Logo} alt="Logo" className="logo-header-kanan" />  
-                                </div>
-                                <div className="cart-kanan">
-                                    <p style={{fontSize:'25px',fontWeight:'700',color:'tomato'}}>CART</p>
-                                </div>
-                                <div className="message-kanan">
-                                    <p style={{fontSize:'15px',fontWeight:'700',color:'tomato'}}>Message:</p>
-                                    <p style={{marginTop:'-20px'}}>
-                                        {this.state.arrMessage}
-                                    </p>
-                                </div>
-
-                                <div className="cart-details">
-                                    <p style={{fontSize:'15px',fontWeight:'700',color:'tomato'}}>Cart Details:</p>
-                                </div>
-
-                                <div className="render-data-kanan">
-                                    <p style={{fontSize:'25px', marginLeft:'50px'}}>{this.state.dataParcelByIdChocolate.namaParcel}</p>
-                                    <p>Details Package:</p>
-                                    
-                                        <table>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Qty</th>
-                                                <th>Action</th>
-                                            </tr>
-                                            
-                                            {this.renderCartProduct()}
-                                            
-                                        </table>
-                                    
-                                </div>
-                                
-                                    <div className="button-add" onClick={this.saveMessage}>
-                                        <p>Beli</p>
+                            <div className="render-kanan">
+                                    <div className="header-kanan">
+                                        <img src={Logo} alt="Logo" className="logo-header-kanan" />  
                                     </div>
-                                
-                               
+                                    <div className="cart-kanan">
+                                        <p style={{fontSize:'25px',fontWeight:'700',color:'tomato'}}>CART</p>
+                                    </div>
+                                    <div className="message-kanan">
+                                        <p style={{fontSize:'15px',fontWeight:'700',color:'tomato'}}>Message:</p>
+                                        <p style={{marginTop:'-20px'}}>
+                                            {this.state.arrMessage}
+                                        </p>
+                                    </div>
+
+                                    <div className="cart-details">
+                                        <p style={{fontSize:'15px',fontWeight:'700',color:'tomato'}}>Cart Details:</p>
+                                    </div>
+
+                                    <div className="render-data-kanan">
+                                        <p style={{fontSize:'25px', marginLeft:'50px'}}>{this.state.dataParcelByIdChocolate.namaParcel}</p>
+                                        <p>Details Package:</p>
+                                        
+                                            <table>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th></th>
+                                                    <th>Qty</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                
                             
-                        </div>
+                                                {this.renderCartMakanan()}
+                                                {this.renderCartMinuman()}
+                                                {this.renderCartChocolate()}
+                                                
+                                            </table>
+                                        
+                                    </div>
+                                        <a href="/cart">
+                                            <div className="button-add" onClick={this.saveMessage}>
+                                                <p>Beli</p>
+                                            </div>
+                                        </a>
+
+                            </div>
 
                     </div>
 

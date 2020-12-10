@@ -209,7 +209,7 @@ class dataProduct extends Component {
         let userid=this.props.id
         console.log(userid)
         
-        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
+        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
             user_id:userid,
             products_id:productid,
             parcel_id:0,
@@ -233,7 +233,7 @@ class dataProduct extends Component {
         let productid=id
         let userid=this.props.id
         console.log(userid)
-        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
+        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
             user_id:userid,
             products_id:productid,
             parcel_id:0,
@@ -268,7 +268,7 @@ class dataProduct extends Component {
         let productid=id
         let userid=this.props.id
         console.log(userid)
-        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
+        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
             user_id:userid,
             products_id:productid,
             parcel_id:0,
