@@ -43,6 +43,7 @@ const CartPage=()=>{
     const toggleModalEdit=()=>setShowEdit(!showEdit)
 
     useEffect(()=>{
+        console.log(Auth)
         fetchdata()
     },[])
 
