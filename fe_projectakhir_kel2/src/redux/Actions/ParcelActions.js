@@ -3,6 +3,7 @@ import {API_URL_SQL} from '../../helpers'
 
 export const loadCategories = () => {
     return (dispatch) => {
+        // console.log('loadcategories on process')
         dispatch({type:'LOADING'});
         try {
             Axios.get(`${API_URL_SQL}/product/getallcatprod`)
@@ -12,16 +13,27 @@ export const loadCategories = () => {
                     Axios.get(`${API_URL_SQL}/product/getallproduct`)
                     .then((Product)=>{
                         Axios.get(`${API_URL_SQL}/parcel/getallparcel`)
-                        .then((Parcel)=>{   
+                        .then((Parcel)=>{
+                            for(let i = 0; i < Parcel.data.items.length; i++){
+                                for(let k=0; k < Parcel.data.items[i].length; k++){
+                                    if(Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.items[i][k].parcel_id))].items) {
+                                        let item=Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.items[i][k].parcel_id))].items;
+                                        item.push(Parcel.data.items[i][k])
+                                        Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.items[i][k].parcel_id))].items=item;
+                                    }else{
+                                        Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.items[i][k].parcel_id))].items=[Parcel.data.items[i][k]];
+                                    };
+                                };
+                            };
                             const data={
                                 Product_Category    : Product_Category.data,
                                 Parcel_Category     : Parcel_Category.data,
                                 Product             : Product.data,
-                                Parcel              : Parcel.data
+                                Parcel              : Parcel.data.allparcel
                             };
                             dispatch({type:'LOAD',payload:data});
                         }).catch((error)=>{
-                            dispatch({type:'Error',payload:error.response.data.message});
+                            dispatch({type:'Error',payload:error.message});
                         })
                     }).catch((error)=>{
                         dispatch({type:'Error',payload:error.response.data.message});

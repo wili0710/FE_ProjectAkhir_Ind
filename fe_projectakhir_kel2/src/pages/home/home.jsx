@@ -6,96 +6,65 @@ import {
 } from '../../helpers'
 import { 
     icon,
-    illustration_1
+    illustration_1,
+    d_parcel
 } from '../../assets'
 import { 
     Header,
     packageCarousel
 } from '../../components';
+import { connect } from 'react-redux';
+import { loadCategories } from '../../redux/Actions';
+import { priceFormatter } from '../../helpers/apiUrl';
 
-/* data dummy */
-const packages = [
-    {
-        id: 1,
-        title: 'Object',
-        copy: 'asdasdas'
-    },
-    {
-        id: 2,
-        title: 'Object',
-        copy: 'asdasdas'
-    },
-    {
-        id: 3,
-        title: 'Package',
-        copy: 'asdasdas '
-    },
-    {
-        id: 4,
-        title: 'Object',
-        copy: 'asdasdas',
-    },
-    {
-        id: 5,
-        title: 'Object',
-        copy: 'asdasdas',
-    },
-    {
-        id: 6,
-        title: 'Package',
-        copy: 'asdasdas',
-    },
-    {
-        id: 7,
-        title: 'Package',
-        copy: 'asdasdas',
-    },
-    {
-        id: 8,
-        title: 'Package',
-        copy: 'asdasdas',
-    },
-    {
-        id: 9,
-        title: 'Object',
-        copy: 'asdasdas',
-    }
-];
-/* end of data dummy */
+const mapStatetoProps = (state) => {
+    return {
+        Parcel:state.Parcel
+    };
+};
 
-class Home extends React.Component {
+export default connect(mapStatetoProps,{loadCategories}) (class Home extends React.Component {
     state = {
         inputSearch:'',
-        listPackage:[],
-        filteredPackage:[]
+        filteredPackage:[],
+        product_categories:[],
     };
 
     componentDidMount() {
+        this.props.loadCategories();
+        this.setState({product_categories:this.props.Parcel.Product_Category})
         draggableCard(".cardBx","left",2);
-        this.setState({listPackage:packages});
     };
 
-    checkLetter() {
-        return packages.title.toLowerCase()  
-    }
+    componentDidUpdate() {
+        
+    };
 
-    onSearchInputChange(e) {
-        //* temporary code *// 
+    onSearchInputChange(e,prop) {
+        console.log(prop.array)
         let newArr = [];
-        for (let i = 0; i < packages.length; i++) {
-            if(packages[i].title.toLowerCase().includes(e.target.value)) {
-                newArr.push(packages[i])
+        for (let i = 0; i < prop.array.length; i++) {
+            if(prop.array[i].nama.toLowerCase().includes(e.target.value)) {
+                newArr.push(prop.array[i])
             };
         };
         this.setState({filteredPackage:newArr})
     };
 
-    componentDidUpdate() {
-        // console.log(this.state.listPackage);
-        // console.log(this.state.filteredPackage);
+
+    onChangeInput=(e)=> {
+        if(this.state.product_categories.findIndex( val => parseInt(e.target.value) === val.id)!==-1){
+            this.state.product_categories.splice(this.state.product_categories.findIndex( val => parseInt(e.target.value) === val.id),1);
+            this.setState({product_categories:this.state.product_categories});
+        }else{
+            this.state.product_categories.push(this.props.Parcel.Product_Category[this.props.Parcel.Product_Category.findIndex(val=>val.id === parseInt(e.target.value))]);
+            this.setState({product_categories:this.state.product_categories.sort((a,b) => (a.id > b.id) ? 1 :-1 )});
+        };
     };
 
     render() { 
+        console.log(this.state.product_categories)
+        
         return ( 
             <>
                 <Header/> 
@@ -118,7 +87,7 @@ class Home extends React.Component {
                             </div>
                         </div>
                         <div className="lowerContent">
-                            <input type="text" placeholder="Search Package" onChange={debounce((e)=>this.onSearchInputChange(e), 700)}/> 
+                            <input type="text" placeholder="Search Package" onChange={debounce((e)=>this.onSearchInputChange(e,{array:this.props.Parcel.Parcel}), 700)}/> 
                         </div>
                     </div>   
                 </section>
@@ -126,9 +95,9 @@ class Home extends React.Component {
                     <div className="bg">
                 {
                     this.state.filteredPackage.length?
-                    packageCarousel(this.state.filteredPackage)
+                    packageCarousel({obj:this.state.filteredPackage, rest:this.props.Parcel})
                     :
-                    packageCarousel(this.state.listPackage)
+                    packageCarousel({obj:this.props.Parcel.Parcel, rest:this.props.Parcel})
                 }
                     </div>
                 </section>
@@ -143,86 +112,67 @@ class Home extends React.Component {
                         </p>
                         <div className="productBx">
                             <div className="leftBx">
-                                Select Category: 
-                                <label>
-                                    Syrup
-                                    <input type="checkbox" name=""/>
-                                </label>
-                                <label>
-                                    Snack
-                                    <input type="checkbox" name=""/>
-                                </label>
-                                <label>
-                                    Chocolate
-                                    <input type="checkbox" name=""/>
-                                </label>
-                                <label>
-                                    Breads
-                                    <input type="checkbox" name=""/>
-                                </label>
+                                <div className="hint">
+                                    Check to hide categories: 
+                                </div>
+                                <div className="lists">
+                                {
+                                    this.props.Parcel.Product_Category.map((val)=>{
+                                        return (
+                                        <div className="cat_list" key={val.id}>
+                                            <div>{val.nama}</div>    
+                                            <input type="checkbox" name={val.nama} value={val.id} onChange={this.onChangeInput}/>
+                                        </div>
+                                        )
+                                    })
+                                }
+                                </div>
                             </div>
                             <div className="rightBx">
-                                <div className="border">
-                                    <div className="search">
-                                        <div className="cat">
-                                            Sirup
-                                        </div>
-                                        <input type="text" name="search" placeholder="insert product's name you want to search"/>
-                                    </div>
-                                    <div className="list">
-                                        <div className="cardlist">
-                                            <div className="card">
-                                                a
+                                {
+                                    this.state.product_categories.map((val)=>{
+                                    return (
+                                        <div className="border" key={val.id}>
+                                            <div className="search">
+                                                <div className="cat">
+                                                    {val.nama}
+                                                </div>
+                                                <input type="text" name="search" placeholder="insert product's name you want to search"/>
+                                                <button className="more">See All..</button>
+                                            </div>
+                                            <div className="list">
+                                                <div className="cardlist">
+                                                    {
+                                                        this.props.Parcel.Product.map((item)=>{
+                                                            if(item.categoryproduct_id===val.id){
+                                                                return (
+                                                                    <div className="card" key={item.id}>
+                                                                        <div className="imgBx">
+                                                                            <img src={item.image}/>
+                                                                        </div>
+                                                                        <div className="namaitem">
+                                                                            {item.nama}
+                                                                        </div>
+                                                                        <div className="hargaitem">
+                                                                            {priceFormatter(item.harga)}
+                                                                        </div>
+                                                                        <div className="additem">
+                                                                            <div>-</div>
+                                                                            <div>2</div>
+                                                                            <div>+</div>
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        })
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div className="border">
-                                    <div className="search">
-                                        <div className="cat">
-                                            Snack
-                                        </div>
-                                        <input type="text" name="search" placeholder="insert product's name you want to search"/>
-                                    </div>
-                                    <div className="list">
-                                        <div className="cardlist">
-                                            <div className="card">
-                                                a
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="border">
-                                    <div className="search">
-                                        <div className="cat">
-                                            Chocolate
-                                        </div>
-                                        <input type="text" name="search" placeholder="insert product's name you want to search"/>
-                                    </div>
-                                    <div className="list">
-                                        <div className="cardlist">
-                                            <div className="card">
-                                                a
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="border">
-                                    <div className="search">
-                                        <div className="cat">
-                                            Breads
-                                        </div>
-                                        <input type="text" name="search" placeholder="insert product's name you want to search"/>
-                                    </div>
-                                    <div className="list">
-                                        <div className="cardlist">
-                                            <div className="card">
-                                                a
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
+                                    )
+
+                                    })
+                                }
                             </div>
                         </div>
                     </div>
@@ -230,6 +180,4 @@ class Home extends React.Component {
             </>
         );
     };
-};
- 
-export default Home;
+});

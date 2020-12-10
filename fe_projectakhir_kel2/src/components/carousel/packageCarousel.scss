@@ -5,7 +5,7 @@
     position   : relative;
     overflow   : hidden;
     white-space: nowrap;
-    margin     : -220px 0 0 0;
+    margin     : -250px 0 0 0;
     padding    : 15px;
     transition : 0.2s;
 
@@ -26,27 +26,36 @@
 
         .Bx {
             @include flexin($r, $sp, $cn);
-            width: 100%;
+            width : 100%;
             height: 100%;
 
             .content {
                 @include flexin($cl, $cn, $cn);
                 text-align: center;
                 width     : 200px;
+                height    : 100%;
+
+                &:hover {
+                    cursor: pointer;
+
+                    h2 {
+                        letter-spacing: 1px;
+                    }
+                }
 
                 .tag {
-                    margin-top: -40px;
+                    margin-top      : -40px;
                     background-color: $dk_gray;
-                    padding: 3px 20px;
-                    font-size: 14px;
-                    font-family: 'Cambria',sans-serif;
-                    color: $tertiary;
+                    padding         : 3px 20px;
+                    font-size       : 14px;
+                    font-family     : 'Cambria', sans-serif;
+                    color           : $tertiary;
                 }
 
                 .imageBx {
                     position  : relative;
                     width     : 120px;
-                    height    : 120px;
+                    height    : 150px;
                     transition: 0.5s;
 
                     img {
@@ -55,6 +64,23 @@
                         height    : 100%;
                         object-fit: cover;
                     }
+                }
+
+                h2 {
+                    font-size     : 20px;
+                    letter-spacing: .5px;
+                    font-weight   : 500;
+                    font-family   : 'Fredoka One', cursive;
+                    margin        : 0;
+                    color         : $primary;
+                }
+
+                p {
+                    font-size     : 13px;
+                    color         : $tertiary;
+                    font-family   : 'Cambria', sans-serif;
+                    letter-spacing: 2px;
+                    margin        : 0;
                 }
             }
 
@@ -90,12 +116,6 @@
                                 width     : 100%;
                                 height    : 100%;
                                 object-fit: fill;
-                                filter    : invert(82%) sepia(0%) saturate(10%) hue-rotate(223deg) brightness(150%) contrast(110%);
-
-                                &:hover {
-                                    cursor: pointer;
-                                    filter: invert(10%) sepia(0%) saturate(30%) hue-rotate(223deg) brightness(102%) contrast(110%);
-                                }
                             }
                         }
 
@@ -120,7 +140,7 @@
                         width      : 100%;
                         margin     : 5px 0 !important;
                         line-height: 15px;
-                    }   
+                    }
                 }
 
                 .lower {
@@ -133,9 +153,45 @@
                         margin-top: 5px;
                         font-size : 9px;
                     }
+
                     .categoryBx {
-                        height: 80px;
-                        border: $borderset;
+                        position: relative;
+                        height  : 80px;
+                        border  : $borderset;
+
+                        .label {
+                            background-color: $tertiary;
+                            margin-top      : -5px;
+                            padding         : 2px 5px;
+                            font-size       : 11px;
+                        }
+
+                        .cards {
+                            @include flexin($r, $cn, $cn);
+                            position: relative;
+                            height  : 62px;
+
+                            .cardo {
+                                display         : flex;
+                                flex-direction  : column;
+                                justify-content : center;
+                                align-items     : center;
+                                background-color: $lt_primary;
+                                width           : 60px;
+                                height          : 60px;
+                                margin          : 0 2px;
+
+                                .qty {
+                                    font-weight: 500;
+                                    font-size  : 10px;
+                                }
+
+                                .categories {
+                                    font-weight: 500;
+                                    font-size  : 10px;
+                                }
+                            }
+                        }
                     }
                 }
             }
