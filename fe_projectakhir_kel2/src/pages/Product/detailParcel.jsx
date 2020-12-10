@@ -493,10 +493,12 @@ class DetailParcel extends Component {
             var parcelid=this.state.dataParcelByIdChocolate.parcel_id
             console.log(arrProduct)
             console.log(qtyProduct)
+            let userid=this.props.id
+            console.log(userid)
 
 
          var obj = {
-            user_id:"1",
+            user_id:userid,
             products_id:"0",
             parcel_id:parcelid,
             qty:"1",
