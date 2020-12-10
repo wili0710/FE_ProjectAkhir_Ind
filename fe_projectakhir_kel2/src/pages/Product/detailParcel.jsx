@@ -528,6 +528,8 @@ class DetailParcel extends Component {
             console.log(this.state.dataArrMakanan)
             console.log(this.state.dataMakanan)
             console.log(this.state.dataParcelByIdChocolate.parcel_id)
+            console.log(this.props.id, 'line 531')
+            
             const {classes}= this.props
         return ( 
             <>

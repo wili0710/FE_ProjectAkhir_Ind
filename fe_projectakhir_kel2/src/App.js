@@ -30,22 +30,9 @@ function App() {
 
   const [loading,setLoading]=useState(true)
 
-  // useEffect(()=>{
-  //   var id=localStorage.getItem('id')
-  //   if(id!==null){ 
-  //     Axios.get(`${API_URL_SQL}/auth/keeplogin/${id}`)
-  //     .then((res)=>{
-  //         dispatch({type:'LOGIN',payload:res.data.datauser,cart:res.data.cart})
-  //     }).catch((err)=>{
-  //       console.log(err.response.data.message)
-  //         // alert(err.response.data.message)
-  //     }).finally(()=>{
-  //         setLoading(false)
-  //     })
-  //   }else{
-  //     setLoading(false)
-  //   }
-  // },[])
+  useEffect(()=>{
+  console.log(Auth.id)
+  },[])
 
   // if(loading){
   //   return(
@@ -92,4 +79,11 @@ function App() {
   );
 }
 
+const Mapstatetoprops=({Auth})=>{
+  return {
+      ...Auth
+  }
+}
+
 export default App;
+// export default withStyles(Styles)(connect(Mapstatetoprops,{LoginThunk})(Login));
