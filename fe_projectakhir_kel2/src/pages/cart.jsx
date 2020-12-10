@@ -1163,12 +1163,12 @@ const CartPage=()=>{
                             paddingBottom:10,
                             marginBottom:10
                         }}>
-                        <div style={{
-                            borderBottom:"#f3f4f5 solid 10px",
-                            paddingBottom:10,
-                            marginBottom:10
-                        }}>
-                            <h6>Keranjang:</h6>
+                            <div style={{
+                                borderBottom:"#f3f4f5 solid 10px",
+                                paddingBottom:10,
+                                marginBottom:10
+                            }}>
+                                <h6>Keranjang:</h6>
                         </div>
                             {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
                             renderCartDetail()
