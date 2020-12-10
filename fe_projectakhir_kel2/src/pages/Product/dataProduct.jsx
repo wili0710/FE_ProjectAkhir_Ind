@@ -206,8 +206,11 @@ class dataProduct extends Component {
         console.log(id)
         console.log('data')
         let productid=id
+        let userid=this.props.id
+        console.log(userid)
+        
         Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
-            user_id:1,
+            user_id:userid,
             products_id:productid,
             parcel_id:0,
             qty:1
@@ -229,8 +232,11 @@ class dataProduct extends Component {
         console.log(id)
         console.log('data makanan')
         let productid=id
+        let userid=this.props.id
+        console.log(userid)
         Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
-            user_id:1,products_id:productid,
+            user_id:userid,
+            products_id:productid,
             parcel_id:0,
             qty:1
         }).then((res)=>{
@@ -262,8 +268,10 @@ class dataProduct extends Component {
         console.log(id)
         let productid=id
         console.log('data chocolate')
+        let userid=this.props.id
+        console.log(userid)
         Axios.post(`${API_URL_SQL}/transaksi/addtocart`,{
-            user_id:1,
+            user_id:userid,
             products_id:productid,
             parcel_id:0,
             qty:1
@@ -458,10 +466,9 @@ class dataProduct extends Component {
     }
 }
 
-const MapStatetoprops=({Auth,cart})=>{
+const MapStatetoprops=({Auth})=>{
     return {
-        ...Auth,
-        ...cart
+        ...Auth
     }
 }
  

@@ -115,11 +115,11 @@ class DetailParcel extends Component {
     
           if(total <= this.state.dataParcelByIdMinuman.qty){
              var dataArrMakanan = this.state.dataArrMakanan
-             console.log(dataArrMakanan)
+            //  console.log(dataArrMakanan)
             var a = dataArrMakanan.findIndex((val)=>{
                 return val.parcel_id = id
             })
-            console.log(a)
+            // console.log(a)
 
             if(dataArrMakanan[a].qty-1==0){
                 dataArrMakanan.splice(a,1)             
@@ -133,7 +133,7 @@ class DetailParcel extends Component {
      }
  
      hapusDataMakanan=(id)=>{
-         console.log(id,'delete id ')
+        //  console.log(id,'delete id ')
      
          var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id
          var filterprod=this.state.dataArrMakanan.filter((val)=>{
@@ -151,11 +151,11 @@ class DetailParcel extends Component {
     
           if(total <= this.state.dataParcelByIdMakanan.qty){
              var dataArrMakanan = this.state.dataArrMakanan
-             console.log(dataArrMakanan)
+            //  console.log(dataArrMakanan)
             var a = dataArrMakanan.findIndex((val)=>{
                 return val.parcel_id = id
             })
-            console.log(a)
+            // console.log(a)
 
             if(dataArrMakanan[a].qty-1==0){
                 dataArrMakanan.splice(a,1)             
@@ -168,7 +168,7 @@ class DetailParcel extends Component {
      }
 
      hapusDataChocolate=(id)=>{
-         console.log(id)
+        //  console.log(id)
          var prodid= this.state.dataParcelByIdChocolate.categoryproduct_id
          var filterprod=this.state.dataArrMakanan.filter((val)=>{
              return val.categoryproduct_id === prodid
@@ -185,11 +185,11 @@ class DetailParcel extends Component {
     
           if(total <= this.state.dataParcelByIdChocolate.qty){
              var dataArrMakanan = this.state.dataArrMakanan
-             console.log(dataArrMakanan)
+            //  console.log(dataArrMakanan)
             var a = dataArrMakanan.findIndex((val)=>{
                 return val.parcel_id = id
             })
-            console.log(a)
+            // console.log(a)
 
             if(dataArrMakanan[a].qty-1==0){
                 dataArrMakanan.splice(a,1)             
@@ -201,24 +201,18 @@ class DetailParcel extends Component {
          }
      }
      onDeleteProduct=(id)=>{
-        console.log('delete product')
-        console.log(id, ' line 205')
         var dataCart = this.state.dataArrMakanan
         dataCart.splice(id,1)
-        console.log(dataCart, 'ini datacart 207')
         this.setState({dataArrMakanan:dataCart})
     }
 
      
      
      AddDataMakanan=(id)=>{
-        console.log(id)
-        console.log('jalan line 69')
+
         var dataArrMakanan = this.state.dataArrMakanan
-        console.log(dataArrMakanan,' ini dataArrMakanan')
+        
         var a = dataArrMakanan.findIndex((val)=>{
-            console.log(val.parcel_id,'193') // 10
-            console.log(id,194) // 9
             return val.parcel_id==id
         })
 
@@ -232,7 +226,7 @@ class DetailParcel extends Component {
             text: 'Berhasil Menambahkan Product'                    
         })
 
-        console.log(a)
+        
         if(a== -1){
             var arrMakanan2=this.state.dataArrMakanan
              arrMakanan2.push({
@@ -242,11 +236,10 @@ class DetailParcel extends Component {
                 namaProduct:this.state.dataMakanan[find].nama
             })
             
-            console.log(arrMakanan2)
+            
             this.setState({dataArrMakanan:arrMakanan2})
         }else {
-            console.log(this.state.dataArrMakanan)
-            console.log(a, 206)
+
             var dataSama = this.state.dataArrMakanan
             dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
 
@@ -257,13 +250,12 @@ class DetailParcel extends Component {
         }
 
      AddDataMinuman=(id)=>{
-         console.log(id, ' ini id')
+         
 
          var dataArrMakanan = this.state.dataArrMakanan
          console.log(dataArrMakanan,' ini dataArrMakanan')
          var a = dataArrMakanan.findIndex((val)=>{
-             console.log(val.parcel_id,'193') // 10
-             console.log(id,194) // 9
+
              return val.parcel_id==id
          })
          var findMinuman=this.state.dataMinuman
@@ -286,7 +278,7 @@ class DetailParcel extends Component {
              })
                 this.setState({dataArrMakanan:arrMakanan2})
          }else {
-             console.log(this.state.dataArrMakanan)
+             
              var dataSama = this.state.dataArrMakanan
              dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
              this.setState({dataArrMakanan:dataSama})
@@ -294,13 +286,12 @@ class DetailParcel extends Component {
      }
 
      AddDataChocolate=(id)=>{
-        console.log(id, ' ini id')
+        
 
         var dataArrMakanan = this.state.dataArrMakanan
-        console.log(dataArrMakanan,' ini dataArrMakanan')
+        
         var a = dataArrMakanan.findIndex((val)=>{
-            console.log(val.parcel_id,'193') // 10
-            console.log(id,194) // 9
+
             return val.parcel_id==id
         })
         Swal.fire({
@@ -323,7 +314,7 @@ class DetailParcel extends Component {
                 this.setState({dataArrMakanan:arrMakanan2})
 
         }else {
-            console.log(this.state.dataArrMakanan)
+            
             var dataSama = this.state.dataArrMakanan
             dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
             this.setState({dataArrMakanan:dataSama})
@@ -502,10 +493,12 @@ class DetailParcel extends Component {
             var parcelid=this.state.dataParcelByIdChocolate.parcel_id
             console.log(arrProduct)
             console.log(qtyProduct)
+            let userid=this.props.id
+            console.log(userid)
 
 
          var obj = {
-            user_id:"1",
+            user_id:userid,
             products_id:"0",
             parcel_id:parcelid,
             qty:"1",
@@ -525,10 +518,10 @@ class DetailParcel extends Component {
      
   
     render() { 
-            console.log(this.state.dataArrMakanan)
-            console.log(this.state.dataMakanan)
-            console.log(this.state.dataParcelByIdChocolate.parcel_id)
-            console.log(this.props.id, 'line 531')
+            // console.log(this.state.dataArrMakanan)
+            // console.log(this.state.dataMakanan)
+            // console.log(this.state.dataParcelByIdChocolate.parcel_id)
+            // console.log(this.props.id, 'line 531')
             
             const {classes}= this.props
         return ( 
@@ -665,9 +658,11 @@ class DetailParcel extends Component {
                                         </table>
                                     
                                 </div>
-                                <div className="button-add" onClick={this.saveMessage}>
-                                            <p>Beli</p>
-                                </div>
+                                <Link to='/cart'>
+                                    <div className="button-add" onClick={this.saveMessage}>
+                                        <p>Beli</p>
+                                    </div>
+                                </Link>
                                
                             
                         </div>
