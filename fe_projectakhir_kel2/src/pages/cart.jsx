@@ -57,7 +57,7 @@ const CartPage=()=>{
             // Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             await Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             .then((res)=>{
-                console.log(res.data,' line 55')
+                console.log(res.data)
                 dispatch({type:'CART',cart:res.data})
                 setLoading(false)
                 
@@ -86,7 +86,7 @@ const CartPage=()=>{
 
         Axios.post(`${API_URL_SQL}/payment/uploadpaymenttransfer`,formData,options)
         .then((res)=>{
-
+            fetchdata()
         }).catch((err)=>{
             console.log(err)
         })
