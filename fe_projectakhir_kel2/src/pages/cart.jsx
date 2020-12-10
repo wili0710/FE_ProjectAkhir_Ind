@@ -32,7 +32,7 @@ const CartPage=()=>{
     const fetchdata=()=>{
         try {
             // Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
-            Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=1`)
+            Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             .then((res)=>{
                 console.log(res.data)   
                 dispatch({type:'LOGIN',cart:res.data})
