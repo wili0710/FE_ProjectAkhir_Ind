@@ -111,6 +111,7 @@ const Register=(props)=>{
                 'success'
             )
             dispatch({type:'LOGIN',payload:res.data.datauser,cart:''})
+            localStorage.setItem('id',res.data.id)
             localStorage.removeItem("registrasi")
             localStorage.removeItem("verified")
         }).catch((err)=>{
