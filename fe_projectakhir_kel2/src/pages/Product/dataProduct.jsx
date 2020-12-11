@@ -177,14 +177,25 @@ class dataProduct extends Component {
    
     renderMinuman=()=>{
         return this.state.dataMinuman.map((val,index)=>{
+            console.log(val.image,' ini val image 181')
+            console.log(index,' 182')
             return(
                 <>
+<<<<<<< Updated upstream
                 <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMinuman(val.id)}>
                     <div className="body">
                         <div className="cp_img">
                             <img src={val.image} alt="logo" className="img-parcel"/>
                             <div className="hover">
                                 <a href="javascript:void(0);" className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
+=======
+                <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMakanan(val.id)}>
+                    <div className="body">
+                        <div className="cp_img">
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel"/>
+                        <div className="hover">
+                                <a className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
+>>>>>>> Stashed changes
                             </div>
                         </div>
                         <div className="product_details">
@@ -196,8 +207,11 @@ class dataProduct extends Component {
                         </div>
                     </div>
                 </div>
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
                 </>
             )
         })
@@ -465,18 +479,23 @@ class dataProduct extends Component {
                             
                             <TabPane  tabId="2" className="tab-row-2 tabpanel">
                                 <Row className="tabpanel-2">
-                                    <div className="container-prod">
-                                        <Zoom>
-                                            <div className="box-2">
+                                    <div className="container-prod" >
+                                        {/* <Zoom> */}
+                                            <div className="box-2" style={{animation: 'growDown 1000ms ease-in-out forwards'}}>
                                                     <div style={{
                                                          display:'flex',
                                                          flexWrap:'wrap'
+                                                         
                                                     }}>
+<<<<<<< Updated upstream
                                                     {this.renderMinuman()}
                                                    
+=======
+                                                        {this.renderMinuman()}
+>>>>>>> Stashed changes
                                                     </div>
                                             </div>
-                                        </Zoom>  
+                                        {/* </Zoom>   */}
                                     </div>
                                 </Row>
                             </TabPane>

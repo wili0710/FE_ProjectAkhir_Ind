@@ -65,8 +65,13 @@ function App(props) {
     )
   }
   const renderProtectedAdminRoutes=()=>{
+<<<<<<< Updated upstream
     // if(1===1){
     if(Auth.role==="Admin"){
+=======
+    if(1===1){
+    // if(Auth.role==="admin"){
+>>>>>>> Stashed changes
       return(
         <>
           <Route exact path='/adminpanel' component={AdminReport}/>
