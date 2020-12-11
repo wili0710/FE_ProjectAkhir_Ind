@@ -63,7 +63,7 @@ function App(props) {
   }
   const renderProtectedAdminRoutes=()=>{
     // if(1===1){
-    if(Auth.role==="Admin"){
+    if(Auth.role==="admin"){
       return(
         <>
           <Route exact path='/adminpanel' component={AdminReport}/>
@@ -92,7 +92,7 @@ function App(props) {
         <Route exact path ='/cart' component={CartPage}/>
         <Route exact path ='/hapusaja' component={Example}/>
         {renderProtectedAdminRoutes()}
-        <Route path='*' component={ManageAdmin}/>
+        <Route path='*' component={Home}/>
 
       </Switch>
     </>
