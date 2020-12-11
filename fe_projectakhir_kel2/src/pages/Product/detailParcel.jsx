@@ -961,11 +961,11 @@ class DetailParcel extends Component {
                                             </table>
                                         
                                     </div>
-                                        {/* <a href="/cart"> */}
+                                        <a href="/cart">
                                             <div className="button-add" onClick={this.saveMessage}>
                                                 <p>Beli</p>
                                             </div>
-                                        {/* </a> */}
+                                        </a>
 
                             </div>
 
