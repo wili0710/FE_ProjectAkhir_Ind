@@ -16,6 +16,7 @@ import { red } from '@material-ui/core/colors';
 import Swal from 'sweetalert2';
 import {Dropdown} from 'react-bootstrap'
 import {AiOutlineLogout,AiFillHome} from 'react-icons/ai'
+import debounce from 'lodash.debounce';
 
 class dataProduct extends Component {
     state = {
@@ -300,9 +301,35 @@ class dataProduct extends Component {
         console.log('logout jalan')
     }
 
+    onChangeSearch=debounce(function(e){
+        console.log(e.target.value, ' debounce')
+        if(e.target.value){
+            this.filterSearch(e.target.value)
+        }else if(e.target.value == '') {
+            console.log('data')
+            Axios.get(`${API_URL_SQL}/product/getDataParcel`)
+            .then((res)=>{
+                // console.log(res.data)
+                this.setState({dataParcel:res.data})
+                // this.setState({loadingParcel:false})
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }
+    },1000)
+
+    filterSearch=(input)=>{
+        console.log(input, 'ini input, ')
+        var filterdata = this.state.dataParcel.filter((val)=>{
+            return val.nama.toLowerCase().includes(input.toLowerCase())
+        })
+        this.setState({dataParcel:filterdata})
+        
+    }
     render() { 
         console.log(this.props.name)
         console.log(this.props.cart)
+        console.log(this.state.dataParcel)
 
         if(this.state.loadingParcel){
             return (
@@ -314,12 +341,22 @@ class dataProduct extends Component {
         return ( 
             <>
             <div className="outer-dp">
-                <div className="header-top d-flex bd-highlight">
-                    <div className="div-img p-2 flex-grow-1 bd-highlight">
+                <div className="header-top d-flex justify-content-between">
+                    <div className="div-img  ">
                         <img src={Logo} alt="Logo" className="logo-header"/>    
                     </div>
+
+                    <div className="searching-dp">
+                        <input type='text' 
+                        defaultValue={this.props.value}
+                        onChange = {(e)=>this.onChangeSearch(e)} 
+                        // onChange={(e)=>this.search(e.target.value)}
+                        placeholder='Search' style={{marginBottom:'5px'}} 
+                        className="input-search" />
+
+                    </div>
                     
-                    <div className="icon-user p-2 bd-highlight">
+                    <div className="icon-user  ">
                         <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
                             <Dropdown.Toggle variant="danger" id="dropdown-basic">
                                 <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 

@@ -1,4 +1,4 @@
-import React, { Component,createRef } from 'react';
+import React, { Component,createRef, useCallback } from 'react';
 import './product.css'
 import HeaderAdmin from './../../components/header/headerAdmin'
 
@@ -13,8 +13,14 @@ import {MdAddShoppingCart} from 'react-icons/md'
 import Axios from 'axios'
 import { API_URL_SQL } from '../../helpers/apiUrl';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import debounce from 'lodash.debounce';
+
+import InputBase from '@material-ui/core/InputBase';
 
 class Product extends Component {
+
+   
+
     state = { 
         dataProduct:[],
         setModalAdd:false,
@@ -24,10 +30,13 @@ class Product extends Component {
             harga:createRef(),
             stok:createRef(),
             deskripsi:createRef(),
-            catProduct:createRef()
+            catProduct:createRef(),
+            isOpen:false
         },
         fileImage:null,
-        categoryProduct:[]
+        categoryProduct:[],
+        searchData:'',
+        testSearching:[]
      }
 
      componentDidMount(){
@@ -154,9 +163,42 @@ class Product extends Component {
          console.log('selesai upload')
      }
 
+
+    //  TESTING DEBOUNCE BARU
+
+      onChangeSearch=debounce(function(e){
+          console.log(e.target.value,' debounce ')
+          if(e.target.value){
+              this.setState({searchData:e.target.value})
+              this.filterSearch(e.target.value)
+          }else if (e.target.value == ''){
+              console.log('data kosong')
+              Axios.get(`${API_URL_SQL}/product/getallproduct`)
+              .then((res)=>{
+                 console.log(res.data)
+                 this.setState({dataProduct:res.data})
+              }).catch((err)=>{
+                  console.log(err)
+              })
+          }
+      },1000)
+
+     filterSearch=(input)=>{
+         console.log(input, ' ini input')
+         var filterdata = this.state.dataProduct.filter((val)=>{
+             return val.nama.toLowerCase().includes(input.toLowerCase())
+         })
+         this.setState({testSearching:filterdata,dataProduct:filterdata})
+
+     }
+     
+
+
+
      toggle = () => this.setState({setModalAdd:false});
     render() { 
-        console.log(this.state.categoryProduct)
+        console.log(this.state.dataProduct)
+        console.log(this.state.testSearching)
         return ( 
             <>
                 <Modal isOpen={this.state.setModalAdd} toggle={this.toggle}>
@@ -187,9 +229,24 @@ class Product extends Component {
                             <p style={{fontWeight:'600'}}>Product</p>
                         </div>
                     </div>
+                    <div className="header-bawah">
                         <div className="btn-add" onClick={this.onAddData}>
                            <p>Add Data</p>
                         </div>
+                        <div className="searching">
+                
+                            <input type='text' 
+                            defaultValue={this.props.value}
+                            onChange = {(e)=>this.onChangeSearch(e)} 
+                            // onChange={(e)=>this.search(e.target.value)}
+
+                            onFocus = {()=>this.setState({isOpen:true})} 
+                            onBlur ={()=>setTimeout(() => {this.setState()}, 100)}
+                             placeholder='Search' style={{marginBottom:'5px'}} 
+                             className="input-search" />
+
+                        </div>
+                    </div>
                     <div className="container-data">
 
                         <TableContainer>
