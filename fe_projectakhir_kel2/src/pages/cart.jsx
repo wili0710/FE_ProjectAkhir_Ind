@@ -6,7 +6,7 @@ import Logo from './../assets/logo.png'
 import {BiCart,BiUser} from 'react-icons/bi'
 import { Badge } from '@material-ui/core';
 import { FullPageLoading } from '../components/loading';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import './cart.css';
 import numeral from 'numeral';
 import { Button} from 'reactstrap';
@@ -743,6 +743,10 @@ const CartPage=()=>{
         )
     }
 
+    if(!Auth.isLogin){
+        return <Redirect to='/' />
+    }
+
     return(
         <div style={{
             display:"flex",
@@ -779,7 +783,8 @@ const CartPage=()=>{
                         right: 0,
                         top:0,
                         bottom:0,
-                        
+                        animation: "rotateY 500ms ease-in-out forwards",
+                        transformOrigin: "top center"
                     }}>
                         <div style={{
                             borderBottom:"10px solid #f4f6f8",
@@ -905,7 +910,9 @@ const CartPage=()=>{
                         left: 0,
                         right: 0,
                         top:0,
-                        bottom:0
+                        bottom:0,
+                        animation: "rotateY 500ms ease-in-out forwards",
+                        transformOrigin: "top center"
                     }}>
                         <div style={{
                             padding:20,
@@ -1127,15 +1134,14 @@ const CartPage=()=>{
                                 <div style={{
                                     display:"flex",
                                     justifyContent:"space-between",
-                                    borderBottom:"#f3f4f5 solid 1px"
+                                    borderBottom:"#f3f4f5 solid 1px",
+                                    cursor:"pointer"
+                                }}onClick={()=>{
+                                    localStorage.removeItem("id")
+                                    dispatch({type:'LOGOUT'})
                                 }}>
                                     <div>Logout</div>
-
                                 </div>
-                                <div>
-                                    
-                                </div>
-
                             </div>
                         </div>
                     </div>
