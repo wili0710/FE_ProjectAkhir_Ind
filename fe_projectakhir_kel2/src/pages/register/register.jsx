@@ -91,9 +91,19 @@ const Register=(props)=>{
         setIsOtpSent(true)
         Axios.post(`${API_URL_SQL}/auth/s_r_otp`,{email:email})
         .then((res)=>{
-            setInputOtp(true)
-            setIsOtpSent(false)
-            setOtp("")
+            console.log(res)
+            if(res.data.isnext===false){
+                setIsOtpSent(false)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Email Sudah Terdaftar',
+                    text: 'Email sudah terdaftar. Silakan login'
+                  })
+            }else{
+                setInputOtp(true)
+                setIsOtpSent(false)
+                setOtp("")
+            }
         }).catch((err)=>{
             console.log(err)
         })
@@ -110,7 +120,7 @@ const Register=(props)=>{
                 'Ingin mengirimkan Parcel Custom? Serahkan pada kami!',
                 'success'
             )
-            dispatch({type:'LOGIN',payload:res.data.datauser,cart:''})
+            dispatch({type:'LOGIN',payload:res.data,cart:''})
             localStorage.setItem('id',res.data.id)
             localStorage.removeItem("registrasi")
             localStorage.removeItem("verified")
