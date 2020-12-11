@@ -630,11 +630,12 @@ const CartPage=()=>{
                             border:"3px #f3f4f5 solid",
                             padding:20,
                             marginTop:10,
-                            width:500
+                            width:500,
+                            // height:"fit-content",
                         }}>
-                            <h6>
-                                "{val.message}"
-                            </h6> 
+                            <p style={{wordWrap:"break-word"}}>
+                                {val.message}
+                            </p> 
                         </div>
                     </div>
                     <div style={{
