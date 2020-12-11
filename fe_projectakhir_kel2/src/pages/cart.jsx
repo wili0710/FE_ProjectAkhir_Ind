@@ -74,7 +74,7 @@ const CartPage=()=>{
 
     const clickSendBukti=(transaksi_id,users_id)=>{
         console.log(transaksi_id,users_id)
-        let data={transaksi_id,users_id,image}
+        // let data={transaksi_id,users_id,image}
         let formData=new FormData()
         let options={
             header:{

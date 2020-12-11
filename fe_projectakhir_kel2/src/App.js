@@ -62,8 +62,8 @@ function App(props) {
     )
   }
   const renderProtectedAdminRoutes=()=>{
-    if(1===1){
-    // if(Auth.role==="Admin"){
+    // if(1===1){
+    if(Auth.role==="Admin"){
       return(
         <>
           <Route exact path='/adminpanel' component={AdminReport}/>

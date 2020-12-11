@@ -17,6 +17,12 @@ export const AddcartAction=(cart)=>{
     
 }
 
+export const LogoutFunc=()=>{
+    return {
+        type:'LOGOUT'
+    }
+}
+
 export const LoginThunk=(email,password)=>{
     return (dispatch)=>{
         dispatch({type:'LOADING'})

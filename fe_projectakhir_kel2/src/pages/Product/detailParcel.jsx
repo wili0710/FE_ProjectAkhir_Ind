@@ -20,6 +20,7 @@ import {Dropdown} from 'react-bootstrap'
 import Logo from './../../assets/logo.png'
 import {AiOutlineLogout,AiFillHome,AiFillDelete} from 'react-icons/ai'
 import {connect} from 'react-redux';
+import {LogoutFunc} from './../../redux/Actions'
 class DetailParcel extends Component {
     state = { 
         dataParcelByIdMakanan:[],
@@ -809,6 +810,14 @@ class DetailParcel extends Component {
        
 
      }
+
+     onLogoutClick=()=>{
+        localStorage.removeItem('id')
+        Swal.fire('Logout Berhasil')
+        this.props.LogoutFunc()
+        window.location.assign(`http://localhost:3000`)
+
+     }
      
   
     render() { 
@@ -829,31 +838,53 @@ class DetailParcel extends Component {
                             <img src={Logo} alt="Logo" className="logo-header"/>    
                         </div>
                         
-                        <div className="icon-user p-2 bd-highlight">
-                            <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
-                                <Dropdown.Toggle variant="danger" id="dropdown-basic">
-                                    <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
-                                </Dropdown.Toggle>
+                        {
+                        this.props.isLogin?
+                            <div className="icon-user  ">
+                                <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
+                                    <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                                        <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                                    </Dropdown.Toggle>
 
-                                <Dropdown.Menu>
-                                    <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
-                                        <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
-                                        Logout
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
+                                            <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
+                                            Logout
+                                            </Dropdown.Item>
+                                        <Dropdown.Item href="/cart">
+                                                <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                                Cart
                                         </Dropdown.Item>
-                                    <Dropdown.Item href="/cart">
-                                            <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
-                                            Cart
-                                    </Dropdown.Item>
-                                    <Dropdown.Item href="/">
-                                        <AiFillHome color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
-                                        Home                         
-                                    </Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                            <p style={{fontSize:'15px', marginTop:'10px',color:'white'}}>
-                            Hallo, {this.props.name}</p>
-                        
-                        </div>
+                                        <Dropdown.Item href="/">
+                                            <AiFillHome color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                            Home                         
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                                <p style={{fontSize:'15px', marginTop:'10px',color:'white'}}>
+                                Hallo, {this.props.nama}</p>
+                            
+                            </div>
+                    :
+                            <div className="icon-user  ">
+                                <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
+                                    <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                                        <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                            <Dropdown.Item href="/login" >
+                                            <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
+                                            Login
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="/">
+                                            <AiFillHome color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                            Home                         
+                                            </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                             </div>
+                    }
                     </div>   
 
 
@@ -983,4 +1014,4 @@ const MapStatetoprops=({Auth,cart})=>{
     }
 }
 
-export default (connect(MapStatetoprops,{})(DetailParcel))
+export default (connect(MapStatetoprops,{LogoutFunc})(DetailParcel))
