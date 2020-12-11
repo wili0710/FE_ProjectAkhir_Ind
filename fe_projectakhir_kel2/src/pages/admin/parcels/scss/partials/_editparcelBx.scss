@@ -166,8 +166,11 @@
 
         .renderBx {
             position     : relative;
+            display: flex;
+            justify-content: center;
             overflow     : hidden;
             white-space  : nowrap;
+            padding: 20px;
             height       : 100%;
             width        : 100%;
             margin-bottom: 5px;
@@ -177,6 +180,17 @@
             &:active {
                 cursor: grabbing;
                 cursor: -webkit-grabbing;
+            }
+
+            p {
+                background-color: $lt_gray;
+                color: $dk_gray;
+                position: relative;
+                text-align: center;
+                font-size: 14px;
+                padding: 90px 0;
+                height: 100%;
+                width: 100%;
             }
 
             .rendersubBx0 {

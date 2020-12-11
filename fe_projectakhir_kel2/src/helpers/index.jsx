@@ -67,6 +67,7 @@ export function priceFormatter(num) {
 };
 
 export function renderOption(props) {
+    console.log(props)
     if(props.text !== "pilih kategori product") {
         return (
             <> 
@@ -86,9 +87,9 @@ export function renderOption(props) {
     let a;
     let arr = [];
     arr.push(...props.state)
-    for (let i = 0; i < this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item.length; i++){
+    for (let i = 0; i < props.change[props.index].item.length; i++){
         a = arr.filter(val => {
-                return val.id !== this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item[i].category_item
+                return val.id !== props.change[props.index].item[i].category_item
             });
         arr.splice(0,arr.length)
         arr.push(...a)

@@ -31,7 +31,7 @@ export default () => {
                 <div className="usermenuBx">
                     <IconContext.Provider value={{ style: {fontSize:"20px", color:"white", margin:"0 10px"} }}>
                         <div>
-                            { Auth.role==="admin"?
+                            { Auth.role === "admin"?
                             <HiBriefcase/>
                             :
                             <Link to='/cart'>

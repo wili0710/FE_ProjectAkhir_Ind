@@ -46,6 +46,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     };  
     
     componentDidUpdate() {
+        console.log(this.state.index_add_cat_product)
         if(this.state.index_add_cat_product !== (-1)){
             draggableCard(".renderBx","left",1);
         };
@@ -253,17 +254,34 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     };
 
     onFinishAddItem = () => {
+        const temp_parcel = this.props.Parcel.init_Parcel;
         console.log(this.props.Parcel.init_Parcel[this.state.index_add_cat_product])
         const data = {
-            nama                : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].name,  
-            harga               : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].price,   
-            categoryparcel_id   : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].category,
-            item                : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item,
-            gambar              : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].gambar,
+            nama                : temp_parcel[this.state.index_add_cat_product].name,  
+            harga               : temp_parcel[this.state.index_add_cat_product].price,   
+            categoryparcel_id   : temp_parcel[this.state.index_add_cat_product].category,
+            item                : temp_parcel[this.state.index_add_cat_product].item,
+            gambar              : temp_parcel[this.state.index_add_cat_product].gambar,
         }
         console.log(data,'FE')
-        this.props.uploadParcel(data);
-    };
+        try {
+            this.props.uploadParcel(data);
+        } catch (error) {
+            alert(error);
+        };
+        temp_parcel.splice(this.state.index_add_cat_product,1);
+        this.props.setTempParcel(temp_parcel);
+        this.setState({
+            id_category_parcel      : 0,
+            harga                   : "",
+            nama_parcel             : "",
+            url_files               : "",
+            upl_files               : null,
+            index_add_cat_product   : -1,
+            item_category           : 0,
+            item_qty                : "",
+        });
+    };  
     
     renderTempParcel = (val,index) => {
         return (
@@ -301,16 +319,16 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     render() {
         console.log(this.props.Parcel)
         return (
-           <>
+           <div className="mainparcel">
                 <section className="subheader">
                     <div className="subborder">
-                        <h1 className="title">PARCEL  <span>.</span></h1>
+                        <h1 className="title">PARCEL<span>.</span></h1>
                         <section className="navbar">
-                            <Link to='./parcel/manage' style={{ textDecoration: 'none' }}>
+                            <Link to='/adminpanel/parcel/manage' style={{ textDecoration: 'none' }}>
                                 <div className="subnav">Manage Parcel</div>
                             </Link>
                             <div className="subnav active">Add Parcel</div>
-                            <Link to='./parcel/deploy' style={{ textDecoration: 'none' }}>
+                            <Link to='/adminpanel/parcel/deploy' style={{ textDecoration: 'none' }}>
                                 <div className="subnav">Deploy Parcel 
                                     {
                                         this.props.Parcel.ready_Parcel.length?
@@ -355,7 +373,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                                             value       = {this.state.id_category_parcel} 
                                             onChange    = {this.onChangeInput}
                                             >
-                                        {renderOption({state:this.props.Parcel.Parcel_Category,text:"pilih kategori parcel"})}
+                                        {renderOption({state:this.props.Parcel.Parcel_Category,text:"pilih kategori parcel",index:null})}
                                     </select>    
                                 </div>
                                 <div className = "nameBx">
@@ -495,7 +513,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                                                         value       = {this.state.item_category}
                                                         disabled    = {this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item.length === this.props.Parcel.Product_Category.length? true:false}
                                                 >
-                                                    {renderOption({state:this.props.Parcel.Product_Category,text:"pilih kategori product"})}
+                                                    {renderOption({state:this.props.Parcel.Product_Category,change:this.props.Parcel.init_Parcel,text:"pilih kategori product",index:this.state.index_add_cat_product})}
                                                 </select>
                                                 <input className    = "input0" 
                                                        type         = "number"
@@ -540,7 +558,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                         </div>
                     </div>
                 </section>
-            </>
+            </div>
         );
     };
 });
