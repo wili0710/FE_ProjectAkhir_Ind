@@ -12,9 +12,12 @@ import numeral from 'numeral';
 import { Button} from 'reactstrap';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReactImageMagnify from 'react-image-magnify';
-
-
-const CartPage=()=>{
+import {LogoutFunc} from './../redux/Actions'
+import {connect} from 'react-redux';
+import { propTypes } from 'react-bootstrap/esm/Image';
+import Swal from 'sweetalert2';
+import {HOME_URL} from './helper/homeUrl'
+const CartPage=(props)=>{
     const Auth=useSelector(state=>state.Auth) 
     const dispatch=useDispatch()
 
@@ -730,7 +733,12 @@ const CartPage=()=>{
             })
         }
     }
-
+    const onClickLogout=()=>{
+        localStorage.removeItem('id')
+        Swal.fire('Logout Berhasil')
+        props.LogoutFunc()
+        window.location.assign(`http://localhost:3000`)
+    }
 
     if(loading){
         return(
@@ -1124,7 +1132,7 @@ const CartPage=()=>{
                                     display:"flex",
                                     justifyContent:"space-between",
                                     borderBottom:"#f3f4f5 solid 1px"
-                                }}>
+                                }} onClick={onClickLogout}>
                                     <div>Logout</div>
 
                                 </div>
@@ -1263,4 +1271,11 @@ const CartPage=()=>{
     )
 }
 
-export default CartPage
+const MapStatetoprops=({Auth,cart})=>{
+    return {
+        ...Auth
+    }
+}
+
+// export default CartPage
+export default (connect(MapStatetoprops,{LogoutFunc})(CartPage))

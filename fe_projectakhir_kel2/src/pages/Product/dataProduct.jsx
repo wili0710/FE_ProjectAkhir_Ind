@@ -330,6 +330,7 @@ class dataProduct extends Component {
         console.log(this.props.name)
         console.log(this.props.cart)
         console.log(this.state.dataParcel)
+        console.log(this.props.isLogin)
 
         if(this.state.loadingParcel){
             return (
@@ -356,6 +357,8 @@ class dataProduct extends Component {
 
                     </div>
                     
+                    {
+                        this.props.isLogin?
                     <div className="icon-user  ">
                         <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
                             <Dropdown.Toggle variant="danger" id="dropdown-basic">
@@ -381,6 +384,30 @@ class dataProduct extends Component {
                         Hallo, {this.props.nama}</p>
                        
                     </div>
+                    :
+                    <div className="icon-user  ">
+                    <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
+                        <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                            <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                                <Dropdown.Item href="/login" >
+                                <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
+                                Login
+                                </Dropdown.Item>
+                                <Dropdown.Item href="/">
+                                <AiFillHome color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                Home                         
+                                </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                   
+                   
+                </div>
+
+                    }
+                    
                 </div>    
                
                 <div className="navtab">
