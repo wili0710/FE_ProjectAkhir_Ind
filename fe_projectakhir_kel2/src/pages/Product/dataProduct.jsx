@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 import {Dropdown} from 'react-bootstrap'
 import {AiOutlineLogout,AiFillHome} from 'react-icons/ai'
 import debounce from 'lodash.debounce';
-
+import {LogoutFunc} from './../../redux/Actions'
 class dataProduct extends Component {
     state = {
         activeTab:"1",
@@ -57,11 +57,12 @@ class dataProduct extends Component {
         }).catch((err)=>{
             console.log(err)
         })
-        console.log("jaln jalan")
         Axios.post(`${API_URL_SQL}/product/getDataProductMinuman`)
         .then((res)=>{
+            console.log("jaln jalan")
             console.log(res.data,'line 65')
             this.setState({dataMinuman:res.data})
+
         }).catch((err)=>{
             console.log(err)
         })
@@ -90,7 +91,7 @@ class dataProduct extends Component {
 
 
     renderParcel=()=>{
-        console.log(this.state.loading)
+        // console.log(this.state.loading)
         if(this.state.loading){
             return null
         }else{
@@ -130,7 +131,7 @@ class dataProduct extends Component {
                 <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataChocolate(val.id)}>
                 <div className="body">
                     <div className="cp_img">
-                        <img src={val.image} alt="logo" className="img-parcel"/>
+                        <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel"/>
                         <div className="hover">
                             <a href="javascript:void(0);" className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
                         </div>
@@ -156,9 +157,9 @@ class dataProduct extends Component {
                 <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMakanan(val.id)}>
                     <div className="body">
                         <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel"/>
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel"/>
                             <div className="hover">
-                                <a href="javascript:void(0);" className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
+                                <a className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
                             </div>
                         </div>
                         <div className="product_details">
@@ -180,24 +181,22 @@ class dataProduct extends Component {
             return(
                 <>
                 <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMinuman(val.id)}>
-                    <div className="body">
-                        <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel"/>
-                            <div className="hover">
-                                <a href="javascript:void(0);" className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
-                            </div>
-                        </div>
-                        <div className="product_details">
-                            <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
-                            <ul className="product_price list-unstyled">
-                                <li className="old_price">Stock:{val.stok}</li>
-                                <li className="new_price">Rp.{val.harga}</li>
-                            </ul>
+                <div className="body">
+                    <div className="cp_img">
+                        <img src={val.image} alt="logo" className="img-parcel"/>
+                        <div className="hover">
+                            <a href="javascript:void(0);" className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
                         </div>
                     </div>
+                    <div className="product_details">
+                        <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
+                        <ul className="product_price list-unstyled">
+                            <li className="old_price">Stock:{val.stok}</li>
+                            <li className="new_price">Rp.{val.harga}</li>
+                        </ul>
+                    </div>
                 </div>
-
-
+            </div>
                 </>
             )
         })
@@ -205,7 +204,7 @@ class dataProduct extends Component {
 
     onCheckDataMinuman=(id)=>{
         console.log(id)
-        console.log('data')
+        console.log('data minuman')
         let productid=id
         let userid=this.props.id
         console.log(userid)
@@ -216,7 +215,7 @@ class dataProduct extends Component {
             parcel_id:0,
             qty:1
         }).then((res)=>{
-            console.log(this.state.dataMinuman.id)
+            // console.log(this.state.dataMinuman.id)
             console.log('data berhasil ditambah')
             Swal.fire({
                 icon: 'success',
@@ -299,6 +298,10 @@ class dataProduct extends Component {
 
     onLogoutClick=()=>{
         console.log('logout jalan')
+        localStorage.removeItem('id')
+        Swal.fire('Logout Berhasil')
+        this.props.LogoutFunc()
+        window.location.assign(`http://localhost:3000`)
     }
 
     onChangeSearch=debounce(function(e){
@@ -329,7 +332,7 @@ class dataProduct extends Component {
     render() { 
         console.log(this.props.name)
         console.log(this.props.cart)
-        console.log(this.state.dataParcel)
+        console.log(this.state.dataMinuman)
         console.log(this.props.isLogin)
 
         if(this.state.loadingParcel){
@@ -366,7 +369,7 @@ class dataProduct extends Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
+                                <Dropdown.Item  onClick={this.onLogoutClick}>
                                     <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
                                     Logout
                                     </Dropdown.Item>
@@ -440,6 +443,13 @@ class dataProduct extends Component {
                                         Chocolate
                                     </NavLink>
                                 </NavItem>
+                                <NavItem className="cursor-nav">
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '5' })}
+                                        onClick={() => { this.toggle('5'); }}>
+                                        Minuman
+                                    </NavLink>
+                                </NavItem>
 
                         </Nav>
                         <TabContent activeTab={this.state.activeTab}>
@@ -473,7 +483,7 @@ class dataProduct extends Component {
                                                          flexWrap:'wrap'
                                                     }}>
                                                     {this.renderMinuman()}
-                                                   
+                                                        <h1>render minuman</h1>
                                                     </div>
                                             </div>
                                         </Zoom>  
@@ -514,6 +524,39 @@ class dataProduct extends Component {
                                     </div>
                                 </Row>
                             </TabPane>
+                            <TabPane  tabId="5" className="tab-row-2 tabpanel">
+                                <Row className="tabpanel-5">
+                                    <div className="container-prod">
+                                        <Zoom>
+                                        <div className="box-5">
+                                                    <div style={{
+                                                         display:'flex',
+                                                         flexWrap:'wrap'
+                                                    }}>
+                                                    {/* {this.renderMinuman()}  */}
+                                                        <div className=" box-3 card product_item" key='1' onClick={()=>this.onCheckDataMakanan(1)}>
+                                                            <div className="body">
+                                                                <div className="cp_img">
+                                                                    <img src={Logo} alt="logo" className="img-parcel"/>
+                                                                    <div className="hover">
+                                                                        <a className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="product_details">
+                                                                    <h5><a href="ec-product-detail.html">Makanan</a></h5>
+                                                                    <ul className="product_price list-unstyled">
+                                                                        <li className="old_price">Stock:100</li>
+                                                                        <li className="new_price">Rp.1000</li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>       
+                                                    </div> 
+                                            </div>
+                                        </Zoom>     
+                                    </div>
+                                </Row>
+                            </TabPane>
                          
                         </TabContent>
                     
@@ -534,4 +577,4 @@ const MapStatetoprops=({Auth})=>{
     }
 }
  
-export default (connect(MapStatetoprops,{})(dataProduct));
+export default (connect(MapStatetoprops,{LogoutFunc})(dataProduct));
