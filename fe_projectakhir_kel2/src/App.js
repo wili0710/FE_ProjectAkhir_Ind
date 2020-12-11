@@ -39,13 +39,10 @@ function App(props) {
     Axios.post(`${API_URL_SQL}/auth/newkeeplogin`,{
       id
     }).then((res)=>{
-      console.log('newkeeplogin jalan')
-      console.log(res.data[0].user[0])
-      console.log(res.data[1])
+
       props.LoginFunc(res.data[0].user[0],res.data[1])
       // props.AddcartAction(res.data[1])
-      console.log(Auth.id)
-      console.log(res.data)
+
     }).catch((err)=>{
       console.log(err)
     }).finally(()=>{
@@ -95,7 +92,7 @@ function App(props) {
         <Route exact path ='/cart' component={CartPage}/>
         <Route exact path ='/hapusaja' component={Example}/>
         {renderProtectedAdminRoutes()}
-        <Route path='*' component={ManageAdmin}/>
+        <Route path='*' component={Home}/>
 
       </Switch>
     </>

@@ -6,18 +6,16 @@ import Logo from './../assets/logo.png'
 import {BiCart,BiUser} from 'react-icons/bi'
 import { Badge } from '@material-ui/core';
 import { FullPageLoading } from '../components/loading';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import './cart.css';
 import numeral from 'numeral';
 import { Button} from 'reactstrap';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReactImageMagnify from 'react-image-magnify';
-import {LogoutFunc} from './../redux/Actions'
-import {connect} from 'react-redux';
-import { propTypes } from 'react-bootstrap/esm/Image';
-import Swal from 'sweetalert2';
-import {HOME_URL} from './helper/homeUrl'
-const CartPage=(props)=>{
+import { namaPertama } from '../helpers/namapertama';
+
+
+const CartPage=()=>{
     const Auth=useSelector(state=>state.Auth) 
     const dispatch=useDispatch()
 
@@ -60,7 +58,7 @@ const CartPage=(props)=>{
             // Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             await Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             .then((res)=>{
-                console.log(res.data,' line 55')
+                console.log(res.data)
                 dispatch({type:'CART',cart:res.data})
                 setLoading(false)
                 
@@ -76,7 +74,7 @@ const CartPage=(props)=>{
 
     const clickSendBukti=(transaksi_id,users_id)=>{
         console.log(transaksi_id,users_id)
-        let data={transaksi_id,users_id,image}
+        // let data={transaksi_id,users_id,image}
         let formData=new FormData()
         let options={
             header:{
@@ -89,7 +87,7 @@ const CartPage=(props)=>{
 
         Axios.post(`${API_URL_SQL}/payment/uploadpaymenttransfer`,formData,options)
         .then((res)=>{
-
+            fetchdata()
         }).catch((err)=>{
             console.log(err)
         })
@@ -508,9 +506,9 @@ const CartPage=(props)=>{
                 <div style={{
                     display:"flex",
                     // justifyContent:"space-between",
-                    borderBottom:"1px solid #f3f4f5",
+                    borderBottom:"5px solid #f3f4f5",
                     paddingTop:10,
-                    paddingBottom:10,
+                    paddingBottom:100,
                     // backgroundColor:"wheat",
                     height:100
                 }}>
@@ -603,9 +601,10 @@ const CartPage=(props)=>{
                 <div style={{
                     display:"flex",
                     // justifyContent:"space-between",
-                    borderBottom:"1px solid #f3f4f5",
+                    borderBottom:"5px solid #f3f4f5",
                     paddingTop:10,
-                    paddingBottom:10
+                    paddingBottom:20,
+                    marginBottom:10
                 }}>
                     <div style={{
                         marginRight:10
@@ -631,11 +630,12 @@ const CartPage=(props)=>{
                             border:"3px #f3f4f5 solid",
                             padding:20,
                             marginTop:10,
-                            width:500
+                            width:500,
+                            // height:"fit-content",
                         }}>
-                            <h6>
-                                "{val.message}"
-                            </h6> 
+                            <p style={{wordWrap:"break-word"}}>
+                                {val.message}
+                            </p> 
                         </div>
                     </div>
                     <div style={{
@@ -733,20 +733,19 @@ const CartPage=(props)=>{
             })
         }
     }
-    const onClickLogout=()=>{
-        localStorage.removeItem('id')
-        Swal.fire('Logout Berhasil')
-        props.LogoutFunc()
-        window.location.assign(`http://localhost:3000`)
+
+
+    if(loading){
+        return(
+            <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+                {FullPageLoading(loading,100,'#0095DA')}
+            </div>
+        )
     }
 
-    // if(loading){
-    //     return(
-    //         <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
-    //             {FullPageLoading(loading,100,'#0095DA')}
-    //         </div>
-    //     )
-    // }
+    if(!Auth.isLogin){
+        return <Redirect to='/' />
+    }
 
     return(
         <div style={{
@@ -784,7 +783,8 @@ const CartPage=(props)=>{
                         right: 0,
                         top:0,
                         bottom:0,
-                        
+                        animation: "rotateY 500ms ease-in-out forwards",
+                        transformOrigin: "top center"
                     }}>
                         <div style={{
                             borderBottom:"10px solid #f4f6f8",
@@ -910,7 +910,9 @@ const CartPage=(props)=>{
                         left: 0,
                         right: 0,
                         top:0,
-                        bottom:0
+                        bottom:0,
+                        animation: "rotateY 500ms ease-in-out forwards",
+                        transformOrigin: "top center"
                     }}>
                         <div style={{
                             padding:20,
@@ -1025,11 +1027,11 @@ const CartPage=(props)=>{
                 </div>
                 <div style={{
                     display:"flex",
-                    justifyContent:"space-around",
+                    justifyContent:"flex-end",
                     alignItems:"center",
                     flexBasis:"13%"}}>
                     <div style={{
-                        position:"relative",}} onMouseEnter={()=>setShowCart(true)} onMouseLeave={()=>setShowCart(false)}>
+                        position:"relative",marginRight:10}} onMouseEnter={()=>setShowCart(true)} onMouseLeave={()=>setShowCart(false)}>
                         <Badge color="error" badgeContent={Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length}>
                             <BiCart color="white" size="20" style={{cursor:"pointer"}}/>
                         </Badge>
@@ -1094,10 +1096,11 @@ const CartPage=(props)=>{
                     <div style={{
                         borderLeft: '1px solid white',
                         paddingLeft:10,
+                        marginLeft:10,
                         position:"relative",
                         }}
                         onMouseEnter={()=>setShowMenuUser(true)} onMouseLeave={()=>setShowMenuUser(false)}>
-                        <BiUser color="white" size="20" style={{cursor:"pointer"}}/> Halo, {Auth.nama}
+                        <BiUser color="white" size="20" style={{cursor:"pointer"}}/> Halo, {namaPertama(Auth.nama)}
                         <div style={{
                             position:"absolute",
                             display:showMenuUser?"block":"none",
@@ -1131,15 +1134,14 @@ const CartPage=(props)=>{
                                 <div style={{
                                     display:"flex",
                                     justifyContent:"space-between",
-                                    borderBottom:"#f3f4f5 solid 1px"
-                                }} onClick={onClickLogout}>
+                                    borderBottom:"#f3f4f5 solid 1px",
+                                    cursor:"pointer"
+                                }}onClick={()=>{
+                                    localStorage.removeItem("id")
+                                    dispatch({type:'LOGOUT'})
+                                }}>
                                     <div>Logout</div>
-
                                 </div>
-                                <div>
-                                    
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -1171,12 +1173,12 @@ const CartPage=(props)=>{
                             paddingBottom:10,
                             marginBottom:10
                         }}>
-                        <div style={{
-                            borderBottom:"#f3f4f5 solid 10px",
-                            paddingBottom:10,
-                            marginBottom:10
-                        }}>
-                            <h6>Keranjang:</h6>
+                            <div style={{
+                                borderBottom:"#f3f4f5 solid 10px",
+                                paddingBottom:10,
+                                marginBottom:10
+                            }}>
+                                <h6>Keranjang:</h6>
                         </div>
                             {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
                             renderCartDetail()
@@ -1271,11 +1273,4 @@ const CartPage=(props)=>{
     )
 }
 
-const MapStatetoprops=({Auth,cart})=>{
-    return {
-        ...Auth
-    }
-}
-
-// export default CartPage
-export default (connect(MapStatetoprops,{LogoutFunc})(CartPage))
+export default CartPage

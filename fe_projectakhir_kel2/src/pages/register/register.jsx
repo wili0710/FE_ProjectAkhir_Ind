@@ -32,9 +32,9 @@ const Register=(props)=>{
         if(localStorage.getItem('registrasi')){
             setEmail(localStorage.getItem('registrasi'))
         }
-        if(localStorage.getItem('verified')){
-            setIsverified(localStorage.getItem('verified'))
-        }
+        // if(localStorage.getItem('verified')){
+        //     setIsverified(localStorage.getItem('verified'))
+        // }
         setLoading(false)
     },[])
     useEffect(()=>{
@@ -64,7 +64,7 @@ const Register=(props)=>{
             }else{
                 setIsverified(true)
                 localStorage.setItem("registrasi",email)
-                localStorage.setItem("verified",true)
+                // localStorage.setItem("verified",true)
                 setLoadingregister(false)
             }
         }).catch((err)=>{
@@ -91,9 +91,19 @@ const Register=(props)=>{
         setIsOtpSent(true)
         Axios.post(`${API_URL_SQL}/auth/s_r_otp`,{email:email})
         .then((res)=>{
-            setInputOtp(true)
-            setIsOtpSent(false)
-            setOtp("")
+            console.log(res)
+            if(res.data.isnext===false){
+                setIsOtpSent(false)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Email Sudah Terdaftar',
+                    text: 'Email sudah terdaftar. Silakan login'
+                  })
+            }else{
+                setInputOtp(true)
+                setIsOtpSent(false)
+                setOtp("")
+            }
         }).catch((err)=>{
             console.log(err)
         })
@@ -110,7 +120,8 @@ const Register=(props)=>{
                 'Ingin mengirimkan Parcel Custom? Serahkan pada kami!',
                 'success'
             )
-            dispatch({type:'LOGIN',payload:res.data.datauser,cart:''})
+            dispatch({type:'LOGIN',payload:res.data,cart:''})
+            localStorage.setItem('id',res.data.id)
             localStorage.removeItem("registrasi")
             localStorage.removeItem("verified")
         }).catch((err)=>{
@@ -178,11 +189,15 @@ const Register=(props)=>{
                     <input type='email' className="form-control" onChange={(e)=>funcvalidateemail(e)} style={{transition:'500ms'}}/>
                     {
                         isOtpSent?
-                        <span style={{cursor:"not-allowed",color:"blue"}} className='my-2'>Verify dengan OTP</span>
+                        <div style={{display:"flex", justifyContent:"space-between"}}>
+                            <span style={{cursor:"not-allowed",color:"blue"}} className='my-2'>Verify dengan OTP</span>
+                            <span style={{cursor:"not-allowed",color:"blue"}} className='my-2'>Sudah Ada OTP</span>
+                        </div>
                         :
-                        <>
-                        <span style={{cursor:"pointer",color:"blue"}} className='my-2' onClick={sentOtp}>Verify dengan OTP </span>
-                        </>
+                        <div style={{display:"flex", justifyContent:"space-between"}}>
+                            <span style={{cursor:"pointer",color:"blue"}} className='my-2' onClick={sentOtp}>Verify dengan OTP </span>
+                            <span style={{cursor:"pointer",color:"blue"}} className='my-2' onClick={()=>setInputOtp(true)}>Sudah Ada OTP</span>
+                        </div>
                     }
                     <button className='p-2' disabled style={{transition:'1000ms',border:'0px', borderRadius:'5px', backgroundColor:"#e5e7e9",fontSize:'20px',cursor:'not-allowed'}}>Daftar</button>
                 </div>
