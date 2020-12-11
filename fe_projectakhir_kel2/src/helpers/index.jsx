@@ -17,6 +17,7 @@ export function draggableCard(classname="",dir="left"||"top",speed=Number) {
         slider.addEventListener('mousedown', (e) => {
             slider.classList.toggle('active');
             isDown = true;
+            console.log(e.pageX, slider.offsetLeft)
             initPos = (e.pageX - slider.offsetLeft);
             scrollDir = slider.scrollLeft;
         });
@@ -64,5 +65,50 @@ export function priceFormatter(num) {
       currency: "IDR",
     }).format(num);
 };
+
+export function renderOption(props) {
+    console.log(props)
+    if(props.text !== "pilih kategori product") {
+        return (
+            <> 
+                <option className="hide" value={0} disabled selected>{props.text}</option>  
+                { 
+                    props.state.map((val)=>{
+                        return (
+                            <option key={val.id} value={val.id}>
+                                {val.id} | {val.nama}
+                            </option>
+                        )
+                    })
+                }
+            </>
+        );
+    };
+    let a;
+    let arr = [];
+    arr.push(...props.state)
+    for (let i = 0; i < props.change[props.index].item.length; i++){
+        a = arr.filter(val => {
+                return val.id !== props.change[props.index].item[i].category_item
+            });
+        arr.splice(0,arr.length)
+        arr.push(...a)
+    };
+    // console.log(arr, 'option')
+    return (
+        <> 
+            <option className="hide" value={0} disabled selected>{props.text}</option>  
+            { 
+                arr.map((val)=>{
+                    return (
+                        <option key={val.id} value={val.id}>
+                            {val.id} | {val.nama}
+                        </option>
+                    )
+                })
+            }
+        </>
+    );
+}; 
 
 export const API_URL_SQL = `http://localhost:8000`;

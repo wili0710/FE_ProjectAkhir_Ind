@@ -1,17 +1,17 @@
 @import '../../styles/mixins.scss';
-@import url('../../styles/colors.css');
 @import '../../styles/variables.scss';
 
 header {
-    @include flexin ($r, space-between, $cn);
+    @include flexin($r,$cn, $cn);
     background-color: $primary;
     position        : fixed;
     top             : 0;
     left            : 0;
     right           : 0;
     width           : 100%;
-    padding         : 10px 130px;
+    padding         : 10px 60px;
     z-index         : 500;
+    border-bottom   : 4px solid $tertiary;
 
     img {
         position  : relative;
@@ -21,8 +21,10 @@ header {
     }
 
     .navBx {
-        color    : $white;
-        font-size: 14px;
+        color      : $white;
+        flex       : 1;
+        font-size  : 14px;
+        margin-left: auto;
 
         span {
             color         : $tertiary;
@@ -40,12 +42,13 @@ header {
 
     .logoBx {
         @include flexin($cl, $cn, $cn);
-        width     : 150px;
-        align-self: center;
+        flex  : 1;
+        width : 150px;
+        margin: auto;
 
         .imgBx {
             position: relative;
-            width   : 100%;
+            width   : 150px;
             height  : auto;
         }
 
@@ -62,8 +65,11 @@ header {
     }
 
     .userBx {
-        @include flexin($r, $cn, $cn);
-        position: relative;
+        display        : flex;
+        justify-content: flex-end;
+        flex           : 1;
+        position       : relative;
+        margin-left    : auto;
 
         .usermenuBx {
             border-right: 1px dashed $lt_primary;

@@ -740,13 +740,13 @@ const CartPage=(props)=>{
         window.location.assign(`http://localhost:3000`)
     }
 
-    if(loading){
-        return(
-            <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
-                {FullPageLoading(loading,100,'#0095DA')}
-            </div>
-        )
-    }
+    // if(loading){
+    //     return(
+    //         <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+    //             {FullPageLoading(loading,100,'#0095DA')}
+    //         </div>
+    //     )
+    // }
 
     return(
         <div style={{

@@ -1,0 +1,679 @@
+@import '../../../../Styles/mixins.scss';
+@import '../../../../styles/variables.scss';
+@import "partials/subheader";
+
+// *:not(input){
+//     transition: .5s;
+// }
+
+// section //
+.mainparcel {
+    margin-left: 65px;
+
+    .addparcel {
+        background-color: $dk_gray;
+        padding         : 0 30px;
+
+        .subborder2 {
+            @include bordering(none, $borderset, $borderset, none);
+            @include flexin(row,center,center);
+            padding        : 20px 30px 0 30px;
+
+            .addcard {
+                @include flexin(null, center, center);
+                background-color: $white;
+                width           : 1000px;
+                padding         : 50px 10px;
+                box-shadow      : 5px 2px 6px 0px rgba(gray, 0.1);
+
+                .rotate90 {
+                    color         : $lt_gray;
+                    transform     : rotate(-90deg);
+                    letter-spacing: 10px;
+                    margin        : -15px;
+                    font-weight   : 600;
+                    font-size     : 40px;
+                }
+                .imgBx {
+                    position: relative;
+                    width : 250px;
+                    height: 250px;
+                    margin: 0 30px 0 10px;
+
+                    .erase {
+                        position        : absolute;
+                        text-align      : center;
+                        font-size       : 10px;
+                        color           : white;
+                        top             : 10px;
+                        left            : 170px;
+                        padding         : 2px 8px;
+                        z-index         : 5;
+                        opacity         : 0.6;
+                        border          : none;
+                        border-radius   : 5px;
+                        background-color: #555;
+                        cursor          : pointer;
+
+                        &:hover {
+                            opacity         : 1;
+                            background-color: $dk_tertiary;
+                        }
+                        &:focus {
+                            outline: none;
+                        }
+                    }
+                    img {
+                        position  : relative;
+                        width     : 100%;
+                        height    : 100%;
+                        object-fit: cover;
+                    }
+                }
+                .formBx {
+                    @include flexin(column, center, center);
+                    color: $dk_gray;
+
+                    div {
+                        &:not(.fakeBx) {
+                            @include flexin(row, center, center);
+                            width: 100%;
+                        }
+                        span {
+                            color    : $tertiary;
+                            font-size: 10px;
+                            margin   : -5px 0 0 10px;
+                        }
+                    }
+                    label {
+                        margin-right: 20px;
+                        width       : 300px;
+                        font-size   : 14px;
+                    }
+                    select {
+                        background-color: $lt_gray;
+                        color           : $tertiary;
+                        border          : none;
+                        outline         : none;
+                        appearance      : none;
+                        padding-left    : 15px;
+                        padding-top     : 5px;
+                        padding-bottom  : 5px;
+                        margin          : 5px 0;
+                        width           : 100%;
+                        font-size       : 13px;
+                        font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+                        &:hover {
+                            cursor: pointer;
+                        }
+                        &:focus {
+                            outline: none;
+
+                            .hide {
+                                display: none;
+                            }
+                        }
+                        option {
+                            border : none;
+                            outline: none;
+                            padding: 5px;
+                            margin : 5px;
+
+                            &:hover {
+                                background-color: $dk_tertiary;
+                            }
+                        }
+                    }
+                    input {
+                        color: $tertiary;
+                        width: 100%;
+
+                        &:not([type="file"]) {
+                            text-align : center;
+                            padding    : 5px;
+                            font-weight: 600;
+                            margin     : 5px 0;
+                            border     : 1px dashed $tertiary;
+
+                            &:disabled {
+                                border: 1px dashed $lt_gray;
+
+                                &::placeholder {
+                                    color: $lt_gray;
+                                }
+                            }
+                            &:hover:not([disabled]) {
+                                letter-spacing: 0.5px;
+                                
+                                &::placeholder {
+                                    color         : $tertiary;
+                                    letter-spacing: 0.5px;
+                                }
+                            }
+                            &::placeholder {
+                                // text-align  : center;
+                                font-weight : 400;
+                                font-size   : 12px;
+                                padding     : 20px;
+                                font-family : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                                // transition: 0.3s;
+                            }
+                        }
+                        &[type="file"] {
+                            position: relative;
+                            opacity : 0;
+                            z-index : 2;
+
+                            &:disabled {
+                                cursor: not-allowed;
+
+                                &~.fakeBx{
+                                    background-color: $lt_gray !important;
+                                }
+                            }
+                            &:focus {
+                                outline: none;
+                                border : 1px solid $tertiary;
+                            }
+                            &:hover:not([disabled]) {
+                                cursor: pointer;
+
+                                &~.fakeBx:not([disabled]) {
+                                    background-color: $dk_tertiary;
+                                    letter-spacing  : 1px;
+                                }
+                            }
+                            &:focus,
+                            &:active {
+                                outline: none;
+                                border: none;
+                            }
+                        }
+                        &:focus {
+                            outline: none;
+                            border : 1px solid $tertiary;
+                        }
+                        
+                    }
+                    .urlBx {
+                        div {
+                            @include flexin(column, center, center);
+                        }
+                    }
+                    .fakeBx {
+                        background-color: $tertiary;
+                        color           : $white;
+                        position        : absolute;
+                        width           : 280px;
+                        height          : 35px;
+                        font-size       : 12px;
+                        margin-top      : 60px;
+                        border-radius   : 5px;
+                        transition      : 0.3s;
+                        font-weight     : 600;
+                    }
+                }
+                .rotate270 {
+                    color         : $lt_gray;
+                    transform     : rotate(90deg);
+                    margin        : -15px;
+                    letter-spacing: 10px;
+                    font-weight   : 600;
+                    font-size     : 40px;
+                }
+            }
+        }
+        .buttonBx {
+            @include flexin(row, center, center);
+            border-left : $borderset;
+            border-right: $borderset;
+            width       : 100%;
+
+            .addbutton {
+                color           : $tertiary;
+                border          : $borderset;
+                background-color: transparent;
+                margin          : 10px 0 30px 0;
+                width           : 1000px;
+                padding         : 10px;
+                transition      : 0.5s;
+
+                &:disabled {
+                    color   : $lt_gray;
+                    border  : 1px dashed $lt_gray;
+                    opacity : .5;
+                }
+                &:hover:not([disabled]) {
+                    color         : $lt_primary;
+                    font-weight   : bold;
+                    text-transform: uppercase;
+                    letter-spacing: 10px;
+                    border        : 1px dashed $lt_primary;
+                    cursor        : pointer;
+                }
+                &:focus {
+                    outline: none;
+                }
+                &:active {
+                    background-color: $lt_primary;
+                    color: $white;
+                    outline: none;
+                }
+            }
+        }
+    }
+
+    // section //
+    .addedparcel {
+        background-color: $lt_gray;
+        padding         : 0 30px 30px 30px;
+
+        .subborder3 {
+            @include bordering(none,$borderset,$borderset,$borderset);
+            @include flexin(column,center,center);
+            position: relative;
+            padding: 40px 60px 40px 60px;
+
+            p {
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                font-size: 14px;
+            }
+
+            h1 {
+                margin        : -5px 0 20px 0;
+                padding       : 10px 50px;
+                letter-spacing: 3px;
+                transition    : 0.5s;
+                border-bottom : 1px dashed gray;
+
+                span {
+                    background-color: $dk_tertiary;
+                    color           : $white;
+                    vertical-align  : top;
+                    font-size       : 12px;
+                    padding         : 5px;
+                    border-radius   : 2px;
+                    letter-spacing  : 2px;
+                    margin-right    : 10px;
+                }
+            }
+            .tempcards {
+                @include flexin(row, center, center);
+                position: relative;
+                flex-wrap: wrap;
+                width: 100%;
+
+                .newparcel {
+                    background-color: $white;
+                    margin          : 10px 5px;
+                    padding         : 10px;
+                    transition      : 0.5s;
+
+                    &:hover {
+                        box-shadow  : 0px 2px 10px 1px rgba(gray,.2);
+                    }
+                    .subsubborder {
+                        border          : $borderset;
+                        background-color: $white;
+                        padding         : 15px;
+
+                        &:hover {
+                            border: 1px solid $tertiary;
+                        }
+                        .cardhead {
+                            @include flexin(row, space-between, center);
+
+                            .tag {
+                                color      : $dk_tertiary;
+                                font-weight: 600;
+                            }
+                            button {
+                                background-color: $tertiary;
+                                color           : $white;
+                                text-align      : center;
+                                border          : none;
+                                font-weight     : bold;
+                                font-size       : 12px;
+                                padding         : 1px 7px 3px 7px;
+
+                                &:disabled {
+                                    background-color: $lt_gray;
+                                }
+                                &:hover:not([disabled]) {
+                                    background-color: $dk_tertiary;
+                                }
+                            }
+                        }
+                        .cardname {
+                            border-bottom : $borderset;
+                            font-weight   : bolder;
+                            text-transform: uppercase;
+                            text-align    : center;
+                            letter-spacing: 1px;
+                            padding       : 3px;
+                        }
+                        .cardcategory {
+                            text-align    : center;
+                            font-size     : 14px;
+                            text-transform: capitalize;
+                            letter-spacing: 2px;
+                            margin        : 5px;
+                        }
+                        .imgBx {
+                            margin: 5px 0 10px 0;
+                            width : 200px;
+                            height: 230px;
+
+                            img {
+                                position  : relative;
+                                object-fit: cover;
+                                height    : 100%;
+                                width     : 100%;
+                            }
+                        }
+                        .cardharga {
+                            background-color: $dk_tertiary;
+                            color           : $white;
+                            text-align      : center;
+                            font-weight     : bolder;
+                        }
+                        .carditem {
+                            @include flexin(row, space-between, center);
+                            width  : 100%;
+                            padding: 0 10px;
+                            
+                            .texted {
+                                font-size: 15px;
+                                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                            }
+                            button {
+                                position        : relative;
+                                background-color: transparent;
+                                border          : none;
+                                font-weight     : bold;
+                                transition      : 0.3s;
+                                font-size       : 30px;
+                                padding         : 0 7px 2px 7px;
+
+                                &:hover:not([disabled]) {
+                                    color      : $primary;
+                                    font-weight: 800;
+                                }
+                            }
+                        }
+                    }
+                }
+                .addingitemBx {
+                    @include flexin(row, center, center);
+                    background-color: $dk_gray;
+                    position        : relative;
+                    padding         : 35px;
+                    margin          : 20px 30px;
+                    width           : 1700px;
+                    height          : 500px;
+
+                    .additemContent {
+                        @include bordering($borderset,none,$borderset,$borderset);
+                        @include flexin(column, center, center);
+                        position    : relative;
+                        text-align  : center;
+                        margin-left : -3px;
+                        padding     : 40px 40px 10px 40px;
+                        height      : 100%;
+                        width       : 100%;
+
+                        h2 {
+                            color : $lt_gray;
+                            margin: -10px 0 10px 0;
+
+                            span {
+                                color           : $tertiary;
+                                border-bottom   : $borderset;
+                                margin          : 0 10px;
+                                padding         : 0 5px;
+                            }
+                        }
+                        .subcaption {
+                            color       : $lt_gray;
+                            padding     : 5px 0 20px 0;
+                            font-family : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+                            .span0 {
+                                color      : $tertiary;
+                                padding    : 0 5px;
+                                margin     : 0 5px;
+                                font-weight: 600;
+                            }
+                            .span1 {
+                                background-color: $primary;
+                                padding         : 0 5px;
+                                margin          : 0 5px;
+                                font-weight     : 600;
+                                font-size       : 15px;
+                            }
+                            .span2 {
+                                background-color: $dk_tertiary;
+                                padding         : 0 5px;
+                                margin          : 0 5px;
+                                font-weight     : 600;
+                                font-size       : 15px;
+                            }
+                        }
+                        .renderBx {
+                            position     : relative;
+                            overflow     : hidden;
+                            white-space  : nowrap;
+                            height       : 185px;
+                            width        : 100%;
+                            margin-bottom: 5px;
+                            transition   : 0.2s;
+                            border       : 1px dashed $lt_gray;
+
+                            &:active {
+                                cursor: grabbing;
+                                cursor: -webkit-grabbing;
+                            }
+                            .rendersubBx0 {
+                                display         : inline-block;
+                                vertical-align  : top;
+                                background-color: white;
+                                margin          : 18px 10px;
+                                height          : 150px;
+                                width           : 150px;
+
+                                &:start {
+                                    margin-left : 10px;
+                                }
+                                &:end {
+                                    margin-right: 10px;
+                                }
+                                &:hover {
+                                    cursor: grabbing;
+                                }
+                                .content {
+                                    @include flexin(column, center, center);
+                                    text-align: center;
+                                    overflow  : hidden;
+                                    max-width : 150;
+
+                                    .itemhead {
+                                        @include flexin(row, space-between, center);
+                                        width  : 100%;
+                                        z-index: 2;
+                                        padding: 10px;
+
+                                        .id {
+                                            font-size     : 12px;
+                                            font-weight   : bold;
+                                            text-transform: uppercase;
+                                            letter-spacing: 1px;
+                                            padding-left  : 5px;
+                                        }
+                                        button {
+                                            color           : $tertiary;
+                                            background-color: transparent;
+                                            border          : none;
+                                            font-weight     : bolder;
+                                            transition      : 0.5s;
+
+                                            &:hover {
+                                                color: $dk_tertiary;
+                                            }
+                                        }
+                                    }
+                                    .category {
+                                        z-index    : 1;
+                                        font-weight: 800;
+                                        font-size  : 25px;
+                                        line-height: 32px;
+                                        margin-top : -5px;
+                                        font-family: "Lato", sans-serif;
+
+                                        span {
+                                            background-color: $lt_primary;
+                                            font-weight     : normal;
+                                            font-size       : 20px;
+                                            padding         : 0 10px;
+                                        }
+                                    }
+                                    .imgBx {
+                                        margin-top: -138px;
+                                        width     : 150px;
+                                        height    : 150px;
+                                        opacity   : 0.3;
+                                        z-index   : 0;
+                                    }
+                                }
+                            }
+                        }
+                        .selectBx {
+                            @include flexin(row, space-between, center);
+                            position    : relative;
+                            width       : 100%;
+                            margin      : 5px 0;
+                            font-size   : 14px;
+
+                            select {
+                                @include bordering($borderset,$borderset,4px solid $tertiary,$borderset);
+                                color           : $tertiary;
+                                position        : relative;
+                                background-color: transparent;
+                                text-align      : center;
+                                appearance      : none;
+                                padding         : 10px 10px;
+                                width           : 30%;
+                                font-size       : 14px;
+                                font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                                
+                                
+                                &:hover {
+                                    border-style: solid;
+                                }
+                                &:focus {
+                                    outline     : none;
+                                    border-style: solid;;
+
+                                    .hide {
+                                        display: none;
+                                    }
+                                }
+                                option {
+                                    @include flexin(row, center, center);
+                                    background-color: $tertiary;
+                                    color           : $white;
+                                    border          : $borderset;
+                                    font-size       : 14px;
+                                    font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                                }
+                            }
+                            input {
+                                @include bordering(1px dashed $lt_gray,none,none,1px dashed $lt_gray);
+                                color       : $lt_gray;
+                                background  : transparent;
+                                position    : relative;
+                                font-weight : 700;
+                                padding     : 10px;
+                                width       : 60%;
+                                
+
+                                &:disabled {
+                                    opacity: .6;
+                                }
+                                &:focus {
+                                    outline : none;
+                                    border  : 1px solid $lt_gray;
+                                }
+                                &::placeholder {
+                                    color       : $lt_gray;
+                                    font-weight : 400;
+                                    font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                                }
+                            }
+                            button {
+                                @include bordering(none,4px solid $lt_gray,none,none);
+                                background-color: $lt_gray;
+                                color           : $tertiary;
+                                position        : relative;
+                                font-weight     : 600;
+                                width           : 10%;
+                                padding         : 10px;
+                                
+                                &:disabled {
+                                    color: $white;
+                                }
+                            }
+                        }
+                        .buttonBx {
+                            @include flexin(row, space-evenly, center);
+                            position: relative;
+                            width   : 100%;
+
+                            .button0,
+                            .button1 {
+                                padding: 5px;
+                            }
+                            .button0 {
+                                background-color: $primary;
+                                color           : $white;
+                                position        : relative;
+                                border          : none;
+                                width           : 90%;
+
+                                &:disabled {
+                                    background-color: $lt_gray;
+                                    cursor          : not-allowed;
+                                }
+                            }
+                            .button1 {
+                                background-color: $dk_tertiary;
+                                color           : $white;
+                                position        : relative;
+                                border          : none;
+                                width           : 10%;
+                            }
+                        }
+                    }
+                }
+                .maincaption {
+                    background-color: $tertiary;
+                    text-align      : center;
+                    letter-spacing  : 2px;
+                    font-size       : 14px;
+                    width           : 1000px;
+                    padding         : 50px 0;
+                    margin-top      : 20px;
+                    font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+                    span {
+                        background-color: $dk_tertiary;
+                        color           : $white;
+                        padding         : 5px 5px;
+                        margin          : 0 10px;
+                        font-weight     : 700;
+                    }
+                }
+            }
+        }
+    }
+}

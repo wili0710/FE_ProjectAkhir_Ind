@@ -1,6 +1,3 @@
-//abstract :
-$borderset: 1px dashed var(--tertiary);
-
 /* 
     colors :
     lt = lighter,
@@ -23,3 +20,5 @@ $sp : space-between;
 
 $trn : transparent;
 
+//abstract :
+$borderset: 1px dashed $tertiary;

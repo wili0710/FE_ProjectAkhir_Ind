@@ -1,0 +1,210 @@
+@import '../../../../Styles/mixins.scss';
+@import '../../../../styles/variables.scss';
+@import "partials/subheader";
+@import "partials/editparcelBx";
+@import "partials/renderparcel";
+
+.manageparcel {
+    margin-left: 65px;
+
+    // subheader section included //
+
+    // editparcel section //
+    .editparcel {
+        @include flexin();
+        position: relative;
+        padding : 0 30px;
+
+        .subborder {
+            @include bordering(null, $borderset, $borderset, null);
+            position: relative;
+            width   : 100%;
+            padding : 20px 20px;
+
+            .addingitemBx {
+                @include flexin();
+                background-color: $dk_gray;
+                position        : relative;
+                padding         : 35px;
+                width           : 100%;
+                height          : 500px;
+
+                .parceledit {
+                    background-color: $white;
+                    position        : relative;
+                    height          : 100%;
+                    padding         : 20px;
+                    transition      : 0.5s;
+
+                    .subsubborder {
+                        @include flexin($cl);
+                        border          : $borderset;
+                        background-color: $white;
+                        padding         : 15px 15px 10px 15px;
+                        height: 100%;
+
+                        .edit_nama_parcel {
+                            @include bordering(none, none, none, $borderset);
+                            font-weight   : bolder;
+                            text-align    : center;
+                            letter-spacing: 1px;
+                            padding       : 3px;
+                            transition    : .3s;
+
+                            &:hover {
+                                color           : $tertiary;
+                                letter-spacing  : 2px;
+                                background-color: $secondarys;
+                            }
+
+                            &:focus {
+                                outline         : none;
+                                color           : $tertiary;
+                                letter-spacing  : 2px;
+                                background-color: $secondarys;
+                            }
+                        }
+
+                        select {
+                            position      : relative;
+                            text-transform: capitalize;
+                            border        : none;
+                            font-size     : 14px;
+                            letter-spacing: 2px;
+                            margin        : 10px;
+                            width         : 100%;
+                            transition    : .3s;
+
+                            &:active,
+                            &:focus {
+                                outline: none;
+                            }
+
+                            &:hover {
+                                color           : $tertiary;
+                                letter-spacing  : 1px;
+                                background-color: $secondarys;
+                            }
+
+                            option.hide {
+                                display: none;
+                            }
+                        }
+
+                        .imageBx {
+                            position        : relative;
+                            margin          : 5px 0 10px 0;
+                            width           : 200px;
+                            height          : 230px;
+                            background-color: $lt_gray;
+
+                            .edit_buttonBx {
+                                @include flexin();
+                                position: absolute;
+                                top     : 0;
+                                right   : 0;
+                                z-index : 1;
+
+                                .ganti_gambar,
+                                .hapus_gambar {
+                                    background-color: transparent;
+                                    border          : none;
+                                    margin          : 5px;
+                                    opacity         : .2;
+
+                                    &:hover {
+                                        opacity: 1;
+                                    }
+                                }
+                            }
+
+                            img {
+                                position  : relative;
+                                object-fit: cover;
+                                height    : 100%;
+                                width     : 100%;
+                            }
+                        }
+
+                        .edit_harga_parcel {
+                            background-color: $dk_tertiary;
+                            color           : $white;
+                            text-align      : center;
+                            font-weight     : bolder;
+                            border          : none;
+                            margin-bottom: -10px;
+                            transition      : .3s;
+
+                            &:focus,
+                            &:hover {
+                                outline         : none;
+                                color           : $tertiary;
+                                letter-spacing  : 2px;
+                                background-color: $secondarys;
+                            }
+                        }
+
+                        .itemBx {
+                            @include flexin($r, $sp, $cn);
+                            width  : 100%;
+                            padding: 0 10px;
+                            color  : $tertiary;
+
+                            p {
+                                position: relative;
+                                margin-top: 15px;
+                                font-size  : 15px;
+                                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                            }
+
+                            .arrow_icon {
+                                position           : relative;
+                                font-weight        : bold;
+                                transition         : 0.3s;
+                                font-size          : 15px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .parcellist {
+        @include flexin();
+        position: relative;
+        padding : 0 30px 30px 30px;
+
+        .subborder {
+            @include bordering(null, $borderset, $borderset, $borderset);
+            position: relative;
+            width   : 100%;
+            padding : 20px 20px;
+
+            .setting {
+                @include flexin();
+                width     : 100%;
+                margin    : 15px 0;
+                text-align: center;
+                color     : $white;
+                font-size : 12px;
+
+                .parcel-edit {
+                    background-color: $primary;
+                    width           : 100%;
+                }
+
+                .parcel-delete {
+                    background-color: $dk_tertiary;
+                    width           : 100%;
+                }
+            }
+        }
+
+        ;
+    }
+
+    ;
+}
+
+;

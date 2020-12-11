@@ -1,0 +1,393 @@
+.newparcel {
+    background-color: $white;
+    position: relative;
+    height: 100%;
+    padding         : 20px;
+    transition      : 0.5s;
+
+    .subsubborder {
+        border          : $borderset;
+        background-color: $white;
+        padding         : 15px;
+
+        &:hover {
+            border: 1px solid $tertiary;
+        }
+
+        .cardhead {
+            @include flexin(row, space-between, center);
+
+            .tag {
+                color      : $dk_tertiary;
+                font-weight: 600;
+            }
+
+            button {
+                background-color: $tertiary;
+                color           : $white;
+                text-align      : center;
+                border          : none;
+                font-weight     : bold;
+                font-size       : 12px;
+                padding         : 1px 7px 3px 7px;
+
+                &:disabled {
+                    background-color: $lt_gray;
+                }
+
+                &:hover:not([disabled]) {
+                    background-color: $dk_tertiary;
+                }
+            }
+        }
+
+        .cardname {
+            border-bottom : $borderset;
+            font-weight   : bolder;
+            text-transform: uppercase;
+            text-align    : center;
+            letter-spacing: 1px;
+            padding       : 3px;
+        }
+
+        .cardcategory {
+            text-align    : center;
+            font-size     : 14px;
+            text-transform: capitalize;
+            letter-spacing: 2px;
+            margin        : 5px;
+        }
+
+        .imgBx {
+            margin: 5px 0 10px 0;
+            width : 200px;
+            height: 230px;
+
+            img {
+                position  : relative;
+                object-fit: cover;
+                height    : 100%;
+                width     : 100%;
+            }
+        }
+
+        .cardharga {
+            background-color: $dk_tertiary;
+            color           : $white;
+            text-align      : center;
+            font-weight     : bolder;
+        }
+
+        .carditem {
+            @include flexin(row, space-between, center);
+            width  : 100%;
+            padding: 0 10px;
+
+            .texted {
+                font-size  : 15px;
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            }
+
+            button {
+                position        : relative;
+                background-color: transparent;
+                border          : none;
+                font-weight     : bold;
+                transition      : 0.3s;
+                font-size       : 30px;
+                padding         : 0 7px 2px 7px;
+
+                &:hover:not([disabled]) {
+                    color      : $primary;
+                    font-weight: 800;
+                }
+            }
+        }
+    }
+}
+
+.addingitemBx {
+    @include flexin();
+    background-color: $dk_gray;
+    position        : relative;
+    padding         : 35px;
+    width           : 100%;
+    height          : 500px;
+
+    .additemContent {
+        @include flexin($cl);
+        position   : relative;
+        text-align : center;
+        border: $borderset;
+        padding    : 40px;
+        height     : 100%;
+        width      : 100%;
+
+        h2 {
+            color : $lt_gray;
+            margin: -10px 0 10px 0;
+
+            span {
+                color        : $tertiary;
+                border-bottom: $borderset;
+                margin       : 0 10px;
+                padding      : 0 5px;
+            }
+        }
+
+        .subcaption {
+            color      : $lt_gray;
+            padding    : 5px 0;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+            .span0 {
+                color      : $tertiary;
+                padding    : 0 5px;
+                margin     : 0 5px;
+                font-weight: 600;
+            }
+
+            .span1 {
+                background-color: $primary;
+                padding         : 0 5px;
+                margin          : 0 5px;
+                font-weight     : 600;
+                font-size       : 15px;
+            }
+
+            .span2 {
+                background-color: $dk_tertiary;
+                padding         : 0 5px;
+                margin          : 0 5px;
+                font-weight     : 600;
+                font-size       : 15px;
+            }
+        }
+
+        .renderBx {
+            position     : relative;
+            display: flex;
+            justify-content: center;
+            overflow     : hidden;
+            white-space  : nowrap;
+            padding: 20px;
+            height       : 100%;
+            width        : 100%;
+            margin-bottom: 5px;
+            transition   : 0.2s;
+            border       : 1px dashed $lt_gray;
+
+            &:active {
+                cursor: grabbing;
+                cursor: -webkit-grabbing;
+            }
+
+            p {
+                background-color: $lt_gray;
+                color: $dk_gray;
+                position: relative;
+                text-align: center;
+                font-size: 14px;
+                padding: 90px 0;
+                height: 100%;
+                width: 100%;
+            }
+
+            .rendersubBx0 {
+                display         : inline-block;
+                vertical-align  : top;
+                background-color: white;
+                margin          : 18px 10px;
+                height          : 150px;
+                width           : 150px;
+
+                &:start {
+                    margin-left: 10px;
+                }
+
+                &:end {
+                    margin-right: 10px;
+                }
+
+                &:hover {
+                    cursor: grabbing;
+                }
+
+                .content {
+                    @include flexin(column, center, center);
+                    text-align: center;
+                    overflow  : hidden;
+                    max-width : 150;
+
+                    .itemhead {
+                        @include flexin(row, space-between, center);
+                        width  : 100%;
+                        z-index: 2;
+                        padding: 10px;
+
+                        .id {
+                            font-size     : 12px;
+                            font-weight   : bold;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                            padding-left  : 5px;
+                        }
+
+                        button {
+                            color           : $tertiary;
+                            background-color: transparent;
+                            border          : none;
+                            font-weight     : bolder;
+                            transition      : 0.5s;
+
+                            &:hover {
+                                color: $dk_tertiary;
+                            }
+                        }
+                    }
+
+                    .category {
+                        z-index    : 1;
+                        font-weight: 800;
+                        font-size  : 25px;
+                        line-height: 32px;
+                        margin-top : -5px;
+                        font-family: "Lato", sans-serif;
+
+                        span {
+                            background-color: $lt_primary;
+                            font-weight     : normal;
+                            font-size       : 20px;
+                            padding         : 0 10px;
+                        }
+                    }
+
+                    .imgBx {
+                        margin-top: -138px;
+                        width     : 150px;
+                        height    : 150px;
+                        opacity   : 0.3;
+                        z-index   : 0;
+                    }
+                }
+            }
+        }
+
+        .selectBx {
+            @include flexin(row, space-between, center);
+            position : relative;
+            width    : 100%;
+            margin   : 5px 0;
+            font-size: 14px;
+
+            select {
+                @include bordering($borderset, $borderset, 4px solid $tertiary, $borderset);
+                color           : $tertiary;
+                position        : relative;
+                background-color: transparent;
+                text-align      : center;
+                appearance      : none;
+                padding         : 10px 10px;
+                width           : 30%;
+                font-size       : 14px;
+                font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+
+                &:hover {
+                    border-style: solid;
+                }
+
+                &:focus {
+                    outline     : none;
+                    border-style: solid;
+                    ;
+
+                    .hide {
+                        display: none;
+                    }
+                }
+
+                option {
+                    @include flexin(row, center, center);
+                    background-color: $tertiary;
+                    color           : $white;
+                    border          : $borderset;
+                    font-size       : 14px;
+                    font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                }
+            }
+
+            input {
+                @include bordering(1px dashed $lt_gray, none, none, 1px dashed $lt_gray);
+                color      : $lt_gray;
+                background : transparent;
+                position   : relative;
+                font-weight: 700;
+                padding    : 10px;
+                width      : 60%;
+
+
+                &:disabled {
+                    opacity: .6;
+                }
+
+                &:focus {
+                    outline: none;
+                    border : 1px solid $lt_gray;
+                }
+
+                &::placeholder {
+                    color      : $lt_gray;
+                    font-weight: 400;
+                    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                }
+            }
+
+            button {
+                @include bordering(none, 4px solid $lt_gray, none, none);
+                background-color: $lt_gray;
+                color           : $tertiary;
+                position        : relative;
+                font-weight     : 600;
+                width           : 10%;
+                padding         : 10px;
+
+                &:disabled {
+                    color: $white;
+                }
+            }
+        }
+
+        .buttonBx {
+            @include flexin(row, space-evenly, center);
+            position: relative;
+            width   : 100%;
+
+            .button0,
+            .button1 {
+                padding: 5px;
+            }
+
+            .button0 {
+                background-color: $primary;
+                color           : $white;
+                position        : relative;
+                border          : none;
+                width           : 90%;
+
+                &:disabled {
+                    background-color: $lt_gray;
+                    cursor          : not-allowed;
+                }
+            }
+
+            .button1 {
+                background-color: $dk_tertiary;
+                color           : $white;
+                position        : relative;
+                border          : none;
+                width           : 10%;
+            }
+        }
+    }
+}

@@ -23,15 +23,15 @@ export default () => {
                 <div className="imgBx">
                     <img src={logo}/>
                 </div>
-                <h8 className="slogan">
+                <h6 className="slogan">
                     <span>care</span> know no <span>distance</span>
-                </h8>
+                </h6>
             </div>
             <div className="userBx">
                 <div className="usermenuBx">
                     <IconContext.Provider value={{ style: {fontSize:"20px", color:"white", margin:"0 10px"} }}>
                         <div>
-                            { Auth.role==="admin"?
+                            { Auth.role === "admin"?
                             <HiBriefcase/>
                             :
                             <Link to='/cart'>
