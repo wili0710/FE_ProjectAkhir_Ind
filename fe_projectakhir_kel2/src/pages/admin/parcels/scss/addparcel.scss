@@ -1,71 +1,14 @@
-@import url("../../../styles/colors.css");
-@import '../../../styles/mixins.scss';
-@import '../../../styles/variables.scss';
+@import '../../../../Styles/mixins.scss';
+@import '../../../../styles/variables.scss';
+@import "partials/subheader";
 
-$borderset: 1px dashed var(--tertiary);
-
-*:not(input){
-    transition: .5s;
-}
-
-// section //
-.subheader {
-    @include flexin(null, center, center);
-    background-color: var(--dk_gray);
-    height          : 150px;
-    padding         : 30px 30px 0 30px;
-
-    .subborder {
-        @include flexin(null, center, center);
-        @include bordering($borderset, $borderset, $borderset, none);
-        padding: 20px 40px;
-        width  : 100%;
-        height : 100%;
-
-        .title {
-            color         : var(--lt_gray);
-            font-family   : "Lato", sans-serif;
-            margin-top    : -50px;
-            margin-right  : 30px;
-            letter-spacing: 6px;
-            font-weight   : 500;
-            transition    : 0.5s;
-
-            span {
-                color         : var(--dk_tertiary);
-                vertical-align: baseline;
-                font-weight   : 800;
-                font-size     : 7rem;
-            }
-        }
-        .navbar {
-            background-color: var(--lt_gray);
-            width           : 600px;
-
-            div {
-                color         : var(--dk_gray);
-                font-size     : 1rem;
-                letter-spacing: 0.5px;
-                margin        : 0 20px;
-                transition    : 0.5s;
-
-                &:hover:not(.active, span) {
-                    color         : var(--dk_tertiary);
-                }
-            }
-            div.active {
-                background-color: var(--tertiary);
-                color           : var(--white);
-                padding         : 15px;
-                font-weight     : 600;
-            }
-        }
-    }
-}
+// *:not(input){
+//     transition: .5s;
+// }
 
 // section //
 .addparcel {
-    background-color: var(--dk_gray);
+    background-color: $dk_gray;
     padding         : 0 30px;
 
     .subborder2 {
@@ -75,13 +18,13 @@ $borderset: 1px dashed var(--tertiary);
 
         .addcard {
             @include flexin(null, center, center);
-            background-color: var(--white);
+            background-color: $white;
             width           : 1000px;
             padding         : 50px 10px;
             box-shadow      : 5px 2px 6px 0px rgba(gray, 0.1);
 
             .rotate90 {
-                color         : var(--lt_gray);
+                color         : $lt_gray;
                 transform     : rotate(-90deg);
                 letter-spacing: 10px;
                 margin        : -15px;
@@ -111,7 +54,7 @@ $borderset: 1px dashed var(--tertiary);
 
                     &:hover {
                         opacity         : 1;
-                        background-color: var(--dk_tertiary);
+                        background-color: $dk_tertiary;
                     }
                     &:focus {
                         outline: none;
@@ -126,7 +69,7 @@ $borderset: 1px dashed var(--tertiary);
             }
             .formBx {
                 @include flexin(column, center, center);
-                color: var(--dk_gray);
+                color: $dk_gray;
 
                 div {
                     &:not(.fakeBx) {
@@ -134,7 +77,7 @@ $borderset: 1px dashed var(--tertiary);
                         width: 100%;
                     }
                     span {
-                        color    : var(--tertiary);
+                        color    : $tertiary;
                         font-size: 10px;
                         margin   : -5px 0 0 10px;
                     }
@@ -145,8 +88,8 @@ $borderset: 1px dashed var(--tertiary);
                     font-size   : 14px;
                 }
                 select {
-                    background-color: var(--lt_gray);
-                    color           : var(--tertiary);
+                    background-color: $lt_gray;
+                    color           : $tertiary;
                     border          : none;
                     outline         : none;
                     appearance      : none;
@@ -175,12 +118,12 @@ $borderset: 1px dashed var(--tertiary);
                         margin : 5px;
 
                         &:hover {
-                            background-color: var(--dk_tertiary);
+                            background-color: $dk_tertiary;
                         }
                     }
                 }
                 input {
-                    color: var(--tertiary);
+                    color: $tertiary;
                     width: 100%;
 
                     &:not([type="file"]) {
@@ -188,20 +131,20 @@ $borderset: 1px dashed var(--tertiary);
                         padding    : 5px;
                         font-weight: 600;
                         margin     : 5px 0;
-                        border     : 1px dashed var(--tertiary);
+                        border     : 1px dashed $tertiary;
 
                         &:disabled {
-                            border: 1px dashed var(--lt_gray);
+                            border: 1px dashed $lt_gray;
 
                             &::placeholder {
-                                color: var(--lt_gray);
+                                color: $lt_gray;
                             }
                         }
                         &:hover:not([disabled]) {
                             letter-spacing: 0.5px;
                             
                             &::placeholder {
-                                color         : var(--tertiary);
+                                color         : $tertiary;
                                 letter-spacing: 0.5px;
                             }
                         }
@@ -223,18 +166,18 @@ $borderset: 1px dashed var(--tertiary);
                             cursor: not-allowed;
 
                             &~.fakeBx{
-                                background-color: var(--lt_gray) !important;
+                                background-color: $lt_gray !important;
                             }
                         }
                         &:focus {
                             outline: none;
-                            border : 1px solid var(--tertiary);
+                            border : 1px solid $tertiary;
                         }
                         &:hover:not([disabled]) {
                             cursor: pointer;
 
                             &~.fakeBx:not([disabled]) {
-                                background-color: var(--dk_tertiary);
+                                background-color: $dk_tertiary;
                                 letter-spacing  : 1px;
                             }
                         }
@@ -246,7 +189,7 @@ $borderset: 1px dashed var(--tertiary);
                     }
                     &:focus {
                         outline: none;
-                        border : 1px solid var(--tertiary);
+                        border : 1px solid $tertiary;
                     }
                     
                 }
@@ -256,8 +199,8 @@ $borderset: 1px dashed var(--tertiary);
                     }
                 }
                 .fakeBx {
-                    background-color: var(--tertiary);
-                    color           : var(--white);
+                    background-color: $tertiary;
+                    color           : $white;
                     position        : absolute;
                     width           : 280px;
                     height          : 35px;
@@ -269,7 +212,7 @@ $borderset: 1px dashed var(--tertiary);
                 }
             }
             .rotate270 {
-                color         : var(--lt_gray);
+                color         : $lt_gray;
                 transform     : rotate(90deg);
                 margin        : -15px;
                 letter-spacing: 10px;
@@ -285,7 +228,7 @@ $borderset: 1px dashed var(--tertiary);
         width       : 100%;
 
         .addbutton {
-            color           : var(--tertiary);
+            color           : $tertiary;
             border          : $borderset;
             background-color: transparent;
             margin          : 10px 0 30px 0;
@@ -294,24 +237,24 @@ $borderset: 1px dashed var(--tertiary);
             transition      : 0.5s;
 
             &:disabled {
-                color   : var(--lt_gray);
-                border  : 1px dashed var(--lt_gray);
+                color   : $lt_gray;
+                border  : 1px dashed $lt_gray;
                 opacity : .5;
             }
             &:hover:not([disabled]) {
-                color         : var(--lt_primary);
+                color         : $lt_primary;
                 font-weight   : bold;
                 text-transform: uppercase;
                 letter-spacing: 10px;
-                border        : 1px dashed var(--lt_primary);
+                border        : 1px dashed $lt_primary;
                 cursor        : pointer;
             }
             &:focus {
                 outline: none;
             }
             &:active {
-                background-color: var(--lt_primary);
-                color: var(--white);
+                background-color: $lt_primary;
+                color: $white;
                 outline: none;
             }
         }
@@ -320,7 +263,7 @@ $borderset: 1px dashed var(--tertiary);
 
 // section //
 .addedparcel {
-    background-color: var(--lt_gray);
+    background-color: $lt_gray;
     padding         : 0 30px 30px 30px;
 
     .subborder3 {
@@ -342,8 +285,8 @@ $borderset: 1px dashed var(--tertiary);
             border-bottom : 1px dashed gray;
 
             span {
-                background-color: var(--dk_tertiary);
-                color           : var(--white);
+                background-color: $dk_tertiary;
+                color           : $white;
                 vertical-align  : top;
                 font-size       : 12px;
                 padding         : 5px;
@@ -359,7 +302,7 @@ $borderset: 1px dashed var(--tertiary);
             width: 100%;
 
             .newparcel {
-                background-color: var(--white);
+                background-color: $white;
                 margin          : 10px 5px;
                 padding         : 10px;
                 transition      : 0.5s;
@@ -369,22 +312,22 @@ $borderset: 1px dashed var(--tertiary);
                 }
                 .subsubborder {
                     border          : $borderset;
-                    background-color: var(--white);
+                    background-color: $white;
                     padding         : 15px;
 
                     &:hover {
-                        border: 1px solid var(--tertiary);
+                        border: 1px solid $tertiary;
                     }
                     .cardhead {
                         @include flexin(row, space-between, center);
 
                         .tag {
-                            color      : var(--dk_tertiary);
+                            color      : $dk_tertiary;
                             font-weight: 600;
                         }
                         button {
-                            background-color: var(--tertiary);
-                            color           : var(--white);
+                            background-color: $tertiary;
+                            color           : $white;
                             text-align      : center;
                             border          : none;
                             font-weight     : bold;
@@ -392,10 +335,10 @@ $borderset: 1px dashed var(--tertiary);
                             padding         : 1px 7px 3px 7px;
 
                             &:disabled {
-                                background-color: var(--lt_gray);
+                                background-color: $lt_gray;
                             }
                             &:hover:not([disabled]) {
-                                background-color: var(--dk_tertiary);
+                                background-color: $dk_tertiary;
                             }
                         }
                     }
@@ -427,8 +370,8 @@ $borderset: 1px dashed var(--tertiary);
                         }
                     }
                     .cardharga {
-                        background-color: var(--dk_tertiary);
-                        color           : var(--white);
+                        background-color: $dk_tertiary;
+                        color           : $white;
                         text-align      : center;
                         font-weight     : bolder;
                     }
@@ -451,7 +394,7 @@ $borderset: 1px dashed var(--tertiary);
                             padding         : 0 7px 2px 7px;
 
                             &:hover:not([disabled]) {
-                                color      : var(--primary);
+                                color      : $primary;
                                 font-weight: 800;
                             }
                         }
@@ -460,7 +403,7 @@ $borderset: 1px dashed var(--tertiary);
             }
             .addingitemBx {
                 @include flexin(row, center, center);
-                background-color: var(--dk_gray);
+                background-color: $dk_gray;
                 position        : relative;
                 padding         : 35px;
                 margin          : 20px 30px;
@@ -478,36 +421,36 @@ $borderset: 1px dashed var(--tertiary);
                     width       : 100%;
 
                     h2 {
-                        color : var(--lt_gray);
+                        color : $lt_gray;
                         margin: -10px 0 10px 0;
 
                         span {
-                            color           : var(--tertiary);
+                            color           : $tertiary;
                             border-bottom   : $borderset;
                             margin          : 0 10px;
                             padding         : 0 5px;
                         }
                     }
                     .subcaption {
-                        color       : var(--lt_gray);
+                        color       : $lt_gray;
                         padding     : 5px 0 20px 0;
                         font-family : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 
                         .span0 {
-                            color      : var(--tertiary);
+                            color      : $tertiary;
                             padding    : 0 5px;
                             margin     : 0 5px;
                             font-weight: 600;
                         }
                         .span1 {
-                            background-color: var(--primary);
+                            background-color: $primary;
                             padding         : 0 5px;
                             margin          : 0 5px;
                             font-weight     : 600;
                             font-size       : 15px;
                         }
                         .span2 {
-                            background-color: var(--dk_tertiary);
+                            background-color: $dk_tertiary;
                             padding         : 0 5px;
                             margin          : 0 5px;
                             font-weight     : 600;
@@ -522,7 +465,7 @@ $borderset: 1px dashed var(--tertiary);
                         width        : 100%;
                         margin-bottom: 5px;
                         transition   : 0.2s;
-                        border       : 1px dashed var(--lt_gray);
+                        border       : 1px dashed $lt_gray;
 
                         &:active {
                             cursor: grabbing;
@@ -565,14 +508,14 @@ $borderset: 1px dashed var(--tertiary);
                                         padding-left  : 5px;
                                     }
                                     button {
-                                        color           : var(--tertiary);
+                                        color           : $tertiary;
                                         background-color: transparent;
                                         border          : none;
                                         font-weight     : bolder;
                                         transition      : 0.5s;
 
                                         &:hover {
-                                            color: var(--dk_tertiary);
+                                            color: $dk_tertiary;
                                         }
                                     }
                                 }
@@ -585,7 +528,7 @@ $borderset: 1px dashed var(--tertiary);
                                     font-family: "Lato", sans-serif;
 
                                     span {
-                                        background-color: var(--lt_primary);
+                                        background-color: $lt_primary;
                                         font-weight     : normal;
                                         font-size       : 20px;
                                         padding         : 0 10px;
@@ -609,8 +552,8 @@ $borderset: 1px dashed var(--tertiary);
                         font-size   : 14px;
 
                         select {
-                            @include bordering($borderset,$borderset,4px solid var(--tertiary),$borderset);
-                            color           : var(--tertiary);
+                            @include bordering($borderset,$borderset,4px solid $tertiary,$borderset);
+                            color           : $tertiary;
                             position        : relative;
                             background-color: transparent;
                             text-align      : center;
@@ -634,16 +577,16 @@ $borderset: 1px dashed var(--tertiary);
                             }
                             option {
                                 @include flexin(row, center, center);
-                                background-color: var(--tertiary);
-                                color           : var(--white);
+                                background-color: $tertiary;
+                                color           : $white;
                                 border          : $borderset;
                                 font-size       : 14px;
                                 font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
                             }
                         }
                         input {
-                            @include bordering(1px dashed var(--lt_gray),none,none,1px dashed var(--lt_gray));
-                            color       : var(--lt_gray);
+                            @include bordering(1px dashed $lt_gray,none,none,1px dashed $lt_gray);
+                            color       : $lt_gray;
                             background  : transparent;
                             position    : relative;
                             font-weight : 700;
@@ -656,25 +599,25 @@ $borderset: 1px dashed var(--tertiary);
                             }
                             &:focus {
                                 outline : none;
-                                border  : 1px solid var(--lt_gray);
+                                border  : 1px solid $lt_gray;
                             }
                             &::placeholder {
-                                color       : var(--lt_gray);
+                                color       : $lt_gray;
                                 font-weight : 400;
                                 font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
                             }
                         }
                         button {
-                            @include bordering(none,4px solid var(--lt_gray),none,none);
-                            background-color: var(--lt_gray);
-                            color           : var(--tertiary);
+                            @include bordering(none,4px solid $lt_gray,none,none);
+                            background-color: $lt_gray;
+                            color           : $tertiary;
                             position        : relative;
                             font-weight     : 600;
                             width           : 10%;
                             padding         : 10px;
                             
                             &:disabled {
-                                color: var(--white);
+                                color: $white;
                             }
                         }
                     }
@@ -688,20 +631,20 @@ $borderset: 1px dashed var(--tertiary);
                             padding: 5px;
                         }
                         .button0 {
-                            background-color: var(--primary);
-                            color           : var(--white);
+                            background-color: $primary;
+                            color           : $white;
                             position        : relative;
                             border          : none;
                             width           : 90%;
 
                             &:disabled {
-                                background-color: var(--lt_gray);
+                                background-color: $lt_gray;
                                 cursor          : not-allowed;
                             }
                         }
                         .button1 {
-                            background-color: var(--dk_tertiary);
-                            color           : var(--white);
+                            background-color: $dk_tertiary;
+                            color           : $white;
                             position        : relative;
                             border          : none;
                             width           : 10%;
@@ -710,7 +653,7 @@ $borderset: 1px dashed var(--tertiary);
                 }
             }
             .maincaption {
-                background-color: var(--tertiary);
+                background-color: $tertiary;
                 text-align      : center;
                 letter-spacing  : 2px;
                 font-size       : 14px;
@@ -720,8 +663,8 @@ $borderset: 1px dashed var(--tertiary);
                 font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 
                 span {
-                    background-color: var(--dk_tertiary);
-                    color           : var(--white);
+                    background-color: $dk_tertiary;
+                    color           : $white;
                     padding         : 5px 5px;
                     margin          : 0 10px;
                     font-weight     : 700;

@@ -87,7 +87,7 @@ export const uploadParcel = (data) => {
     return (dispatch) => {
         dispatch({type:'LOADING'});
         try {
-            // console.log(data)
+            console.log(data,'REDUX');
             const {nama,harga,categoryparcel_id,gambar,item} = data
             Axios.post(`${API_URL_SQL}/parcel/addparcel`, {
                         nama,
