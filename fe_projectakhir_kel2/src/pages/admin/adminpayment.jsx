@@ -72,6 +72,14 @@ const AdminPayment=()=>{
     Axios.post(`${API_URL_SQL}/payment/confirmpayment`,{payment_id:payment_id,transaksi_id:transaksi_id})
     .then((res)=>{
         console.log(res)
+        setmaxpages(res.data.length)
+        Axios.get(`${API_URL_SQL}/payment/getpaymentwaiting?page=${pages}`)
+        .then((res)=>{
+            console.log(res)
+            setPaymentInWaiting(res.data)
+        }).catch((err)=>{
+          console.log(err)
+        })
         setPaymentInWaiting(res.data)
     })
   }
