@@ -46,12 +46,9 @@ export default connect(mapStatetoProps, { loadCategories })(
           (val) => parseInt(e.target.value) === val.id
         ) !== -1
       ) {
-        this.state.product_categories.splice(
-          this.state.product_categories.findIndex(
-            (val) => parseInt(e.target.value) === val.id
-          ),
-          1
-        );
+        this.state.product_categories.splice
+        ( this.state.product_categories.findIndex((val) => parseInt(e.target.value) === val.id
+          ),1);
         this.setState({ product_categories: this.state.product_categories });
       } else {
         this.state.product_categories.push(

@@ -23,9 +23,9 @@ export default () => {
                 <div className="imgBx">
                     <img src={logo}/>
                 </div>
-                <h8 className="slogan">
+                <h6 className="slogan">
                     <span>care</span> know no <span>distance</span>
-                </h8>
+                </h6>
             </div>
             <div className="userBx">
                 <div className="usermenuBx">
