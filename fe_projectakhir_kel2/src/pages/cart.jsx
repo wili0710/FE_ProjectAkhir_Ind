@@ -506,9 +506,9 @@ const CartPage=()=>{
                 <div style={{
                     display:"flex",
                     // justifyContent:"space-between",
-                    borderBottom:"1px solid #f3f4f5",
+                    borderBottom:"5px solid #f3f4f5",
                     paddingTop:10,
-                    paddingBottom:10,
+                    paddingBottom:100,
                     // backgroundColor:"wheat",
                     height:100
                 }}>
@@ -601,9 +601,10 @@ const CartPage=()=>{
                 <div style={{
                     display:"flex",
                     // justifyContent:"space-between",
-                    borderBottom:"1px solid #f3f4f5",
+                    borderBottom:"5px solid #f3f4f5",
                     paddingTop:10,
-                    paddingBottom:10
+                    paddingBottom:20,
+                    marginBottom:10
                 }}>
                     <div style={{
                         marginRight:10
