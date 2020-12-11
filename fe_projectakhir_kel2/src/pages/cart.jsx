@@ -12,6 +12,7 @@ import numeral from 'numeral';
 import { Button} from 'reactstrap';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReactImageMagnify from 'react-image-magnify';
+import { namaPertama } from '../helpers/namapertama';
 
 
 const CartPage=()=>{
@@ -732,13 +733,13 @@ const CartPage=()=>{
     }
 
 
-    // if(loading){
-    //     return(
-    //         <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
-    //             {FullPageLoading(loading,100,'#0095DA')}
-    //         </div>
-    //     )
-    // }
+    if(loading){
+        return(
+            <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+                {FullPageLoading(loading,100,'#0095DA')}
+            </div>
+        )
+    }
 
     return(
         <div style={{
@@ -1017,11 +1018,11 @@ const CartPage=()=>{
                 </div>
                 <div style={{
                     display:"flex",
-                    justifyContent:"space-around",
+                    justifyContent:"flex-end",
                     alignItems:"center",
                     flexBasis:"13%"}}>
                     <div style={{
-                        position:"relative",}} onMouseEnter={()=>setShowCart(true)} onMouseLeave={()=>setShowCart(false)}>
+                        position:"relative",marginRight:10}} onMouseEnter={()=>setShowCart(true)} onMouseLeave={()=>setShowCart(false)}>
                         <Badge color="error" badgeContent={Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length}>
                             <BiCart color="white" size="20" style={{cursor:"pointer"}}/>
                         </Badge>
@@ -1086,10 +1087,11 @@ const CartPage=()=>{
                     <div style={{
                         borderLeft: '1px solid white',
                         paddingLeft:10,
+                        marginLeft:10,
                         position:"relative",
                         }}
                         onMouseEnter={()=>setShowMenuUser(true)} onMouseLeave={()=>setShowMenuUser(false)}>
-                        <BiUser color="white" size="20" style={{cursor:"pointer"}}/> Halo, {Auth.nama}
+                        <BiUser color="white" size="20" style={{cursor:"pointer"}}/> Halo, {namaPertama(Auth.nama)}
                         <div style={{
                             position:"absolute",
                             display:showMenuUser?"block":"none",
