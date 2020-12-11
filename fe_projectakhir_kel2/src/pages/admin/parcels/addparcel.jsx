@@ -1,5 +1,5 @@
 import React from 'react';
-import './addparcel.scss';
+import './scss/addparcel.scss';
 import Axios from 'axios';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,8 @@ import {
 import { 
     API_URL_SQL,
     priceFormatter,
-    draggableCard
+    draggableCard,
+    renderOption
 } from '../../../helpers';
 import { 
     Courier,
@@ -45,55 +46,9 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     };  
     
     componentDidUpdate() {
-        // console.log(this.props.Parcel.ready_Parcel, 'ready')
-        
         if(this.state.index_add_cat_product !== (-1)){
             draggableCard(".renderBx","left",1);
         };
-    };
-    
-    renderOption = (props) => {
-        if(props.text !== "pilih kategori product") {
-            return (
-                <> 
-                    <option className="hide" value={0} disabled selected>{props.text}</option>  
-                    { 
-                        props.state.map((val)=>{
-                            return (
-                                <option key={val.id} value={val.id}>
-                                    {val.id} | {val.nama}
-                                </option>
-                            )
-                        })
-                    }
-                </>
-            );
-        };
-        let a;
-        let arr = [];
-        arr.push(...props.state)
-        for (let i = 0; i < this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item.length; i++){
-            a = arr.filter(val => {
-                    return val.id !== this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item[i].category_item
-                });
-            arr.splice(0,arr.length)
-            arr.push(...a)
-        };
-        // console.log(arr, 'option')
-        return (
-            <> 
-                <option className="hide" value={0} disabled selected>{props.text}</option>  
-                { 
-                    arr.map((val)=>{
-                        return (
-                            <option key={val.id} value={val.id}>
-                                {val.id} | {val.nama}
-                            </option>
-                        )
-                    })
-                }
-            </>
-        );
     };
     /* end of Initial Funcs */
     
@@ -178,7 +133,6 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                     this.props.setTempParcel([obj])
                     // console.log(this.props.Parcel.init_Parcel, "sil upl")
                     this.setState({
-                        // temp_parcel         : [obj],
                         upl_files           : null,
                         id_category_parcel  : 0,
                         nama_parcel         : "",
@@ -307,32 +261,8 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
             item                : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item,
             gambar              : this.props.Parcel.init_Parcel[this.state.index_add_cat_product].gambar,
         }
-        this.props.uploadParcel(data)
-
-
-        
-        // const temp_parcel = this.props.Parcel.init_Parcel;
-        // if(this.props.Parcel.ready_Parcel.length){
-        //     const ready_parcel = this.props.Parcel.ready_Parcel;
-        //     const newready_parcel = temp_parcel[this.state.index_add_cat_product]
-        //     ready_parcel.push(newready_parcel)
-        //     // console.log(ready_parcel,temp_parcel)
-        //     temp_parcel.splice(this.state.index_add_cat_product, 1);
-        //     this.props.setReadyParcel(ready_parcel,temp_parcel)
-        //     this.setState({
-        //         index_add_cat_product   : -1,
-        //         item_category           : 0,
-        //     });
-        // }else{
-        //     const ready_parcel = temp_parcel[this.state.index_add_cat_product];
-        //     temp_parcel.splice(this.state.index_add_cat_product, 1);
-        //     // console.log(ready_parcel,temp_parcel)
-        //     this.props.setReadyParcel([ready_parcel],temp_parcel)
-        //     this.setState({
-        //         index_add_cat_product   : -1,
-        //         item_category           : 0
-        //     });
-        // };
+        console.log(data,'FE')
+        this.props.uploadParcel(data);
     };
     
     renderTempParcel = (val,index) => {
@@ -369,6 +299,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     };
     
     render() {
+        console.log(this.props.Parcel)
         return (
            <>
                 <section className="subheader">
@@ -424,7 +355,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                                             value       = {this.state.id_category_parcel} 
                                             onChange    = {this.onChangeInput}
                                             >
-                                        {this.renderOption({state:this.props.Parcel.Parcel_Category,text:"pilih kategori parcel"})}
+                                        {renderOption({state:this.props.Parcel.Parcel_Category,text:"pilih kategori parcel"})}
                                     </select>    
                                 </div>
                                 <div className = "nameBx">
@@ -564,7 +495,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                                                         value       = {this.state.item_category}
                                                         disabled    = {this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item.length === this.props.Parcel.Product_Category.length? true:false}
                                                 >
-                                                    {this.renderOption({state:this.props.Parcel.Product_Category,text:"pilih kategori product"})}
+                                                    {renderOption({state:this.props.Parcel.Product_Category,text:"pilih kategori product"})}
                                                 </select>
                                                 <input className    = "input0" 
                                                        type         = "number"

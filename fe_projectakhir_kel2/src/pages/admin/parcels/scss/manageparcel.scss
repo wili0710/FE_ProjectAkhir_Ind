@@ -1,0 +1,17 @@
+@import '../../../../Styles/mixins.scss';
+@import '../../../../styles/variables.scss';
+@import "partials/subheader";
+@import "partials/editparcelBx";
+
+.editparcel {
+    @include flexin();
+    position: relative;
+    padding: 0 30px;
+
+    .subborder {
+       @include bordering(null, $borderset, $borderset, null);
+       position: relative;
+       width: 100%;
+       padding: 20px 20px;
+    }
+}

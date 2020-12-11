@@ -15,9 +15,10 @@ class HeaderAdmin extends Component {
             <>
 
                 <div className="container-luar">
-                        <NavLink to='/'>
+                        <NavLink to='/' style={{textDecoration:"none"}}>
                             <div className="logo">
                                 <img src={Logo} alt="logo" className="colored-lt-primary logoimg"/>
+                                workspace
                             </div>
                         </NavLink>
 
