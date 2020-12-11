@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 import {Dropdown} from 'react-bootstrap'
 import {AiOutlineLogout,AiFillHome} from 'react-icons/ai'
 import debounce from 'lodash.debounce';
-
+import numeral from 'numeral';
 class dataProduct extends Component {
     state = {
         activeTab:"1",
@@ -109,7 +109,7 @@ class dataProduct extends Component {
                                 <img src={val.gambar} alt="logo" className="img-parcel " />      
                                 <div className="cover">
                                     <p className="name">{val.nama}</p>
-                                    <p className="title">Rp.{val.harga}</p>
+                                    <p className="title">Rp.{numeral(val.harga).format('0,0')}</p>
                                     <p className="social">Custom Parcel:</p>
                                     <p className="social">{render[0].nama} : {render[0].qty}</p>
                                     <p className="social">{render[1].nama} : {render[1].qty}</p>
@@ -130,7 +130,7 @@ class dataProduct extends Component {
                 <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataChocolate(val.id)}>
                 <div className="body">
                     <div className="cp_img">
-                        <img src={val.image} alt="logo" className="img-parcel"/>
+                        <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel"/>
                         <div className="hover">
                             <a href="javascript:void(0);" className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
                         </div>
@@ -139,7 +139,7 @@ class dataProduct extends Component {
                         <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
                         <ul className="product_price list-unstyled">
                             <li className="old_price">Stock:{val.stok}</li>
-                            <li className="new_price">Rp.{val.harga}</li>
+                            <li className="new_price">Rp.{numeral(val.harga).format('0,0')}</li>
                         </ul>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ class dataProduct extends Component {
                 <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMakanan(val.id)}>
                     <div className="body">
                         <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel"/>
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel"/>
                             <div className="hover">
                                 <a href="javascript:void(0);" className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
                             </div>
@@ -165,7 +165,7 @@ class dataProduct extends Component {
                             <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
                             <ul className="product_price list-unstyled">
                                 <li className="old_price">Stock:{val.stok}</li>
-                                <li className="new_price">Rp.{val.harga}</li>
+                                <li className="new_price">Rp.{numeral(val.harga).format('0,0')}</li>
                             </ul>
                         </div>
                     </div>
@@ -181,37 +181,23 @@ class dataProduct extends Component {
             console.log(index,' 182')
             return(
                 <>
-<<<<<<< Updated upstream
-                <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMinuman(val.id)}>
-                    <div className="body">
-                        <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel"/>
-                            <div className="hover">
-                                <a href="javascript:void(0);" className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
-=======
                 <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMakanan(val.id)}>
                     <div className="body">
                         <div className="cp_img">
                             <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel"/>
                         <div className="hover">
                                 <a className="btn btn-primary btn-sm waves-effect"><i className="zmdi zmdi-shopping-cart"></i>Add To Cart</a>
->>>>>>> Stashed changes
                             </div>
                         </div>
                         <div className="product_details">
                             <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
                             <ul className="product_price list-unstyled">
                                 <li className="old_price">Stock:{val.stok}</li>
-                                <li className="new_price">Rp.{val.harga}</li>
+                                <li className="new_price">Rp.{numeral(val.harga).format('0,0')}</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
                 </>
             )
         })
@@ -487,12 +473,7 @@ class dataProduct extends Component {
                                                          flexWrap:'wrap'
                                                          
                                                     }}>
-<<<<<<< Updated upstream
-                                                    {this.renderMinuman()}
-                                                   
-=======
                                                         {this.renderMinuman()}
->>>>>>> Stashed changes
                                                     </div>
                                             </div>
                                         {/* </Zoom>   */}

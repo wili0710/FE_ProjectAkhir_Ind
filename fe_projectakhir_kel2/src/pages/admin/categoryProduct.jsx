@@ -12,12 +12,17 @@ import './categoryProduct.css'
 import { API_URL_SQL } from '../../helpers/apiUrl';
 import Axios from 'axios'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
+import ReactPaginate from 'react-paginate';
 
 class CategoryProduct extends Component {
     state = { 
         categoryProduct:[],
         setModalProduct:false,
-        nama:createRef()
+        nama:createRef(),
+        offset:0,
+        perPage:7,
+        currentPage:0,
+        slice:[]
      }
 
      componentDidMount(){
@@ -25,6 +30,7 @@ class CategoryProduct extends Component {
          .then((res)=>{
             console.log(res.data)
             this.setState({categoryProduct:res.data})
+            this.pagination()
          }).catch((err)=>{
              console.log(err)
          })
@@ -43,6 +49,7 @@ class CategoryProduct extends Component {
          .then((res)=>{
              console.log(res.data)
              this.setState({categoryProduct:res.data})
+             this.pagination()
          }).catch((err)=>{
              console.log(err)
          })
@@ -80,6 +87,42 @@ class CategoryProduct extends Component {
          })
      }
 
+     pagination=()=>{
+        var data =this.state.categoryProduct
+        let slice = data.slice(this.state.offset, this.state.offset+this.state.perPage)
+        console.log(data)
+        console.log(slice)
+        this.setState({slice:slice})
+
+        const postData =  slice.map((val,index)=>{
+            return (
+            <TableRow key={val.id}>
+                <TableCell>{index+1}</TableCell>
+                <TableCell>{val.id}</TableCell>
+                <TableCell>{val.nama}</TableCell>
+                <TableCell>
+                <button onClick={()=>this.onDelete(val.id)}>Delete</button>
+                </TableCell>
+
+            </TableRow>
+
+            )
+        })
+        this.setState({pageCount:Math.ceil(data.length/this.state.perPage),postData})
+
+    }
+
+    handlePageClick=(e)=>{
+        const selectedPage= e.selected
+        const offset = selectedPage * this.state.perPage
+        this.setState({
+            currentPage:selectedPage,
+            offset:offset
+        },()=>{
+            this.pagination()
+        })
+    }
+
      toggle = () => this.setState({setModalProduct:false});
     render() { 
         return ( 
@@ -108,6 +151,21 @@ class CategoryProduct extends Component {
                    <div className="btn-add" onClick={this.onAddDataProd}>
                            <p>Add Data</p>
                     </div>
+                    <div>
+                        <ReactPaginate
+                        previousLabel={"Prev"}
+                        nextLabel={"Next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={this.state.pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"page pagination"}
+                        activeClassName={"active"}
+                        />
+                    </div>
                    <div className="container-data">
                    <TableContainer>
                             <Table>
@@ -122,7 +180,8 @@ class CategoryProduct extends Component {
                                 <TableBody>
                                    {/* render disini */}
                                     {/* {this.renderUsers()} */}
-                                    {this.renderCategoryProduct()}
+                                    {this.state.postData}
+                                    {/* {this.renderCategoryProduct()} */}
                                 </TableBody>
                             </Table>
                         </TableContainer>
