@@ -1,4 +1,4 @@
-import React, { Component,createRef } from 'react';
+import React, { Component,createRef, useCallback } from 'react';
 import './product.css'
 import HeaderAdmin from './../../components/header/headerAdmin'
 
@@ -13,8 +13,16 @@ import {MdAddShoppingCart} from 'react-icons/md'
 import Axios from 'axios'
 import { API_URL_SQL } from '../../helpers/apiUrl';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
+import debounce from 'lodash.debounce';
+import ReactPaginate from 'react-paginate';
+import InputBase from '@material-ui/core/InputBase';
+import dataProduct from '../Product/dataProduct';
+import numeral from 'numeral';
+import Zoom from 'react-reveal/Zoom';
 class Product extends Component {
+
+   
+
     state = { 
         dataProduct:[],
         setModalAdd:false,
@@ -24,10 +32,18 @@ class Product extends Component {
             harga:createRef(),
             stok:createRef(),
             deskripsi:createRef(),
-            catProduct:createRef()
+            catProduct:createRef(),
+            isOpen:false
         },
         fileImage:null,
-        categoryProduct:[]
+        categoryProduct:[],
+        searchData:'',
+        testSearching:[],
+        offset:0,
+        data:[],
+        perPage:7,
+        currentPage:0,
+        slice:[]
      }
 
      componentDidMount(){
@@ -35,6 +51,7 @@ class Product extends Component {
          .then((res)=>{
             console.log(res.data)
             this.setState({dataProduct:res.data})
+            this.pagination()
          }).catch((err)=>{
              console.log(err)
          })
@@ -46,6 +63,8 @@ class Product extends Component {
          }).catch((err)=>{
              console.log(err)
          })
+
+         
 
      }
 
@@ -59,7 +78,7 @@ class Product extends Component {
              console.log(res.data)
              console.log('berhasil delete')
              this.setState({dataProduct:res.data})
-            
+            this.pagination()
          }).catch((err)=>{
              console.log(err)
          })      
@@ -78,11 +97,11 @@ class Product extends Component {
                         <TableCell>
                             <img src={API_URL_SQL+val.image} alt={val.nama} style={{height:'50px',width:'50px'}}/>
                             </TableCell>
-                        <TableCell>{val.harga}</TableCell>
+                        <TableCell> Rp {numeral(val.harga).format('0,0')}</TableCell>
                         <TableCell>{val.stok}</TableCell>
                         <TableCell>{val.deskripsi}</TableCell>
                         <TableCell>{val.categoryproduct_id}</TableCell>
-                        <TableCell>Rp.{val.hargapokok}</TableCell>
+                        <TableCell> Rp {numeral(val.hargapokok).format('0,0')}</TableCell>
                         <TableCell>
                             <button onClick={()=>this.onDelete(val.id)}>Delete</button>
                         </TableCell>
@@ -154,9 +173,89 @@ class Product extends Component {
          console.log('selesai upload')
      }
 
+
+    //  TESTING DEBOUNCE BARU
+
+      onChangeSearch=debounce(function(e){
+          console.log(e.target.value,' debounce ')
+          if(e.target.value){
+              this.setState({searchData:e.target.value})
+              this.filterSearch(e.target.value)
+          }else if (e.target.value == ''){
+              console.log('data kosong')
+              Axios.get(`${API_URL_SQL}/product/getallproduct`)
+              .then((res)=>{
+                 console.log(res.data)
+                 this.setState({dataProduct:res.data})
+              }).catch((err)=>{
+                  console.log(err)
+              })
+          }
+      },1000)
+
+     filterSearch=(input)=>{
+         console.log(input, ' ini input')
+         var filterdata = this.state.dataProduct.filter((val)=>{
+             return val.nama.toLowerCase().includes(input.toLowerCase())
+         })
+         this.setState({testSearching:filterdata,dataProduct:filterdata})
+
+     }
+     
+
+            // batas debounce
+
+            // const slice = dataProduct.slice(this.state.offset,this.state.offset + this.state.perPage)
+        pagination=()=>{
+            var data = this.state.dataProduct
+            let slice = data.slice(this.state.offset,this.state.offset + this.state.perPage)
+            console.log(data)
+            console.log(slice)
+            this.setState({slice:slice})
+            const postData = slice.map((val,index)=>{
+                return (
+                    <>
+                       <TableRow key={val.id}>
+                           <TableCell>{index+1}</TableCell>
+                           <TableCell>{val.id}</TableCell>
+                           <TableCell>{val.nama}</TableCell>
+                           <TableCell>
+                               <img src={API_URL_SQL+val.image} alt={val.nama} style={{height:'50px',width:'50px'}}/>
+                               </TableCell>
+                           <TableCell>{val.stok}</TableCell>
+                           <TableCell>{val.deskripsi}</TableCell>
+                           <TableCell>{val.categoryproduct_id}</TableCell>
+                           <TableCell> Rp {numeral(val.harga).format('0,0')}</TableCell>
+                           <TableCell> Rp {numeral(val.hargapokok).format('0,0')}</TableCell>
+                           <TableCell>
+                               <button onClick={()=>this.onDelete(val.id)}>Delete</button>
+                           </TableCell>
+                       </TableRow>
+                    </>
+                )
+            })
+            console.log(postData,' ini post data')
+            this.setState({pageCount:Math.ceil(data.length / this.state.perPage),postData})
+            // console.log(slice)
+        }
+
+            
+        handlePageClick=(e)=>{
+            const selectedPage= e.selected
+            const offset = selectedPage * this.state.perPage
+
+            this.setState({
+                currentPage:selectedPage,
+                offset:offset
+            },()=>{
+                this.pagination()
+            })
+        }
+
      toggle = () => this.setState({setModalAdd:false});
     render() { 
-        console.log(this.state.categoryProduct)
+        console.log(this.state.dataProduct)
+        console.log(this.state.testSearching)
         return ( 
             <>
                 <Modal isOpen={this.state.setModalAdd} toggle={this.toggle}>
@@ -187,9 +286,39 @@ class Product extends Component {
                             <p style={{fontWeight:'600'}}>Product</p>
                         </div>
                     </div>
+                    <div className="header-bawah">
                         <div className="btn-add" onClick={this.onAddData}>
                            <p>Add Data</p>
                         </div>
+                        <div className="searching">
+                
+                            <input type='text' 
+                            defaultValue={this.props.value}
+                            onChange = {(e)=>this.onChangeSearch(e)} 
+                            // onChange={(e)=>this.search(e.target.value)}
+
+                            onFocus = {()=>this.setState({isOpen:true})} 
+                            onBlur ={()=>setTimeout(() => {this.setState()}, 100)}
+                             placeholder='Search' style={{marginBottom:'5px'}} 
+                             className="input-search" />
+
+                        </div>
+                    </div>
+                    <div>
+                        <ReactPaginate
+                        previousLabel={"Prev"}
+                        nextLabel={"Next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={this.state.pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"page pagination"}
+                        activeClassName={"active"}
+                        />
+                    </div>
                     <div className="container-data">
 
                         <TableContainer>
@@ -200,10 +329,10 @@ class Product extends Component {
                                         <TableCell>id</TableCell>
                                         <TableCell>Nama</TableCell>
                                         <TableCell>Gambar</TableCell>
-                                        <TableCell>Harga</TableCell>
                                         <TableCell>Stock</TableCell>
                                         <TableCell>Description</TableCell>
                                         <TableCell>Category Product</TableCell>
+                                        <TableCell>Harga</TableCell>
                                         <TableCell>Harga Pokok</TableCell>
                                         <TableCell>Action</TableCell>
                                     </TableRow>
@@ -211,7 +340,8 @@ class Product extends Component {
                                 <TableBody>
                                    {/* render disini */}
                                     {/* {this.renderUsers()} */}
-                                    {this.renderProduct()}
+                                    {this.state.postData}
+                                    {/* {this.renderProduct()} */}
                                 </TableBody>
                             </Table>
                         </TableContainer>

@@ -5,6 +5,68 @@
    
 
 }
+.header-top{
+    display:flex;
+    background-color:#158ae6;
+    padding:50;
+    color:white;
+    position:fixed;
+    top:0;
+    width:100%;
+    max-width:2000;  
+    z-index: 1;
+    height:80px;
+    
+}
+.cart {
+    margin-top:15px;
+}
+.div-img{
+    height:100px;
+    width:200px;
+    /* background-color:red; */
+    justify-content: center;
+    align-items: center;
+    margin-left:100px;
+}
+.logo-header{
+    height:50px;
+    width:200px;
+    justify-content: center;
+    align-items: center;
+    margin-top:10px;
+}
+.icon-user{
+
+    border-left:1px solid white;
+    padding-left: 10px;
+    position:relative;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    /* background-color:red; */
+    align-items: center;
+    margin-right:20px;
+}
+
+.menu-opt{
+    border:1px solid white;
+    border-bottom-left-radius: 10;
+    border-bottom-right-radius: 10;
+    color:black;
+    padding:10;
+    padding-left:10;
+    padding-right:20;
+    box-shadow: #f3f4f5 0px 1px 5px 1px;
+    background-color: white;
+    display:flex;
+    flex-direction: column;
+    animation:'growOut 300ms ease-in-out forwards';
+    transform-origin:"top center";
+
+
+}
+
 .header-dp{
     /* background-color:blue; */
     height:60px;
@@ -85,7 +147,7 @@
     /* background: linear-gradient(90deg, rgba(116,185,255,1) 0%, rgba(255,255,255,1) 50%, rgba(116,185,255,1) 100%); */
     height:100px;
     width:100%;
-    margin-top:150px;
+    margin-top:100px;
 }
 .tabpanel{
     /* background-color: gray; */
@@ -134,7 +196,7 @@
 }
 .box{
     width:100%;
-    height:100vh;
+    /* height:100vh; */
     /* background-color:blue; */
     display: flex;
     flex-direction: column;
@@ -422,3 +484,23 @@
     padding-left: 200px;
     padding-right:200px;
 }
+
+.searching-dp{
+    margin-top:20px;
+    width:250px;
+}
+
+
+@keyframes growDown {
+    0% {
+      transform: scaleY(0)
+    }
+    80% {
+      transform: scaleY(1.1)
+    }
+    100% {
+      transform: scaleY(1)
+    }
+  }
+
+  

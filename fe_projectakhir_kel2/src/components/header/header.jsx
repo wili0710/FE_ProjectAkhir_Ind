@@ -53,10 +53,10 @@ export default () => {
                     }
                 </div>
                 {
-                    Auth.name?
+                    Auth.nama?
                     <div className="username">
                         Hi!
-                        <span>{Auth.name}</span>
+                        <span>{Auth.nama}</span>
                     </div>
                     :
                     <Link to='/login'>

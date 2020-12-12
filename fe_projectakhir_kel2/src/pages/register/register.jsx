@@ -8,6 +8,7 @@ import { AiFillEye,AiFillEyeInvisible } from 'react-icons/ai';
 import {useSelector,useDispatch} from 'react-redux'
 import {Redirect, Link} from 'react-router-dom'
 
+
 const Register=(props)=>{
 
     const Auth=useSelector(state=>state.Auth) 
@@ -26,20 +27,95 @@ const Register=(props)=>{
     const [isOtpDone,setIsOtpDone]=useState(false)
     const [otp,setOtp]=useState('')
     const [seePassword,setSeePassword]=useState(false)
+    const [isPasswordPass, setIsPasswordPass]=useState(true)
     
     useEffect(()=>{
         if(localStorage.getItem('registrasi')){
             setEmail(localStorage.getItem('registrasi'))
         }
-        if(localStorage.getItem('verified')){
-            setIsverified(localStorage.getItem('verified'))
-        }
+        // if(localStorage.getItem('verified')){
+        //     setIsverified(localStorage.getItem('verified'))
+        // }
         setLoading(false)
     },[])
     useEffect(()=>{
-        if(newuser.name,newuser.nama,newuser.password,newuser.nomorhandphone,newuser.city_id,newuser.alamatlengkap) return setDisable(false)
+        console.log(newuser)
+        if(newuser.nama===""){
+            delete newuser.nama
+        }
+        if(newuser.password===""){
+            delete newuser.password
+        }
+        if(newuser.nomorhandphone===""){
+            delete newuser.nomorhandphone
+        }
+        if(newuser.alamatlengkap===""){
+            delete newuser.alamatlengkap
+        }
+       
+        console.log((Object.entries(newuser)).length)
+        if((Object.entries(newuser)).length >=4) {
+            return setDisable(false)
+        }
         setDisable(true)
     },[newuser])
+
+    const passwordCheck=(e)=>{
+        console.log(e.target.value)
+
+        let upperCaseLetters = /[A-Z]/g
+        let numbers = /[0-9]/g;
+        
+        
+        if (e.target.value.match(upperCaseLetters) && e.target.value.match(numbers) && e.target.value.length>6){
+            setNewuser({...newuser,password:e.target.value})
+            console.log("true")
+            console.log(isPasswordPass)
+            setIsPasswordPass(true)
+        }
+        else{
+            console.log("false")
+            setNewuser({...newuser,password:''})
+            setIsPasswordPass(false)
+        }
+    }
+    const renderInputPassword=()=>{
+        if(seePassword){
+            return(
+                <>
+                    <span>Password : </span> <AiFillEye size={20} style={{color:"#0095DA",cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(false)}/>
+                    <input className='form-control' style={{
+                        transition:'500ms',
+                        border:!isPasswordPass?'1px solid red':null,
+                        boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
+                    }}  type='text' onChange={(e)=>passwordCheck(e)}/>
+                    {
+                        !isPasswordPass?
+                            <span style={{display:"inline-block", margin:5, fontSize:12}}>* Password harus ada angka, minimal 6, huruf besar dan kecil</span>
+                            :
+                            null
+                    }
+                </>
+            )
+        }else{
+            return(
+                <>
+                    <span>Password :</span> <AiFillEyeInvisible size={20} style={{cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(true)}/>
+                    <input className='form-control' style={{
+                        transition:'500ms',
+                        border:!isPasswordPass?'1px solid red':null,
+                        boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
+                    }} type='password' onChange={(e)=>passwordCheck(e)}/>
+                    {
+                        !isPasswordPass?
+                            <span style={{display:"block", margin:5, fontSize:12}}>* Password harus ada angka, minimal 6, huruf besar dan kecil</span>
+                            :
+                            null
+                    }
+                </>
+            )
+        }
+    }
 
     const onsendclick=()=>{
         setLoadingregister(true)
@@ -63,7 +139,7 @@ const Register=(props)=>{
             }else{
                 setIsverified(true)
                 localStorage.setItem("registrasi",email)
-                localStorage.setItem("verified",true)
+                // localStorage.setItem("verified",true)
                 setLoadingregister(false)
             }
         }).catch((err)=>{
@@ -90,9 +166,19 @@ const Register=(props)=>{
         setIsOtpSent(true)
         Axios.post(`${API_URL_SQL}/auth/s_r_otp`,{email:email})
         .then((res)=>{
-            setInputOtp(true)
-            setIsOtpSent(false)
-            setOtp("")
+            console.log(res)
+            if(res.data.isnext===false){
+                setIsOtpSent(false)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Email Sudah Terdaftar',
+                    text: 'Email sudah terdaftar. Silakan login'
+                  })
+            }else{
+                setInputOtp(true)
+                setIsOtpSent(false)
+                setOtp("")
+            }
         }).catch((err)=>{
             console.log(err)
         })
@@ -101,7 +187,7 @@ const Register=(props)=>{
     const onClickNewUser=(e)=>{
         e.preventDefault()
         console.log("jalan")
-        Axios.post(`${API_URL_SQL}/auth/register`,{email:email,password:newuser.password,nama:newuser.name,alamat:newuser.alamatlengkap,nomortelfon:newuser.nomorhandphone})
+        Axios.post(`${API_URL_SQL}/auth/register`,{email:email,password:newuser.password,nama:newuser.nama,alamat:newuser.alamatlengkap,nomortelfon:newuser.nomorhandphone})
         .then((res)=>{
             console.log(res)
             Swal.fire(
@@ -109,7 +195,10 @@ const Register=(props)=>{
                 'Ingin mengirimkan Parcel Custom? Serahkan pada kami!',
                 'success'
             )
-            dispatch({type:'LOGIN',payload:res.data.datauser,cart:''})
+            dispatch({type:'LOGIN',payload:res.data,cart:''})
+            localStorage.setItem('id',res.data.id)
+            localStorage.removeItem("registrasi")
+            localStorage.removeItem("verified")
         }).catch((err)=>{
             console.log(err)
         })
@@ -175,11 +264,15 @@ const Register=(props)=>{
                     <input type='email' className="form-control" onChange={(e)=>funcvalidateemail(e)} style={{transition:'500ms'}}/>
                     {
                         isOtpSent?
-                        <span style={{cursor:"not-allowed",color:"blue"}} className='my-2'>Verify dengan OTP</span>
+                        <div style={{display:"flex", justifyContent:"space-between"}}>
+                            <span style={{cursor:"not-allowed",color:"blue"}} className='my-2'>Verify dengan OTP</span>
+                            <span style={{cursor:"not-allowed",color:"blue"}} className='my-2'>Sudah Ada OTP</span>
+                        </div>
                         :
-                        <>
-                        <span style={{cursor:"pointer",color:"blue"}} className='my-2' onClick={sentOtp}>Verify dengan OTP </span>
-                        </>
+                        <div style={{display:"flex", justifyContent:"space-between"}}>
+                            <span style={{cursor:"pointer",color:"blue"}} className='my-2' onClick={sentOtp}>Verify dengan OTP </span>
+                            <span style={{cursor:"pointer",color:"blue"}} className='my-2' onClick={()=>setInputOtp(true)}>Sudah Ada OTP</span>
+                        </div>
                     }
                     <button className='p-2' disabled style={{transition:'1000ms',border:'0px', borderRadius:'5px', backgroundColor:"#e5e7e9",fontSize:'20px',cursor:'not-allowed'}}>Daftar</button>
                 </div>
@@ -207,7 +300,7 @@ const Register=(props)=>{
 
     if(loading){
         return(
-            <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+              <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
                 {FullPageLoading(loading,100,'#0095DA')}
             </div>
         )
@@ -241,18 +334,39 @@ const Register=(props)=>{
                                 <a href='/register'><span className='mb-3' style={{fontWeight:'lighter'}}><span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}} onClick={()=>{localStorage.removeItem('registrasi');localStorage.removeItem('verified')}}>Pakai Email lain</span></span></a>
                                 <form className='pt-3' style={{width:'80%', marginTop:10, borderTop:'2px solid #E5E7E7'}}>
                                     <span>Nama :</span>
-                                    <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,name:e.target.value})}/>
-                                    {seePassword?
+                                    <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,nama:e.target.value})}/>
+                                    {renderInputPassword()}
+                                    {/* {seePassword?
                                         <>
                                             <span>Password : </span> <AiFillEye size={20} style={{color:"#0095DA",cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(false)}/>
-                                            <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,password:e.target.value})}/>
+                                            <input className='form-control' style={{
+                                                transition:'500ms',
+                                                border:!isPasswordPass?'1px solid red':null,
+                                                boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
+                                            }}  type='text' onChange={(e)=>passwordCheck(e)}/>
+                                            {
+                                                !isPasswordPass?
+                                                    <span>Password harus ada angka, minimal 6, huruf besar dan kecil</span>
+                                                    :
+                                                    null
+                                            }
                                         </>
                                         :
                                         <>
                                             <span>Password :</span> <AiFillEyeInvisible size={20} style={{cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(true)}/>
-                                            <input className='form-control' type='password' onChange={(e)=>setNewuser({...newuser,password:e.target.value})}/>
+                                            <input className='form-control' style={{
+                                                transition:'500ms',
+                                                border:!isPasswordPass?'1px solid red':null,
+                                                boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
+                                            }} type='password' onChange={(e)=>passwordCheck(e)}/>
+                                            {
+                                                !isPasswordPass?
+                                                    <span>Password harus ada angka, minimal 6, huruf besar dan kecil</span>
+                                                    :
+                                                    null
+                                            }
                                         </>
-                                    } 
+                                    }  */}
                                     <span>Nomor Handphone :</span>
                                     <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,nomorhandphone:e.target.value})}/>
                                     <span>Alamat Lengkap :</span>

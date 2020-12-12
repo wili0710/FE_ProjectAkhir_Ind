@@ -10,10 +10,18 @@ import { Window } from '@progress/kendo-react-dialogs';
  import { Button, ButtonGroup, DropDownButton, DropDownButtonItem,
     SplitButton, SplitButtonItem, Chip, ChipList, Toolbar, ToolbarItem } from '@progress/kendo-react-buttons';
 import Parcel from './../../../src/assets/parcel1.jpg';
-import {BiPlus,BiMinus} from 'react-icons/bi'
+import {BiPlus,BiMinus,BiCart,BiUser} from 'react-icons/bi'
+import {FcCheckmark} from 'react-icons/fc'
 import TextField from '@material-ui/core/TextField';
 import { CgInsertBefore } from 'react-icons/cg';
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2';
+import {Dropdown} from 'react-bootstrap'
+import Logo from './../../assets/logo.png'
+import {AiOutlineLogout,AiFillHome,AiFillDelete} from 'react-icons/ai'
+import {connect} from 'react-redux';
+import {LogoutFunc} from './../../redux/Actions'
+import Zoom from 'react-reveal/Zoom';
 class DetailParcel extends Component {
     state = { 
         dataParcelByIdMakanan:[],
@@ -35,6 +43,12 @@ class DetailParcel extends Component {
         buttonMinuman:false,
         buttonChocolate:false,
         dataArrMakanan:[],
+        checklistMinuman:0,
+        checklistMakanan:0,
+        checklistChocolate:0,
+        renderCartMinuman:[],
+        renderCartMakanan:[],
+        renderCartChocolate:[]
      }
      
 
@@ -54,7 +68,7 @@ class DetailParcel extends Component {
      componentDidMount(){
          Axios.get(`${API_URL_SQL}/product/getDataParcelById/${this.props.match.params.id}`)
          .then((res)=>{
-            console.log(res.data,' line 37')
+            console.log(res.data,' line 62')
             this.setState({
             dataParcelByIdMakanan:res.data[1],
             dataParcelByIdMinuman:res.data[0],
@@ -94,112 +108,169 @@ class DetailParcel extends Component {
   
      hapusDataMinuman=(id)=>{
          console.log(id,' line 101')
-         var prodid= this.state.dataParcelByIdMinuman.categoryproduct_id
-         var filterprod=this.state.dataArrMakanan.filter((val)=>{
-             return val.categoryproduct_id === prodid
-         })
-         var total =0
-         for(var i=0; i<filterprod.length; i++){
-             total += filterprod[i].qty
-         }
+        //  var prodid= this.state.dataParcelByIdMinuman.categoryproduct_id
+        //  var filterprod=this.state.dataArrMakanan.filter((val)=>{
+        //      return val.categoryproduct_id === prodid
+        //  })
+        //  var total =0
+        //  for(var i=0; i<filterprod.length; i++){
+        //      total += filterprod[i].qty
+        //  }
+     
     
-          if(total <= this.state.dataParcelByIdMinuman.qty){
+        //   if(total <= this.state.dataParcelByIdMinuman.qty){
              var dataArrMakanan = this.state.dataArrMakanan
-             console.log(dataArrMakanan)
+            //  console.log(dataArrMakanan)
             var a = dataArrMakanan.findIndex((val)=>{
-                return val.parcel_id = id
+                console.log(val.parcel_id ,' parcel id 123')
+                console.log(id, '124')
+                return val.parcel_id == id
             })
-            console.log(a)
+            console.log(a, ' index minuman ')
 
             if(dataArrMakanan[a].qty-1==0){
-                dataArrMakanan.splice(a,1)             
+                console.log('masuk ke a 132')
+                dataArrMakanan.splice(a,1)   
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menghapus Product',
+                    text: 'Cart Minuman Kosong'                    
+                })          
             }else {
+                console.log('masuk ke else 135')
                 dataArrMakanan[a].qty=dataArrMakanan[a].qty-1
+                // this.setState({checklistMinuman:false})
+                // this.setState({renderCartMinuman:dataArrMakanan})
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menghapus Product',
+                    text: 'Berhasil Menghapus Product'                    
+                })
             }
             this.setState({dataArrMakanan:dataArrMakanan})
 
-         }
+        //  }
 
      }
  
      hapusDataMakanan=(id)=>{
-         console.log(id,'delete id ')
+        //  console.log(id,'delete id ')
      
-         var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id
-         var filterprod=this.state.dataArrMakanan.filter((val)=>{
-             return val.categoryproduct_id === prodid
-         })
-         var total =0
-         for(var i=0; i<filterprod.length; i++){
-             total += filterprod[i].qty
-         }
+        //  var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id
+        //  var filterprod=this.state.dataArrMakanan.filter((val)=>{
+        //      return val.categoryproduct_id === prodid
+        //  })
+        //  var total =0
+        //  for(var i=0; i<filterprod.length; i++){
+        //      total += filterprod[i].qty
+        //  }
+         Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menghapus Product',
+            text: 'Berhasil Menghapus Product'                    
+        })
     
-          if(total <= this.state.dataParcelByIdMakanan.qty){
+        //   if(total <= this.state.dataParcelByIdMakanan.qty){
              var dataArrMakanan = this.state.dataArrMakanan
-             console.log(dataArrMakanan)
+            //  console.log(dataArrMakanan)
             var a = dataArrMakanan.findIndex((val)=>{
-                return val.parcel_id = id
+                return val.parcel_id == id
             })
-            console.log(a)
+            // console.log(a)
 
             if(dataArrMakanan[a].qty-1==0){
-                dataArrMakanan.splice(a,1)             
+                dataArrMakanan.splice(a,1) 
+                // console.log(filterprod,' ini filter prod 148')
+                // console.log(this.state.renderCartMinuman)   
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menghapus Product',
+                    text: 'Cart Makanan Kosong'                    
+                })         
             }else {
+                
                 dataArrMakanan[a].qty=dataArrMakanan[a].qty-1
+                // this.setState({renderCartMakanan:dataArrMakanan})
+                // this.setState({checklistMakanan:false})
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menghapus Product',
+                    text: 'Berhasil Menghapus Product'                    
+                })
             }
             this.setState({dataArrMakanan:dataArrMakanan})
-
-         }
+        //  }
+         
      }
 
      hapusDataChocolate=(id)=>{
-         console.log(id)
-         var prodid= this.state.dataParcelByIdChocolate.categoryproduct_id
-         var filterprod=this.state.dataArrMakanan.filter((val)=>{
-             return val.categoryproduct_id === prodid
-         })
-         var total =0
-         for(var i=0; i<filterprod.length; i++){
-             total += filterprod[i].qty
-         }
+        //  console.log(id)
+        //  var prodid= this.state.dataParcelByIdChocolate.categoryproduct_id
+        //  var filterprod=this.state.dataArrMakanan.filter((val)=>{
+        //      return val.categoryproduct_id === prodid
+        //  })
+        //  var total =0
+        //  for(var i=0; i<filterprod.length; i++){
+        //      total += filterprod[i].qty
+        //  }
+       
     
-          if(total <= this.state.dataParcelByIdChocolate.qty){
+        //   if(total <= this.state.dataParcelByIdChocolate.qty){
              var dataArrMakanan = this.state.dataArrMakanan
-             console.log(dataArrMakanan)
+            //  console.log(dataArrMakanan)
             var a = dataArrMakanan.findIndex((val)=>{
-                return val.parcel_id = id
+                return val.parcel_id == id
             })
-            console.log(a)
+            // console.log(a)
 
             if(dataArrMakanan[a].qty-1==0){
-                dataArrMakanan.splice(a,1)             
+                dataArrMakanan.splice(a,1) 
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menghapus Product',
+                    text: 'Cart Chocolate Kosong'                    
+                })            
             }else {
                 dataArrMakanan[a].qty=dataArrMakanan[a].qty-1
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menghapus Product',
+                    text: 'Berhasil Menghapus Product'                    
+                })
             }
             this.setState({dataArrMakanan:dataArrMakanan})
 
-         }
+        //  }
      }
+     onDeleteProduct=(id)=>{
+        var dataCart = this.state.dataArrMakanan
+        dataCart.splice(id,1)
+        this.setState({dataArrMakanan:dataCart})
+    }
 
      
      
      AddDataMakanan=(id)=>{
-        console.log(id)
-        console.log('jalan line 69')
         var dataArrMakanan = this.state.dataArrMakanan
-        console.log(dataArrMakanan,' ini dataArrMakanan')
-        var a = dataArrMakanan.findIndex((val)=>{
-            console.log(val.parcel_id,'193') // 10
-            console.log(id,194) // 9
+        
+        var indexDataMakanan = dataArrMakanan.findIndex((val)=>{ // nyari index makanan
             return val.parcel_id==id
         })
+
         var findMakanan=this.state.dataMakanan
-        var find = findMakanan.findIndex((val=>{
+        console.log(findMakanan)
+        console.log(dataArrMakanan)
+        var find = findMakanan.findIndex((val=>{ // nyari index buat nama makaan pas di push
             return val.id == id
         }))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menambahkan Product',
+            text: 'Berhasil Menambahkan Product'                    
+        })
 
-        console.log(a)
-        if(a== -1){
+        
+        if(indexDataMakanan== -1){
             var arrMakanan2=this.state.dataArrMakanan
              arrMakanan2.push({
                 parcel_id:id,
@@ -207,37 +278,58 @@ class DetailParcel extends Component {
                 categoryproduct_id:this.state.dataParcelByIdMakanan.categoryproduct_id,
                 namaProduct:this.state.dataMakanan[find].nama
             })
-            
-            console.log(arrMakanan2)
+                
             this.setState({dataArrMakanan:arrMakanan2})
         }else {
-            console.log(this.state.dataArrMakanan)
-            console.log(a, 206)
+
             var dataSama = this.state.dataArrMakanan
-            dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
+            dataSama[indexDataMakanan]= {...dataSama[indexDataMakanan],qty:dataSama[indexDataMakanan].qty+1}
 
             // arrMakanan2[a]={...arrMakanan2[a],qty:arrMakanan2[2].qty+1}
             // addData={...addData,qty:addData.qty+1}
             this.setState({dataArrMakanan:dataSama})
         }
-        }
+        var totalQtyMakanan =0
+        var limitMakanan = this.state.dataParcelByIdMakanan.qty
+       var productidmakanan= this.state.dataParcelByIdMakanan.categoryproduct_id // product_id
+       console.log(this.state.dataArrMakanan)
+       var filterprodmakanan = this.state.dataArrMakanan.filter((val)=>{
+           return val.categoryproduct_id === productidmakanan
+       })
+       console.log(filterprodmakanan,' filterprod makanan 262')
+       for(var i =0; i<filterprodmakanan.length; i++){
+           totalQtyMakanan += filterprodmakanan[i].qty
+       }
+       if(totalQtyMakanan == limitMakanan){
+           console.log('checklistmakanan true 266')
+           this.setState({checklistMakanan:totalQtyMakanan,renderCartMakanan:filterprodmakanan})
+       }else {
+           this.setState({renderCartMakanan:filterprodmakanan})
+       }
+       console.log(totalQtyMakanan,' total qty minuman 323')
+
+    }
 
      AddDataMinuman=(id)=>{
-         console.log(id, ' ini id')
+        
 
          var dataArrMakanan = this.state.dataArrMakanan
          console.log(dataArrMakanan,' ini dataArrMakanan')
-         var a = dataArrMakanan.findIndex((val)=>{
-             console.log(val.parcel_id,'193') // 10
-             console.log(id,194) // 9
+         var indexMinuman = dataArrMakanan.findIndex((val)=>{ // find index si product minuman
+
              return val.parcel_id==id
          })
          var findMinuman=this.state.dataMinuman
          var find = findMinuman.findIndex((val=>{
              return val.id == id
          }))
+         Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menambahkan Product',
+            text: 'Berhasil Menambahkan Product'                    
+        })
  
-         if(a== -1){
+         if(indexMinuman== -1){
              var arrMakanan2= this.state.dataArrMakanan
              arrMakanan2.push({
                  parcel_id:id,
@@ -247,22 +339,48 @@ class DetailParcel extends Component {
              })
                 this.setState({dataArrMakanan:arrMakanan2})
          }else {
-             console.log(this.state.dataArrMakanan)
+             
              var dataSama = this.state.dataArrMakanan
-             dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
+             dataSama[indexMinuman]= {...dataSama[indexMinuman],qty:dataSama[indexMinuman].qty+1}
              this.setState({dataArrMakanan:dataSama})
          }
+
+         var totalQtyMinuman =0
+         var limitMinuman = this.state.dataParcelByIdMinuman.qty
+        var productidminuman= this.state.dataParcelByIdMinuman.categoryproduct_id // product_id
+        console.log(this.state.dataArrMakanan)
+        var filterprodminuman = this.state.dataArrMakanan.filter((val)=>{
+            return val.categoryproduct_id === productidminuman
+        })
+        console.log(filterprodminuman)
+        for(var i =0; i<filterprodminuman.length; i++){
+            totalQtyMinuman += filterprodminuman[i].qty
+        }
+        if(totalQtyMinuman == limitMinuman){
+            console.log('checklistminuman true 266')
+            this.setState({checklistMinuman:true,renderCartMinuman:filterprodminuman})
+        }else {
+            this.setState({renderCartMinuman:filterprodminuman})
+        }
+        console.log(totalQtyMinuman,' total qty minuman 323')
+         
+        // batas ngitung total qtyminuman
+
+
      }
 
      AddDataChocolate=(id)=>{
-        console.log(id, ' ini id')
+        
 
-        var dataArrMakanan = this.state.dataArrMakanan
-        console.log(dataArrMakanan,' ini dataArrMakanan')
+        var dataArrMakanan = this.state.dataArrMakanan // data array chocolate 
         var a = dataArrMakanan.findIndex((val)=>{
-            console.log(val.parcel_id,'193') // 10
-            console.log(id,194) // 9
+
             return val.parcel_id==id
+        })
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menambahkan Data',
+            text: 'Berhasil Menambahkan Data'                    
         })
         var findChocolate=this.state.dataChocolate
         var find = findChocolate.findIndex((val=>{
@@ -276,14 +394,37 @@ class DetailParcel extends Component {
                 categoryproduct_id:this.state.dataParcelByIdChocolate.categoryproduct_id,
                 namaProduct:this.state.dataChocolate[find].nama
             })
-                this.setState({dataArrMakanan:arrMakanan2})
+                this.setState({dataArrMakanan:arrMakanan2, })
 
         }else {
-            console.log(this.state.dataArrMakanan)
+            
             var dataSama = this.state.dataArrMakanan
             dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
             this.setState({dataArrMakanan:dataSama})
         }
+
+
+            var totalQtyChocolate =0
+            var limitChocolate = this.state.dataParcelByIdChocolate.qty
+        var productidminuman= this.state.dataParcelByIdChocolate.categoryproduct_id // product_id
+        console.log(this.state.dataArrMakanan)
+        var filterprodchocolate = this.state.dataArrMakanan.filter((val)=>{
+            return val.categoryproduct_id === productidminuman
+        })
+        console.log(filterprodchocolate)
+        for(var i =0; i<filterprodchocolate.length; i++){
+            totalQtyChocolate += filterprodchocolate[i].qty
+        }
+        if(totalQtyChocolate == limitChocolate){
+            console.log('checklistminuman true 266')
+            this.setState({checklistChocolate:true,renderCartChocolate:filterprodchocolate})
+        }else {
+            this.setState({renderCartChocolate:filterprodchocolate})
+        }
+        console.log(totalQtyChocolate,' total qty minuman 323')
+        
+       // batas ngitung total qtyminuman
+        
      }
 
      addMessage=(e)=>{
@@ -291,15 +432,17 @@ class DetailParcel extends Component {
          this.setState({arrMessage:e.target.value})
      }
      renderMakanan=()=>{
-        var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id
+        var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id // product_id
         var filterprod=this.state.dataArrMakanan.filter((val)=>{
             return val.categoryproduct_id === prodid
         })
+        console.log(filterprod, '333')
         var total =0
         for(var i=0; i<filterprod.length; i++){
             total += filterprod[i].qty
+            // this.setState({checklistMakanan:total})
         }
-        console.log(filterprod,' ini filter prod 302')
+        // console.log(filterprod,' ini filter prod 302')
 
          return this.state.dataMakanan.map((val,index)=>{
 
@@ -307,17 +450,14 @@ class DetailParcel extends Component {
                  <>
                 <div className=" box-3 card product_item" key={val.id} >
                         <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel" />
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
                             <div className="hover"  >
-                             
                                 {
-    
                                     total==this.state.dataParcelByIdMakanan.qty ?
                                     null:
                                     <>
                                     <BiPlus onClick={()=>this.AddDataMakanan(val.id)} className="icondp"/>
                                     </>
-                                
                                 }
                                 {
                                     total==0 ?
@@ -357,9 +497,8 @@ class DetailParcel extends Component {
                  <>
                     <div className=" box-3 card product_item" key={val.id} >
                         <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel" />
-                            <div className="hover"  >
-                             
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
+                            <div className="hover"  >      
                             {
     
                                 total==this.state.dataParcelByIdMinuman.qty ?
@@ -404,7 +543,7 @@ class DetailParcel extends Component {
                  <>
                    <div className=" box-3 card product_item" key={val.id} >
                         <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel" />
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
                             <div className="hover"  >
                             {
     
@@ -436,44 +575,321 @@ class DetailParcel extends Component {
          })
      }
 
+     renderCartMinuman=()=>{
+        var checkMinuman= this.state.checklistMinuman
+        return this.state.renderCartMinuman.map((val,index)=>{
+            if(checkMinuman){
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                           <td><FcCheckmark/></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }else {
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                        <td></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }
+        })
+     }
+     
+     renderCartMakanan=()=>{
+        var checkMakanan= this.state.checklistMakanan
+        console.log(checkMakanan)
+        return this.state.renderCartMakanan.map((val,index)=>{
+            console.log(index)
+            if(checkMakanan){
+                console.log('masuk ke line 583 render makanan checklist')
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                           <td><FcCheckmark/></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }else {
+                console.log('masuk ke line 594 render makanan else')
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                        <td></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }
+        })
+         
+     }
+
+     renderCartChocolate=()=>{
+        var checkChocolate= this.state.checklistChocolate
+        return this.state.renderCartChocolate.map((val,index)=>{
+            console.log(index)
+            if(checkChocolate){
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                           <td><FcCheckmark/></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }else {
+                return (
+                    <>
+                    <tr>
+                       <td>{val.namaProduct}</td>
+                        <td></td>
+                       <td> {val.qty}</td>
+                       <td onClick={()=>this.onDeleteProduct(index)}>
+                           <AiFillDelete className="delete-icon"/>
+                       </td>
+                    </tr>
+                    </>
+                )
+            }
+        })
+     }
+
+    renderDataCartProduct=()=>{
+        var limitQtyMakanan= this.state.dataParcelByIdMakanan.qty // product_id
+        var checklistMakanan= this.state.checklistMakanan
+        console.log(checklistMakanan)
+        console.log(limitQtyMakanan)
+        console.log(this.state.dataArrMakanan)
+
+        return this.state.dataArrMakanan.map((val,index)=>{
+            
+            return (
+                <>
+                <tr>
+                   <td>{val.namaProduct}</td>
+                    <td></td>
+                   <td> {val.qty}</td>
+                   <td onClick={()=>this.onDeleteProduct(val.id)}>
+                       <AiFillDelete className="delete-icon"/>
+                   </td>
+                </tr>
+                </>
+            )
+        })
+    }
+
      saveMessage=()=>{
          console.log('button add message jalan')
-            var sendToDb = this.state.dataArrMakanan
+            var limitMinuman = this.state.dataParcelByIdMinuman.qty
+            var limitMakanan= this.state.dataParcelByIdMakanan.qty
+            var limitChocolate= this.state.dataParcelByIdChocolate.qty
+            
             var messagesend=this.state.arrMessage
+            var parcelid=this.state.dataParcelByIdChocolate.parcel_id
+            var sendToDb = this.state.dataArrMakanan
             var arrProduct= sendToDb.map((val)=>val.parcel_id)
             var qtyProduct = sendToDb.map((val)=>val.qty)
+            var userid=this.props.id
+
+
+           
+            console.log(filterprodminuman,' line 519')
+            var totalQtyMinuman = 0
+            var totalQtyMakanan = 0
+            var totalQtyChocolate = 0
+
+            // looping minuman
+            var productidminuman= this.state.dataParcelByIdMinuman.categoryproduct_id // product_id
+            console.log(this.state.dataArrMakanan)
+            var filterprodminuman = this.state.dataArrMakanan.filter((val)=>{
+                return val.categoryproduct_id === productidminuman
+            })
+            for(var i =0; i<filterprodminuman.length; i++){
+                totalQtyMinuman += filterprodminuman[i].qty
+            }
+
+            // looping makanan
+            var productidmakanan= this.state.dataParcelByIdMakanan.categoryproduct_id
+            var  filterprodmakanan= this.state.dataArrMakanan.filter((val)=>{
+                return val.categoryproduct_id === productidmakanan
+            })
+
+            for(var i =0; i<filterprodmakanan.length; i++){
+                totalQtyMakanan += filterprodmakanan[i].qty
+            }
+
+            // looping chocolate
+            var productidchocolate=this.state.dataParcelByIdChocolate.categoryproduct_id
+            var filterprodchocolate= this.state.dataArrMakanan.filter((val)=>{
+                return val.categoryproduct_id === productidchocolate
+            })
+
+            for(var i=0; i<filterprodchocolate.length; i++){
+                totalQtyChocolate += filterprodchocolate[i].qty
+            }
+
+            console.log(totalQtyMinuman,' total qty minuman')
+            console.log(totalQtyChocolate,' total qty chocolate')
+            console.log(totalQtyMakanan,' total qty Makanan')
+
+
+            if(totalQtyMinuman == limitMinuman && totalQtyMakanan == limitMakanan && totalQtyChocolate == limitChocolate){
+                console.log('true')
+                var obj = {
+                    user_id:userid,
+                    products_id:"0",
+                    parcel_id:parcelid,
+                    qty:"1",
+                    productforparcel_id:arrProduct,
+                    qtyproductforparcel:qtyProduct,
+                    message:messagesend
+                 }
+                 console.log(obj)
+                 Axios.post(`${API_URL_SQL}/transaksi/addtocart`,obj).then((res)=>{
+                     console.log('nberhasil')
+                    console.log(res.data)
+                 }).catch((err)=>{
+                     console.log(err)
+                 })
+
+            }else if(totalQtyMinuman < limitMinuman) {
+                Swal.fire({
+                    icon: 'error',
+                    title: `Ada Barang Yang Kurang`,
+                    text: `Anda Harus Memilih ${limitMinuman} Minuman`                   
+                })
+            }else if (totalQtyMakanan < limitMakanan){
+                Swal.fire({
+                    icon: 'error',
+                    title: `Ada Barang Yang Kurang`,
+                    text: `Anda Harus Memilih ${limitMakanan} Makanan`                  
+                })
+            }else if(totalQtyChocolate <limitChocolate){
+                Swal.fire({
+                    icon: 'error',
+                    title: `Ada Barang Yang Kurang`,
+                    text: `Anda Harus Memilih ${limitChocolate} Chocolate`                    
+                })
+            }
+            
+            
             console.log(arrProduct)
-            console.log(qtyProduct)
+            console.log(qtyProduct[0])
+            console.log(qtyProduct[1])
+            console.log(qtyProduct[2])
+            
+            console.log(userid)
 
 
-         var obj = {
-            user_id:"1",
-            products_id:"0",
-            parcel_id:"1",
-            qty:"1",
-            productforparcel_id:arrProduct,
-            qtyproductforparcel:qtyProduct,
-            message:messagesend
-         }
-         console.log(obj)
-         Axios.post(`${API_URL_SQL}/transaksi/addtocart`,obj).then((res)=>{
-             console.log('nberhasil')
-            console.log(res.data)
-         }).catch((err)=>{
-             console.log(err)
-         })
+       
 
      }
+
+     onLogoutClick=()=>{
+        localStorage.removeItem('id')
+        Swal.fire('Logout Berhasil')
+        this.props.LogoutFunc()
+        window.location.assign(`http://localhost:3000`)
+
+     }
+     
   
     render() { 
-            console.log(this.state.dataArrMakanan)
-            console.log(this.state.dataMakanan)
-            console.log(this.state.dataParcelByIdChocolate)
+            // console.log(this.state.dataArrMakanan)
+            // console.log(this.state.dataMakanan)
+            // console.log(this.state.dataParcelByIdMinuman.qty ,' ini maksimal beli minuman')
+            // console.log(this.state.renderCartMakanan,' ini data render cart makanan')
+            console.log(this.state.renderCartMinuman,' ini data render cart minuman')
+            // console.log(this.props.id, 'line 531')
+            console.log(this.state.checklistMinuman)
+            
             const {classes}= this.props
         return ( 
             <>
                 <div className="outer-detail">
-                    <Header/>
+                    <div className="header-top d-flex bd-highlight">
+                        <div className="div-img p-2 flex-grow-1 bd-highlight">
+                            <img src={Logo} alt="Logo" className="logo-header"/>    
+                        </div>
+                        
+                        {
+                        this.props.isLogin?
+                            <div className="icon-user  ">
+                                <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
+                                    <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                                        <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
+                                            <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
+                                            Logout
+                                            </Dropdown.Item>
+                                        <Dropdown.Item href="/cart">
+                                                <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                                Cart
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="/">
+                                            <AiFillHome color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                            Home                         
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                                <p style={{fontSize:'15px', marginTop:'10px',color:'white'}}>
+                                Hallo, {this.props.nama}</p>
+                            
+                            </div>
+                    :
+                            <div className="icon-user  ">
+                                <Dropdown style={{marginRight:'10px', marginTop:'-5px'}}>
+                                    <Dropdown.Toggle variant="danger" id="dropdown-basic">
+                                        <BiUser color="white" size="20" style={{cursor:"pointer", marginRight:'5px'}}/> 
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                            <Dropdown.Item href="/login" >
+                                            <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
+                                            Login
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="/">
+                                            <AiFillHome color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                            Home                         
+                                            </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                             </div>
+                    }
+                    </div>   
+
+
+
+                    {/* END HEADER */}
                     <Link to='/dataproduct'>
                         <div className="div-opt">
                             <BsFillCaretLeftFill className="icon-back"/><p>back to Parcel</p>
@@ -484,58 +900,126 @@ class DetailParcel extends Component {
                         <h3>{this.state.dataParcelByIdChocolate.namaParcel}</h3>
                     </div>
 
-                    <div className="render-parcel" >
+                    <div className="body-render">
+                        <div className="render-parcel" >
 
-                            <div className="k-button" onClick={this.toggleDialog}>
-                                <p>1.Pilih Makanan Yang Kamu Mau</p>
-                            </div>
-                            {this.state.visible && <div onClose={this.toggleDialog}>
-                                <div style={{display:'flex',flexWrap:'wrap'
-                                                    }}>
-                                    {this.renderMakanan()}
+                                <div className="k-button" onClick={this.toggleDialog}>
+                                    <p style={{marginLeft:'20px'}}>1.Pilih Makanan Yang Kamu Mau</p>
                                 </div>
+                                {this.state.visible && <div onClose={this.toggleDialog}>
+                                    <Zoom>
+                                        <div style={{display:'flex',flexWrap:'wrap'
+                                                            }}>
+                                            {this.renderMakanan()}
+                                        </div>
+                                    </Zoom>
 
+                            </div>
+                            }
+                                <div className="k-button" onClick={this.toggleDialogMinuman}>
+                                    <p style={{marginLeft:'20px'}}>2.Pilih Minuman Yang Kamu Mau</p>
+                                </div>
+                                {this.state.MinumanVisible && <div onClose={this.toggleDialogMinuman}>
+                                    <Zoom>
+                                        <div style={{display:'flex',flexWrap:'wrap'
+                                                            }}>
+                                            {this.renderMinuman()}
+                                        </div>
+                                    </Zoom>
+                                </div>
+                                }
+                                <div className="k-button" onClick={this.toggleDialogChocolate}>
+                                    <p style={{marginLeft:'20px'}}>3.Pilih Chocolate Yang Kamu Mau</p>
+                                </div>
+                                {this.state.ChocolateVisible && <div onClose={this.toggleDialogChocolate}>
+                                    <Zoom>
+                                        <div style={{display:'flex',flexWrap:'wrap'
+                                                            }}>
+                                            {this.renderChocolate()}
+                                        </div>
+                                    </Zoom>
+                                </div>
+                                }
+                                <div className="k-button" onClick={this.toggleDialogMessage}>
+                                    <p style={{marginLeft:'20px'}}>4.Isi Pesan Yang Kamu mau</p>
+                                </div>
+                                {this.state.messageVisible && <div onClose={this.toggleDialogMessage}>
+                                    <Zoom>
+                                        <div style={{display:'flex',flexWrap:'wrap',flexDirection:'column'
+                                                            }}>
+                                            <input type='text' className="form-control" onChange={(e)=>this.addMessage(e)} style={{transition:'500ms',width:'350px',marginTop:'10px'}}/>
+                                            
+                                        </div>
+                                    </Zoom>
+                                </div>
+                                }
+
+                                <div style={{marginTop:'50px'}}>
+                                    card parcel
+                                </div>
+                        
                         </div>
-                        }
-                            <div className="k-button" onClick={this.toggleDialogMinuman}>
-                                <p>2.Pilih Minuman Yang Kamu Mau</p>
+                        
+                        
+
+                            <div className="render-kanan">
+                                    <div className="header-kanan">
+                                        <img src={Logo} alt="Logo" className="logo-header-kanan" />  
+                                    </div>
+                                    <div className="cart-kanan">
+                                        <p style={{fontSize:'25px',fontWeight:'700',color:'tomato'}}>CART</p>
+                                    </div>
+                                    <div className="message-kanan">
+                                        <p style={{fontSize:'15px',fontWeight:'700',color:'tomato'}}>Message:</p>
+                                        <p style={{marginTop:'-20px'}}>
+                                            {this.state.arrMessage}
+                                        </p>
+                                    </div>
+
+                                    <div className="cart-details">
+                                        <p style={{fontSize:'15px',fontWeight:'700',color:'tomato'}}>Cart Details:</p>
+                                    </div>
+
+                                    <div className="render-data-kanan">
+                                        <p style={{fontSize:'25px', marginLeft:'50px'}}>{this.state.dataParcelByIdChocolate.namaParcel}</p>
+                                        <p>Details Package:</p>
+                                        
+                                            <table>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th></th>
+                                                    <th>Qty</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                {/* render product all */}
+                                                {this.renderDataCartProduct()} 
+                                                {/* {this.renderCartMakanan()}
+                                                {this.renderCartMinuman()}
+                                                {this.renderCartChocolate()} */}
+                                                
+                                            </table>
+                                        
+                                    </div>
+                                        <a href="/cart">
+                                            <div className="button-add" onClick={this.saveMessage}>
+                                                <p>Beli</p>
+                                            </div>
+                                        </a>
+
                             </div>
-                            {this.state.MinumanVisible && <div onClose={this.toggleDialogMinuman}>
-                                <div style={{display:'flex',flexWrap:'wrap'
-                                                    }}>
-                                    {this.renderMinuman()}
-                                </div>
-                            </div>
-                            }
-                            <div className="k-button" onClick={this.toggleDialogChocolate}>
-                                <p>3.Pilih Chocolate Yang Kamu Mau</p>
-                            </div>
-                            {this.state.ChocolateVisible && <div onClose={this.toggleDialogChocolate}>
-                                <div style={{display:'flex',flexWrap:'wrap'
-                                                    }}>
-                                    {this.renderChocolate()}
-                                </div>
-                            </div>
-                            }
-                            <div className="k-button" onClick={this.toggleDialogMessage}>
-                                <p>4.Isi Pesan Yang Kamu mau</p>
-                            </div>
-                            {this.state.messageVisible && <div onClose={this.toggleDialogMessage}>
-                                <div style={{display:'flex',flexWrap:'wrap'
-                                                    }}>
-                                      <input type='email' className="form-control" onChange={(e)=>this.addMessage(e)} style={{transition:'500ms'}}/>
-                                      <div className="button-add" onClick={this.saveMessage}>
-                                         <p>Save</p>
-                                      </div>
-                                </div>
-                            </div>
-                            }
-                    
+
                     </div>
+
                 </div>
             </>
          );
     }
 }
 
-export default DetailParcel;
+const MapStatetoprops=({Auth,cart})=>{
+    return {
+        ...Auth
+    }
+}
+
+export default (connect(MapStatetoprops,{LogoutFunc})(DetailParcel))

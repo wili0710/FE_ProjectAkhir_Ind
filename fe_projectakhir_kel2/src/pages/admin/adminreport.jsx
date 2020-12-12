@@ -6,6 +6,7 @@ import { API_URL_SQL } from './../../helpers/apiUrl';
 import { FullPageLoading } from '../../components/loading';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import {HiDocumentReport} from 'react-icons/hi'
+import numeral from 'numeral';
 
 const AdminReport=()=>{
     const Auth=useSelector(state=>state.Auth) 
@@ -92,7 +93,7 @@ const AdminReport=()=>{
                 <div className="user-right">
                     <div className="header-user">
                         <div className="icon-group">
-                            <HiDocumentReport className="icon-size" color="black"/>
+                            <HiDocumentReport className="icon-user" color="black"/>
                             <p style={{fontWeight:'600'}}>Report</p>
                         </div>
                     </div>
@@ -114,7 +115,7 @@ const AdminReport=()=>{
                                 borderRadius:5,
                                 textAlign:"center"
                             }}>
-                                {report.PotensiPenjualan}
+                                Rp {numeral(report.PotensiPenjualan).format('0,0')}
                             </div>
                         </div>
                         <div style={{
@@ -128,7 +129,7 @@ const AdminReport=()=>{
                                 borderRadius:5,
                                 textAlign:"center"
                             }}>
-                                {report.Penjualan}
+                                Rp {numeral(report.Penjualan).format('0,0')}
                             </div>
                         </div>
                         <div style={{
@@ -142,7 +143,7 @@ const AdminReport=()=>{
                                 borderRadius:5,
                                 textAlign:"center"
                             }}>
-                                {report.Pendapatan}
+                                Rp {numeral(report.Pendapatan).format('0,0')}
                             </div>
                         </div>
                         <div style={{
@@ -156,7 +157,7 @@ const AdminReport=()=>{
                                 borderRadius:5,
                                 textAlign:"center"
                             }}>
-                                {report.Penjualan_Satuan}
+                                Rp {numeral(report.Penjualan_Satuan).format('0,0')}
                             </div>
                         </div>
                         <div style={{
@@ -170,7 +171,7 @@ const AdminReport=()=>{
                                 borderRadius:5,
                                 textAlign:"center"
                             }}>
-                                {report.Pendapatan_Satuan}
+                                Rp {numeral(report.Pendapatan_Satuan).format('0,0')}
                             </div>
                         </div>
                         <div style={{
@@ -184,7 +185,7 @@ const AdminReport=()=>{
                                 borderRadius:5,
                                 textAlign:"center"
                             }}>
-                                {report.Penjualan_Parcel}
+                                Rp {numeral(report.Penjualan_Parcel).format('0,0')}
                             </div>
                         </div>
                         <div style={{
@@ -198,7 +199,7 @@ const AdminReport=()=>{
                                 borderRadius:5,
                                 textAlign:"center"
                             }}>
-                                {report.Pendapatan_Parcel}
+                                Rp {numeral(report.Pendapatan_Parcel).format('0,0')}
                             </div>
                         </div>
                     </div>

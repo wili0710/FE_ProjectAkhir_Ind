@@ -173,6 +173,9 @@ class Login extends Component {
                             </div>
 
                         </div>
+                            <div className='p-1' style={{width:'1000px',position:"fixed",bottom:0,paddingBottom:10, }}>
+                                <span style={{fontSize:'14px'}}>© 2020, Parcelita</span>
+                            </div>
                 </div>
             </>
          );

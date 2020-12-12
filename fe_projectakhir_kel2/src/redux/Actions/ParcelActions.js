@@ -109,7 +109,7 @@ export const uploadParcel = data => {
                         };
                         dispatch({type:'LOAD',payload:data});
                     }).catch((error)=>{
-                        dispatch({type:'ERROR',payload:error});
+                        dispatch({type:'ERROR',payload:error.message})
                     });
         } catch (error) {
             console.log(error);
