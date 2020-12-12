@@ -14,9 +14,11 @@ import Axios from 'axios'
 import { API_URL_SQL } from '../../helpers/apiUrl';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import debounce from 'lodash.debounce';
-
+import ReactPaginate from 'react-paginate';
 import InputBase from '@material-ui/core/InputBase';
-
+import dataProduct from '../Product/dataProduct';
+import numeral from 'numeral';
+import Zoom from 'react-reveal/Zoom';
 class Product extends Component {
 
    
@@ -36,7 +38,12 @@ class Product extends Component {
         fileImage:null,
         categoryProduct:[],
         searchData:'',
-        testSearching:[]
+        testSearching:[],
+        offset:0,
+        data:[],
+        perPage:7,
+        currentPage:0,
+        slice:[]
      }
 
      componentDidMount(){
@@ -44,6 +51,7 @@ class Product extends Component {
          .then((res)=>{
             console.log(res.data)
             this.setState({dataProduct:res.data})
+            this.pagination()
          }).catch((err)=>{
              console.log(err)
          })
@@ -55,6 +63,8 @@ class Product extends Component {
          }).catch((err)=>{
              console.log(err)
          })
+
+         
 
      }
 
@@ -68,7 +78,7 @@ class Product extends Component {
              console.log(res.data)
              console.log('berhasil delete')
              this.setState({dataProduct:res.data})
-            
+            this.pagination()
          }).catch((err)=>{
              console.log(err)
          })      
@@ -87,11 +97,11 @@ class Product extends Component {
                         <TableCell>
                             <img src={API_URL_SQL+val.image} alt={val.nama} style={{height:'50px',width:'50px'}}/>
                             </TableCell>
-                        <TableCell>{val.harga}</TableCell>
+                        <TableCell> Rp {numeral(val.harga).format('0,0')}</TableCell>
                         <TableCell>{val.stok}</TableCell>
                         <TableCell>{val.deskripsi}</TableCell>
                         <TableCell>{val.categoryproduct_id}</TableCell>
-                        <TableCell>Rp.{val.hargapokok}</TableCell>
+                        <TableCell> Rp {numeral(val.hargapokok).format('0,0')}</TableCell>
                         <TableCell>
                             <button onClick={()=>this.onDelete(val.id)}>Delete</button>
                         </TableCell>
@@ -193,7 +203,54 @@ class Product extends Component {
      }
      
 
+            // batas debounce
 
+            // const slice = dataProduct.slice(this.state.offset,this.state.offset + this.state.perPage)
+        pagination=()=>{
+            var data = this.state.dataProduct
+            let slice = data.slice(this.state.offset,this.state.offset + this.state.perPage)
+            console.log(data)
+            console.log(slice)
+            this.setState({slice:slice})
+            const postData = slice.map((val,index)=>{
+                return (
+                    <>
+                       <TableRow key={val.id}>
+                           <TableCell>{index+1}</TableCell>
+                           <TableCell>{val.id}</TableCell>
+                           <TableCell>{val.nama}</TableCell>
+                           <TableCell>
+                               <img src={API_URL_SQL+val.image} alt={val.nama} style={{height:'50px',width:'50px'}}/>
+                               </TableCell>
+                           <TableCell>{val.stok}</TableCell>
+                           <TableCell>{val.deskripsi}</TableCell>
+                           <TableCell>{val.categoryproduct_id}</TableCell>
+                           <TableCell> Rp {numeral(val.harga).format('0,0')}</TableCell>
+                           <TableCell> Rp {numeral(val.hargapokok).format('0,0')}</TableCell>
+                           <TableCell>
+                               <button onClick={()=>this.onDelete(val.id)}>Delete</button>
+                           </TableCell>
+                       </TableRow>
+                    </>
+                )
+            })
+            console.log(postData,' ini post data')
+            this.setState({pageCount:Math.ceil(data.length / this.state.perPage),postData})
+            // console.log(slice)
+        }
+
+            
+        handlePageClick=(e)=>{
+            const selectedPage= e.selected
+            const offset = selectedPage * this.state.perPage
+
+            this.setState({
+                currentPage:selectedPage,
+                offset:offset
+            },()=>{
+                this.pagination()
+            })
+        }
 
      toggle = () => this.setState({setModalAdd:false});
     render() { 
@@ -247,6 +304,21 @@ class Product extends Component {
 
                         </div>
                     </div>
+                    <div>
+                        <ReactPaginate
+                        previousLabel={"Prev"}
+                        nextLabel={"Next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={this.state.pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"page pagination"}
+                        activeClassName={"active"}
+                        />
+                    </div>
                     <div className="container-data">
 
                         <TableContainer>
@@ -257,10 +329,10 @@ class Product extends Component {
                                         <TableCell>id</TableCell>
                                         <TableCell>Nama</TableCell>
                                         <TableCell>Gambar</TableCell>
-                                        <TableCell>Harga</TableCell>
                                         <TableCell>Stock</TableCell>
                                         <TableCell>Description</TableCell>
                                         <TableCell>Category Product</TableCell>
+                                        <TableCell>Harga</TableCell>
                                         <TableCell>Harga Pokok</TableCell>
                                         <TableCell>Action</TableCell>
                                     </TableRow>
@@ -268,7 +340,8 @@ class Product extends Component {
                                 <TableBody>
                                    {/* render disini */}
                                     {/* {this.renderUsers()} */}
-                                    {this.renderProduct()}
+                                    {this.state.postData}
+                                    {/* {this.renderProduct()} */}
                                 </TableBody>
                             </Table>
                         </TableContainer>

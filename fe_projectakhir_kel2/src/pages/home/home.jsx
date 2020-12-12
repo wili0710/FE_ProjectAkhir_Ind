@@ -25,7 +25,7 @@ export default connect(mapStatetoProps, { loadCategories })(
       this.props.loadCategories();
       this.setState({ product_categories: this.props.Parcel.Product_Category });
       draggableCard(".cardBx", "left", 2);
-    }
+    };
 
     componentDidUpdate() {}
 
@@ -38,7 +38,7 @@ export default connect(mapStatetoProps, { loadCategories })(
         }
       }
       this.setState({ filteredPackage: newArr });
-    }
+    };
 
     onChangeInput = (e) => {
       if (

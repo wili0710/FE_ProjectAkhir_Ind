@@ -36,13 +36,13 @@ export const loadCategories = () => {
                             dispatch({type:'Error',payload:error.message});
                         })
                     }).catch((error)=>{
-                        dispatch({type:'Error',payload:error.response.data.message});
+                        dispatch({type:'Error',payload:error.message});
                     });
                 }).catch((error)=>{
-                    dispatch({type:'Error',payload:error.response.data.message});
+                    dispatch({type:'Error',payload:error.message});
                 });
             }).catch((error)=>{
-                dispatch({type:'Error',payload:error.response.data.message});
+                dispatch({type:'Error',payload:error.message});
             });
         } catch (error) {
             console.log(error);
@@ -98,7 +98,7 @@ export const uploadParcel = (data) => {
                     }).then((result)=>{
                         console.log(result)
                     }).catch((error)=>{
-                        dispatch({type:'ERROR',payload:error.response.data.message})
+                        dispatch({type:'ERROR',payload:error.message})
                     });
         } catch (error) {
             console.log(error)

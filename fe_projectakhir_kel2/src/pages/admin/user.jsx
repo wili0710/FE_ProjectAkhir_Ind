@@ -12,12 +12,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-
+import ReactPaginate from 'react-paginate';
 
 
 class User extends Component {
     state = {  
-        dataUser:[]
+        dataUser:[],
+        offset:0,
+        perPage:7,
+        currentPage:0,
+        slice:[]
     }
 
     componentDidMount(){
@@ -25,6 +29,7 @@ class User extends Component {
         .then((res)=>{
             console.log(res.data)
             this.setState({dataUser:res.data})
+            this.pagination()
         }).catch((err)=>{
             console.log(err)
         })
@@ -57,6 +62,20 @@ class User extends Component {
             console.log('berhasil update data')
             console.log(res.data)
             this.setState({dataUser:res.data})
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+
+    onDelete=(id)=>{
+        console.log(id,' ini id delete')
+        let id2= id
+        Axios.post(`${API_URL_SQL}/product/newdeleteuser`,{
+            id:id2
+        }).then((res)=>{
+            console.log(res.data)
+            this.setState({dataUser:res.data})
+            this.pagination()
         }).catch((err)=>{
             console.log(err)
         })
@@ -107,6 +126,73 @@ class User extends Component {
         })
     }
 
+    // pagination
+
+    pagination=()=>{
+        var data =this.state.dataUser
+        let slice = data.slice(this.state.offset, this.state.offset+this.state.perPage)
+        console.log(data)
+        console.log(slice)
+        this.setState({slice:slice})
+
+        const postData =  slice.map((val,index)=>{
+            console.log(index+1)
+            // console.log(val.nama)
+            console.log('render jalan')
+            if(val.role==='admin'){
+                return (
+                    <>
+                        <TableRow key={val.id}>
+                            <TableCell>{index+1}</TableCell>
+                            <TableCell>{val.id}</TableCell>
+                            <TableCell>{val.nama}</TableCell>
+                            <TableCell>{val.email}</TableCell>
+                            <TableCell>{val.role}</TableCell>
+                            <TableCell>{val.statusver}</TableCell>
+                            <TableCell>
+                                <button onClick={()=>this.onChangeUser(val.id)}>Change to User</button>
+                                <button onClick={()=>this.onDelete(val.id)}>Delete</button>
+                            </TableCell>
+                        </TableRow>
+                    </>
+                )
+            }else {
+                return (
+                        <>
+                        <TableRow key={val.id}>
+                            <TableCell>{index+1}</TableCell>
+                            <TableCell>{val.id}</TableCell>
+                            <TableCell>{val.nama}</TableCell>
+                            <TableCell>{val.email}</TableCell>
+                            <TableCell>{val.role}</TableCell>
+                            <TableCell>{val.statusver}</TableCell>
+                            <TableCell>
+                                <button onClick={()=>this.onChangeAdmin(val.id)}>Change to Admin</button>
+                                <button onClick={()=>this.onDelete(val.id)}>Delete</button>
+                            </TableCell>
+                        </TableRow>
+                    </>
+
+                )
+            }
+        })
+        this.setState({pageCount:Math.ceil(data.length/this.state.perPage),postData})
+
+    }
+
+
+    handlePageClick=(e)=>{
+        const selectedPage= e.selected
+        const offset = selectedPage * this.state.perPage
+        this.setState({
+            currentPage:selectedPage,
+            offset:offset
+        },()=>{
+            this.pagination()
+        })
+    }
+
+
 
     render() { 
         console.log(this.state.dataUser)
@@ -120,6 +206,22 @@ class User extends Component {
                             <FaUserCog className="icon-user"/>
                             <p style={{fontWeight:'600'}}>User/Admin</p>
                         </div>
+                    </div>
+
+                    <div>
+                        <ReactPaginate
+                        previousLabel={"Prev"}
+                        nextLabel={"Next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={this.state.pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"page pagination"}
+                        activeClassName={"active"}
+                        />
                     </div>
                     <div className="container-data">
 
@@ -138,7 +240,8 @@ class User extends Component {
                                 </TableHead>
                                 <TableBody>
                                    {/* render disini */}
-                                    {this.renderUsers()}
+                                   {this.state.postData}
+                                    {/* {this.renderUsers()} */}
                                 </TableBody>
                             </Table>
                         </TableContainer>

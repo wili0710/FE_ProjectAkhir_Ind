@@ -11,17 +11,25 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import ReactPaginate from 'react-paginate';
+
 class CategoryParcel extends Component {
     state = {  
         categoryParcel:[],
         setModalParcel:false,
-        nama:createRef()
+        nama:createRef(),
+        offset:0,
+        data:[],
+        perPage:7,
+        currentPage:0,
+        slice:[]
     }
     componentDidMount(){
         Axios.get(`${API_URL_SQL}/product/getallcatparcel`)
         .then((res)=>{
             console.log(res.data)
             this.setState({categoryParcel:res.data})
+            this.pagination()
         }).catch((err)=>{
             console.log(err)
         })
@@ -41,6 +49,7 @@ class CategoryParcel extends Component {
             console.log('berhasil delete')
             console.log(res.data)
             this.setState({categoryParcel:res.data})
+            this.pagination()
         }).catch((err)=>{
             console.log(err)
         })
@@ -79,6 +88,43 @@ class CategoryParcel extends Component {
             )
         })
     }
+
+    pagination=()=>{
+        var data =this.state.categoryParcel
+        let slice = data.slice(this.state.offset, this.state.offset+this.state.perPage)
+        console.log(data)
+        console.log(slice)
+        this.setState({slice:slice})
+
+        const postData =  slice.map((val,index)=>{
+            return (
+            <TableRow key={val.id}>
+                <TableCell>{index+1}</TableCell>
+                <TableCell>{val.id}</TableCell>
+                <TableCell>{val.nama}</TableCell>
+                <TableCell>
+                <button onClick={()=>this.onDelete(val.id)}>Delete</button>
+                </TableCell>
+
+            </TableRow>
+
+            )
+        })
+        this.setState({pageCount:Math.ceil(data.length/this.state.perPage),postData})
+
+    }
+    handlePageClick=(e)=>{
+        const selectedPage= e.selected
+        const offset = selectedPage * this.state.perPage
+        this.setState({
+            currentPage:selectedPage,
+            offset:offset
+        },()=>{
+            this.pagination()
+        })
+    }
+
+
     
     toggle = () => this.setState({setModalParcel:false});
     render() { 
@@ -102,13 +148,28 @@ class CategoryParcel extends Component {
                 <div className="user-right">
                      <div className="header-user">
                              <div className="icon-group">
-                             <GiMilkCarton className="icon-size"/>
+                             <GiMilkCarton className="icon-user"/>
                                  <p style={{fontWeight:'600'}}>Category Parcel</p>
                              </div>
                      </div>    
                 <div className="btn-add" onClick={this.onAddDataParcel}>
                         <p>Add Data</p>
                  </div>
+                 <div>
+                        <ReactPaginate
+                        previousLabel={"Prev"}
+                        nextLabel={"Next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={this.state.pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"page pagination"}
+                        activeClassName={"active"}
+                        />
+                    </div>
                 <div className="container-data">
                 <TableContainer>
                          <Table>
@@ -123,7 +184,8 @@ class CategoryParcel extends Component {
                              <TableBody>
                                 {/* render disini */}
                                  {/* {this.renderUsers()} */}
-                                {this.renderCategoryParcel()}
+                                 {this.state.postData}
+                                {/* {this.renderCategoryParcel()} */}
                              </TableBody>
                          </Table>
                      </TableContainer>
