@@ -46,7 +46,7 @@ export const loadCategories = () => {
                     });
                 }).catch((error)=>{
                     console.log(error);
-                    dispatch({type:'Error',payload:"error process B});
+                    dispatch({type:'Error',payload:"error process B"});
                 });
             }).catch((error)=>{
                 console.log(error);
