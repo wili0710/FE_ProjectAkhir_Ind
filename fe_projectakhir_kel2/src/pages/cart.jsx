@@ -13,6 +13,7 @@ import { Button} from 'reactstrap';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ReactImageMagnify from 'react-image-magnify';
 import { namaPertama } from '../helpers/namapertama';
+import Swal from 'sweetalert2';
 
 
 const CartPage=()=>{
@@ -33,7 +34,8 @@ const CartPage=()=>{
     const [message,setMessage]=useState()                           // Custom Message
     const [limitProduct,setLimitProduct]=useState([])               // Limit Product per category di Parcel tersebut
     const [listProduct,setListProduct]=useState([])                 // List product dari category yg terpakai
-    const [statusPerCategory,setStatusPerCategory]=useState([])     // Status per category apakah sudah kena limit, 0 atau belum.
+    const [statusPerCategory,setStatusPerCategory]=useState([]) 
+    const [isAllLimit,setIsAllLimit]=useState()    // Status per category apakah sudah kena limit, 0 atau belum.
     
     const [qtyParcel,setQtyParcel]=useState()                       // qty Parcelnya
     
@@ -223,6 +225,21 @@ const CartPage=()=>{
         })
         setLoadingEdit2(false)
         setStatusPerCategory(letstatusPerCategory)
+
+
+        let isAllLimitFind=letstatusPerCategory.find((filtering)=>{
+            return filtering.isAtLimit==false
+        })
+        if(isAllLimitFind==undefined){
+            isAllLimitFind={isAtLimit:true}
+        }
+        let isAllLimit=isAllLimitFind.isAtLimit
+        if(isAllLimit!==false){
+            isAllLimit=true
+        }
+        setIsAllLimit(isAllLimit)
+
+        
     }
 
     // Render isi parcel di modal edit
@@ -701,12 +718,20 @@ const CartPage=()=>{
     }
     const onClickSaveParcel=(transaksidetail_id,parcel_id)=>{
         console.log(komposisiParcel)
-        let products_id=komposisiParcel.map((val,index)=>{
-            return val.products_id
-        })
-        if(products_id.length!==itemEdit[1].length){
-            alert(`Macam produk hanya boleh ${itemEdit[1].length}. Jika ingin beda silakan tambah paket parcel baru`)
-        }else{
+
+        if(!isAllLimit){
+            Swal.fire({
+                icon: 'error',
+                title: 'Sorry',
+                text: 'Isi Parcel Belum Penuh!',
+                footer: '<a href>Why do I have this issue?</a>'
+              })
+        }
+        else{
+            let products_id=komposisiParcel.map((val,index)=>{
+                return val.products_id
+            })
+    
             let product_qty=komposisiParcel.map((val,index)=>{
                 return val.qty
             })
@@ -731,7 +756,9 @@ const CartPage=()=>{
                 setShowEdit(!showEdit)
                 console.log(err)
             })
+
         }
+
     }
 
 
