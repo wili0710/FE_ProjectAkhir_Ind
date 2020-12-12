@@ -334,7 +334,7 @@ const Register=(props)=>{
                                 <a href='/register'><span className='mb-3' style={{fontWeight:'lighter'}}><span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}} onClick={()=>{localStorage.removeItem('registrasi');localStorage.removeItem('verified')}}>Pakai Email lain</span></span></a>
                                 <form className='pt-3' style={{width:'80%', marginTop:10, borderTop:'2px solid #E5E7E7'}}>
                                     <span>Nama :</span>
-                                    <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,name:e.target.value})}/>
+                                    <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,nama:e.target.value})}/>
                                     {renderInputPassword()}
                                     {/* {seePassword?
                                         <>

@@ -14,6 +14,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import ReactImageMagnify from 'react-image-magnify';
 import { namaPertama } from '../helpers/namapertama';
 import Swal from 'sweetalert2';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 
 const CartPage=()=>{
@@ -68,7 +69,7 @@ const CartPage=()=>{
             }).catch((err)=>{
                 console.log(err)
             })
-            Axios.get(`${API_URL_SQL}/product/getRandomProduct`)
+            Axios.get(`${API_URL_SQL}/product/getRandomProduct/4`)
             .then((res)=>{
                 setRandomProduct(res.data)
                 setLoading(false)
@@ -122,6 +123,7 @@ const CartPage=()=>{
                     borderLeft:"1px solid whitesmoke",
                     cursor:"pointer",
                     position:"relative",
+                    fontSize:14
                 }} onMouseEnter={()=>setOverlayProduct(unikId)} onMouseLeave={()=>setOverlayProduct("")}>
                     <div style={{
                         width:"100%",
@@ -189,6 +191,9 @@ const CartPage=()=>{
                     borderLeft:"1px solid whitesmoke",
                     cursor:"pointer",
                     position:"relative",
+                    display:"flex",
+                    flexDirection:"column",
+                    fontSize:14
                 }} onMouseEnter={()=>setOverlayProduct(unikId)} onMouseLeave={()=>setOverlayProduct("")}>
                     <div style={{
                         width:"100%",
@@ -1415,12 +1420,12 @@ const CartPage=()=>{
                                             fontWeight:"700"
                                         }}>
                                             {Auth.cart.transaksi.length==1?
-                                        <>
-                                            Rp {numeral(Auth.cart.transaksi[0].totaltransaksi).format('0,0')}
-                                        </>
-                                        :
-                                        null
-                                    }
+                                                <>
+                                                    Rp {numeral(Auth.cart.transaksi[0].totaltransaksi).format('0,0')}
+                                                </>
+                                                :
+                                                "Belum ada yang dibeli"
+                                            }
                                         </span>
                                     </div>
                                 </div>
@@ -1436,7 +1441,13 @@ const CartPage=()=>{
                                         justifyContent:"space-between"
                                     }}>
                                         <div>
-                                            Tambah juga :
+                                            {
+                                                Auth.cart.transaksi.length==1?
+                                                    "Tambah juga :"
+                                                    :
+                                                    "Product :"
+
+                                            }
                                         </div>
                                         <div>
                                             <Link to='/dataproduct'>
@@ -1450,14 +1461,17 @@ const CartPage=()=>{
                                             </Link>
                                         </div>
                                     </div>
-                                    <div style={{
-                                        display:"flex",
-                                        justifyContent:"space-between",
-                                        marginTop:10,
-                                        marginBottom:5
-                                    }}>
-                                        {renderRandomProduct()}
-                                    </div>
+                                    <Scrollbars autoHeight autoHide>
+                                        <div style={{
+                                            display:"flex",
+                                            justifyContent:"space-between",
+                                            marginTop:10,
+                                            marginBottom:5,
+                                            paddingBottom:10
+                                        }}>
+                                                {renderRandomProduct()}
+                                        </div>
+                                    </Scrollbars>
                                 </div>
                                 <div style={{
                                     // backgroundColor:"wheat",
