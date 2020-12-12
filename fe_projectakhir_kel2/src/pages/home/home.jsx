@@ -67,7 +67,7 @@ export default connect(mapStatetoProps, { loadCategories })(
     };
 
     render() {
-      console.log(this.state.product_categories);
+      console.log(this.props.Parcel);
 
       return (
         <>

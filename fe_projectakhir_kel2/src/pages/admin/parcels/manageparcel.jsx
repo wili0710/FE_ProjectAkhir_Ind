@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { priceFormatter, renderOption, API_URL_SQL } from '../../../helpers';
 import { cat_2, d_parcel, icon } from '../../../assets';
+import { popup } from '../../../components';
 import { IconContext } from 'react-icons';
 import { HiStar } from 'react-icons/hi';
 import { deleteParcel } from '../../../redux/Actions'
@@ -36,7 +37,10 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
         item_qty                : "",
 
         // rest state
-        filteredparcel          : []
+        filteredparcel          : [],
+
+        // component toggle 
+        showPopup               : false
     };
     
     componentDidMount() {
@@ -205,6 +209,15 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
         console.log(this.state.index_edit)
         console.log(this.props.AllData)
         return (
+            <>
+            {
+            this.state.showPopup?
+            <popup  text='click "x" to hide popup'
+                    closePopup={()=>this.setState({showPopup:!this.state.showPopup})}
+            />
+            :
+            null
+            }
             <div className="manageparcel">  
                 <section className="subheader">
                     <div className="subborder">
@@ -240,7 +253,7 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                         </select> 
                                         <div className="imageBx">
                                             <div className="edit_buttonBx">
-                                                <button className="ganti_gambar"> ... </button>
+                                                <button className="ganti_gambar" onClick={()=>this.setState({showPopup:!this.state.showPopup})}> ... </button>
                                                 <button className="hapus_gambar"> x </button>
                                             </div>
                                             <img src = {this.state.edit_gambar_parcel_upl? this.state.edit_gambar_parcel_upl : this.state.edit_gambar_parcel_url!=="null"? this.state.edit_gambar_parcel_url:d_parcel} 
@@ -408,6 +421,7 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                     </div>
                 </section>
             </div>
+            </>
         );
     };
 });
