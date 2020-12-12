@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import { compose } from 'redux';
 import {API_URL_SQL} from '../../helpers'
 
 export const loadCategories = () => {
@@ -14,17 +15,20 @@ export const loadCategories = () => {
                     .then((Product)=>{
                         Axios.get(`${API_URL_SQL}/parcel/getallparcel`)
                         .then((Parcel)=>{
-                            for(let i = 0; i < Parcel.data.items.length; i++){
-                                for(let k=0; k < Parcel.data.items[i].length; k++){
-                                    if(Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.items[i][k].parcel_id))].items) {
-                                        let item=Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.items[i][k].parcel_id))].items;
-                                        item.push(Parcel.data.items[i][k])
-                                        Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.items[i][k].parcel_id))].items=item;
+                            console.log(Parcel.data)
+                            for(let i = 0; i < Parcel.data.item.length; i++){
+                                for(let k=0; k < Parcel.data.item[i].length; k++){
+                                    if(Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.item[i][k].parcel_id))].item) {
+                                        let item=Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.item[i][k].parcel_id))].item;
+                                        item.push(Parcel.data.item[i][k])
+                                        Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.item[i][k].parcel_id))].item=item;
                                     }else{
-                                        Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.items[i][k].parcel_id))].items=[Parcel.data.items[i][k]];
+                                        console.log('a')
+                                        Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.item[i][k].parcel_id))].item=[Parcel.data.item[i][k]];
                                     };
                                 };
                             };
+                            console.log(Parcel.data.allparcel)
                             const data={
                                 Product_Category    : Product_Category.data,
                                 Parcel_Category     : Parcel_Category.data,
@@ -33,16 +37,20 @@ export const loadCategories = () => {
                             };
                             dispatch({type:'LOAD',payload:data});
                         }).catch((error)=>{
-                            dispatch({type:'Error',payload:error.message});
+                            console.log(error);
+                            dispatch({type:'Error',payload:"error process D"});
                         })
                     }).catch((error)=>{
-                        dispatch({type:'Error',payload:error.response.data.message});
+                        console.log(error);
+                        dispatch({type:'Error',payload:"error process C"});
                     });
                 }).catch((error)=>{
-                    dispatch({type:'Error',payload:error.response.data.message});
+                    console.log(error);
+                    dispatch({type:'Error',payload:"error process B});
                 });
             }).catch((error)=>{
-                dispatch({type:'Error',payload:error.response.data.message});
+                console.log(error);
+                dispatch({type:'Error',payload:"error process A"});
             });
         } catch (error) {
             console.log(error);

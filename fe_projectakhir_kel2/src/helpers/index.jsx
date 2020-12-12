@@ -67,11 +67,11 @@ export function priceFormatter(num) {
 };
 
 export function renderOption(props) {
-    console.log(props)
+    // console.log(props)
     if(props.text !== "pilih kategori product") {
         return (
             <> 
-                <option className="hide" value={0} disabled selected>{props.text}</option>  
+                <option className="hide" value={0} disabled defaultValue>{props.text}</option>  
                 { 
                     props.state.map((val)=>{
                         return (

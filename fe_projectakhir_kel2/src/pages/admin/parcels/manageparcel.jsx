@@ -19,12 +19,22 @@ const mapStatetoProps = (state) => {
 export default connect(mapStatetoProps) (class ManageParcel extends React.Component {
     state = {
         index_edit              : -1,
+
+        // edit parcel init state
         edit_category_parcel    : 0,
         edit_nama_parcel        : "",
         edit_harga_parcel       : "",
         edit_gambar_parcel_url  : "",
         edit_gambar_parcel_upl  : null,
         edit_item_parcel        : [],
+
+        // select_category state
+        cat_product_edit        : [],
+        cat_parcel_edit         : [],
+        item_category           : 0,
+        item_qty                : "",
+
+        // rest state
         filteredparcel          : []
     };
     
@@ -33,6 +43,26 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
     }
     componentDidUpdate() {
         console.log(this.props.Parcel)
+    }
+
+    onResetEditParcel = () => {
+        if(this.props.Parcel[this.state.index_edit].gambar && this.props.Parcel[this.state.index_edit].gambar.includes(API_URL_SQL)){
+            this.setState({
+                edit_category_parcel    : this.props.Parcel[this.state.index_edit].categoryparcel_id,
+                edit_nama_parcel        : this.props.Parcel[this.state.index_edit].nama,
+                edit_harga_parcel       : this.props.Parcel[this.state.index_edit].harga,
+                edit_gambar_parcel_upl  : this.props.Parcel[this.state.index_edit].gambar,
+                edit_item_parcel        : this.props.Parcel[this.state.index_edit].item,
+            });
+        }else{
+            this.setState({
+                edit_category_parcel    : this.props.Parcel[this.state.index_edit].categoryparcel_id,
+                edit_nama_parcel        : this.props.Parcel[this.state.index_edit].nama,
+                edit_harga_parcel       : this.props.Parcel[this.state.index_edit].harga,
+                edit_gambar_parcel_url  : this.props.Parcel[this.state.index_edit].gambar,
+                edit_item_parcel        : this.props.Parcel[this.state.index_edit].item,
+            });
+        };
     }
 
     onEditParcelCLick = index => {
@@ -58,8 +88,6 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
     };
 
     onChangeInput = (e) =>{
-        console.log(e.target.name)
-        console.log(e.target.value)
         if(e.target.name === ("edit_harga_parcel")) {
             if(e.target.value > 0) {
                 this.setState({[e.target.name]:e.target.value})
@@ -238,7 +266,7 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
                                     </div>
                                 </div>
                             }
-                            <div className="additemContent">
+                            <div className="edititemContent">
                                 <h2 className="title">
                                     Choose Parcel 
                                     <span>
@@ -260,7 +288,7 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
                                     <span className="span2">Cancel</span>
                                     to cancel to cancel parcel edited but beware of losing all changes
                                 </div>
-                                <div className="renderBx">
+                                <div className="renderBx_edit">
                                     {
                                     this.state.index_edit >= 0?
                                     this.props.Parcel[this.state.index_edit].items.map((val,index)=>{
@@ -290,7 +318,37 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
                                     </p>
                                     }
                                 </div>
+                                <div className="selectBx">
+                                    <select className   = "select0"
+                                            name        = "item_category"
+                                            onChange    = {this.onChangeInput}
+                                            value       = {this.state.item_category}
+                                            disabled    = {this.props.Parcel[this.state.index_edit].item.length === this.props.Product_Category.length? true:false}
+                                    >
+                                        {renderOption({state:this.props.Product_Category,change:this.props.Parcel[this.state.index_edit],text:"pilih kategori product",index:this.state.index_edit})}
+                                    </select>
+                                    <input className    = "input0" 
+                                           type         = "number"
+                                           name         = "item_qty"
+                                           value        = {this.state.item_qty}
+                                           onChange     = {this.onChangeInput}
+                                           disabled     = {this.props.Parcel[this.state.index_edit].item.length === this.props.Product_Category.length? true:false}
+                                           min          = {1}
+                                           placeholder  = "masukkan angka jumlah item per product"
+                                    />
+                                    <button className   = "button0"
+                                            // onClick     = {this.onSaveItem}
+                                            // disabled    = {this.state.item_qty && this.state.item_category? false:true}
+                                    >
+                                        Add
+                                    </button>
+                                </div>
                                 <div className="buttonBx">
+                                    <button className   = "button2" 
+                                            onClick     = {this.onCancelAddItem}
+                                    >
+                                        Reset
+                                    </button>
                                     <button className   = "button0" 
                                             // onClick     = {this.onFinishAddItem}
                                             // disabled    = {this.props.Parcel.Parcel[this.state.index_edit].item.length? false:true}
