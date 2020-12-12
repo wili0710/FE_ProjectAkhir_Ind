@@ -6,6 +6,7 @@ import { priceFormatter, renderOption, API_URL_SQL } from '../../../helpers';
 import { cat_2, d_parcel, icon } from '../../../assets';
 import { IconContext } from 'react-icons';
 import { HiStar } from 'react-icons/hi';
+import { deleteParcel } from '../../../redux/Actions'
 
 const mapStatetoProps = (state) => {
     return {
@@ -16,7 +17,7 @@ const mapStatetoProps = (state) => {
     };
 };
 
-export default connect(mapStatetoProps) (class ManageParcel extends React.Component {
+export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel extends React.Component {
     state = {
         index_edit              : -1,
 
@@ -39,10 +40,10 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
     };
     
     componentDidMount() {
-        console.log(this.props.Parcel)
+        // console.log(this.props.Parcel)
     }
     componentDidUpdate() {
-        console.log(this.props.Parcel)
+        // console.log(this.props.Parcel)
     }
 
     onResetEditParcel = () => {
@@ -95,6 +96,10 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
         }else{
             this.setState({[e.target.name]:e.target.value})
         };
+    };
+
+    onDeleteParcel = (id) => {
+        this.props.deleteParcel(id);
     };
 
     renderParcel(props) {
@@ -155,7 +160,7 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
                                         </div>
                                         <div className="cards">
                                             {
-                                                val.items.map((item,index)=>{
+                                                val.item.map((item,index)=>{
                                                     return (
                                                     <div className="cardo">
                                                         <div className="qty">
@@ -174,18 +179,19 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
                             </div>
                         </div>
                         <div className="setting">
-                            <div className  = "parcel-edit" 
+                            <button className  = "parcel-edit" 
                                  disabled   = {this.state.index_edit!==-1? true:false}
                                  onClick    = {()=>this.onEditParcelCLick(index)}
                             >
                                 edit
-                            </div>
-                            <div className  = "parcel-delete" 
+                            </button>
+                            <button className  = "parcel-delete" 
+                                 onClick    = {()=>this.onDeleteParcel(val.id)}
                                  disabled   = {this.state.index_edit!==-1? true:false}
                                  
                             >
                                 delete
-                            </div>
+                            </button>
                         </div>
                     </div>
                 )
@@ -291,21 +297,21 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
                                 <div className="renderBx_edit">
                                     {
                                     this.state.index_edit >= 0?
-                                    this.props.Parcel[this.state.index_edit].items.map((val,index)=>{
+                                    this.props.Parcel[this.state.index_edit].item.map((val,index)=>{
                                     return (
                                     <div className="itemBx_edit" key={val.id}>
                                         <div className="content">
                                             <div className="itemhead">
-                                                    <div className="id"> SET {index+1}</div>
-                                                    <button>X</button>
-                                                </div>
+                                                <div className="id"> SET {index+1}</div>
+                                                <button>X</button>
+                                            </div>
                                             <div className="category"> 
-                                                    Any
-                                                    <br/>
-                                                    {this.props.Product_Category[this.props.Product_Category.findIndex(vals=>vals.id===val.categoryproduct_id)].nama}
-                                                    <br/>
-                                                    <span> Qty : {val.qty_item} </span>
-                                                </div> 
+                                                Any
+                                                <br/>
+                                                {this.props.Product_Category[this.props.Product_Category.findIndex(vals=>vals.id===val.categoryproduct_id)].nama}
+                                                <br/>
+                                                <span> Qty : {val.qty} </span>
+                                            </div> 
                                             <div className="imgBx">
                                                 <img src={cat_2} alt="illustrasi category"/>
                                             </div>
@@ -318,49 +324,69 @@ export default connect(mapStatetoProps) (class ManageParcel extends React.Compon
                                     </p>
                                     }
                                 </div>
-                                <div className="selectBx">
-                                    <select className   = "select0"
-                                            name        = "item_category"
-                                            onChange    = {this.onChangeInput}
-                                            value       = {this.state.item_category}
-                                            disabled    = {this.props.Parcel[this.state.index_edit].item.length === this.props.Product_Category.length? true:false}
-                                    >
-                                        {renderOption({state:this.props.Product_Category,change:this.props.Parcel[this.state.index_edit],text:"pilih kategori product",index:this.state.index_edit})}
-                                    </select>
-                                    <input className    = "input0" 
-                                           type         = "number"
-                                           name         = "item_qty"
-                                           value        = {this.state.item_qty}
-                                           onChange     = {this.onChangeInput}
-                                           disabled     = {this.props.Parcel[this.state.index_edit].item.length === this.props.Product_Category.length? true:false}
-                                           min          = {1}
-                                           placeholder  = "masukkan angka jumlah item per product"
-                                    />
-                                    <button className   = "button0"
-                                            // onClick     = {this.onSaveItem}
-                                            // disabled    = {this.state.item_qty && this.state.item_category? false:true}
-                                    >
-                                        Add
-                                    </button>
-                                </div>
-                                <div className="buttonBx">
-                                    <button className   = "button2" 
-                                            onClick     = {this.onCancelAddItem}
-                                    >
-                                        Reset
-                                    </button>
-                                    <button className   = "button0" 
-                                            // onClick     = {this.onFinishAddItem}
-                                            // disabled    = {this.props.Parcel.Parcel[this.state.index_edit].item.length? false:true}
-                                    >
-                                        Finish
-                                    </button>
-                                    <button className   = "button1" 
-                                            // onClick     = {this.onCancelAddItem}
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
+                                {
+                                this.state.index_edit >= 0?
+                                <>
+                                    <div className="selectBx_active">
+                                        <select className   = "select0"
+                                                name        = "item_category"
+                                                onChange    = {this.onChangeInput}
+                                                value       = {this.state.item_category}
+                                                disabled    = {this.props.Parcel[this.state.index_edit].item.length === this.props.Product_Category.length? true:false}
+                                        >
+                                            {renderOption({state:this.props.Product_Category,change:this.props.Parcel[this.state.index_edit],text:"pilih kategori product"})}
+                                        </select>
+                                        <input className    = "input0" 
+                                               type         = "number"
+                                               name         = "item_qty"
+                                               value        = {this.state.item_qty}
+                                               onChange     = {this.onChangeInput}
+                                               disabled     = {this.props.Parcel[this.state.index_edit].item.length === this.props.Product_Category.length? true:false}
+                                               min          = {1}
+                                               placeholder  = "masukkan angka jumlah item per product"
+                                        />
+                                        <button className   = "button0"
+                                                // onClick     = {this.onSaveItem}
+                                                // disabled = {this.state.item_qty && this.state.item_category? false:true}
+                                        >
+                                            Add
+                                        </button>
+                                    </div>
+                                    <div className="buttonBx_active">
+                                        <button className   = "button2" 
+                                                onClick     = {this.onCancelAddItem}
+                                        >
+                                            Reset
+                                        </button>
+                                        <button className   = "button0" 
+                                                // onClick     = {this.onFinishAddItem}
+                                                // disabled    = {this.props.Parcel.Parcel[this.state.index_edit].item.length? false:true}
+                                        >
+                                            Finish
+                                        </button>
+                                        <button className   = "button1" 
+                                                // onClick     = {this.onCancelAddItem}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </>
+                                :  
+                                <>
+                                    <div className="selectBx">
+                                        <select className="select0" disabled>
+                                            <option>pilih kategori produk</option>
+                                        </select>
+                                        <input className="input0" placeholder="masukkan angka jumlah item per product"/>
+                                        <button className="button0" disabled>Add</button>
+                                    </div>
+                                    <div className="buttonBx">
+                                        <button className="button2" disabled>Reset</button>
+                                        <button className="button0" disabled>Finish</button>
+                                        <button className="button1" disabled>Cancel</button>
+                                    </div>
+                                </>
+                            }
                             </div>
                         </div>
                     </div>

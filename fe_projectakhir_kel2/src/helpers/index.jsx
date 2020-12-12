@@ -86,18 +86,18 @@ export function renderOption(props) {
     };
     let a;
     let arr = [];
+    console.log(props.change.item)
     arr.push(...props.state)
-    for (let i = 0; i < props.change[props.index].item.length; i++){
+    for (let i = 0; i < props.change.item.length; i++){
         a = arr.filter(val => {
-                return val.id !== props.change[props.index].item[i].category_item
+                return val.id !== props.change.item[i].categoryproduct_id
             });
         arr.splice(0,arr.length)
         arr.push(...a)
     };
-    // console.log(arr, 'option')
     return (
         <> 
-            <option className="hide" value={0} disabled selected>{props.text}</option>  
+            <option className="hide" value={0} disabled defaultValue>{props.text}</option>  
             { 
                 arr.map((val)=>{
                     return (

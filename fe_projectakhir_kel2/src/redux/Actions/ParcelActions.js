@@ -1,10 +1,27 @@
 import Axios from 'axios'
-import { compose } from 'redux';
 import {API_URL_SQL} from '../../helpers'
+
+const pushitem =(parcel,item)=>{
+    try {
+    for(let i = 0; i < item.length; i++){
+        for(let k=0; k < item[i].length; k++){
+            if(parcel[parcel.findIndex((val=>val.id===item[i][k].parcel_id))].item) {
+                let items=parcel[parcel.findIndex((val=>val.id===item[i][k].parcel_id))].item;
+                items.push(item[i][k])
+                parcel[parcel.findIndex((val=>val.id===item[i][k].parcel_id))].item=items;
+            }else{
+                parcel[parcel.findIndex((val=>val.id===item[i][k].parcel_id))].item=[item[i][k]];
+            };
+        };
+    };
+    }catch(error){
+        console.log(error)
+    }
+    return parcel;
+};
 
 export const loadCategories = () => {
     return (dispatch) => {
-        // console.log('loadcategories on process')
         dispatch({type:'LOADING'});
         try {
             Axios.get(`${API_URL_SQL}/product/getallcatprod`)
@@ -15,25 +32,11 @@ export const loadCategories = () => {
                     .then((Product)=>{
                         Axios.get(`${API_URL_SQL}/parcel/getallparcel`)
                         .then((Parcel)=>{
-                            console.log(Parcel.data)
-                            for(let i = 0; i < Parcel.data.item.length; i++){
-                                for(let k=0; k < Parcel.data.item[i].length; k++){
-                                    if(Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.item[i][k].parcel_id))].item) {
-                                        let item=Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.item[i][k].parcel_id))].item;
-                                        item.push(Parcel.data.item[i][k])
-                                        Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.item[i][k].parcel_id))].item=item;
-                                    }else{
-                                        console.log('a')
-                                        Parcel.data.allparcel[Parcel.data.allparcel.findIndex((val=>val.id===Parcel.data.item[i][k].parcel_id))].item=[Parcel.data.item[i][k]];
-                                    };
-                                };
-                            };
-                            console.log(Parcel.data.allparcel)
                             const data={
                                 Product_Category    : Product_Category.data,
                                 Parcel_Category     : Parcel_Category.data,
                                 Product             : Product.data,
-                                Parcel              : Parcel.data.allparcel
+                                Parcel              : pushitem(Parcel.data.allparcel,Parcel.data.item)
                             };
                             dispatch({type:'LOAD',payload:data});
                         }).catch((error)=>{
@@ -58,14 +61,13 @@ export const loadCategories = () => {
     };
 };
 
-export const setTempParcel = (arr_TempParcel) => {
+export const setTempParcel = arr_TempParcel => {
     return (dispatch) => {
         dispatch({type:'LOADING'});
         try {
             const data={
                 init_Parcel:arr_TempParcel
-            }
-            // console.log(data)
+            };
             dispatch({type:'LOAD',payload:data});
         } catch (error) {
             console.log(error)
@@ -82,7 +84,6 @@ export const setReadyParcel = (arr_readyParcel,arr_TempParcel) => {
                 ready_Parcel:arr_readyParcel,
                 init_Parcel:arr_TempParcel
             };
-            // console.log(data)
             dispatch({type:'LOAD',payload:data})
         } catch (error) {
             console.log(error)
@@ -91,11 +92,10 @@ export const setReadyParcel = (arr_readyParcel,arr_TempParcel) => {
     };
 };
 
-export const uploadParcel = (data) => {
+export const uploadParcel = data => {
     return (dispatch) => {
         dispatch({type:'LOADING'});
         try {
-            console.log(data,'REDUX');
             const {nama,harga,categoryparcel_id,gambar,item} = data
             Axios.post(`${API_URL_SQL}/parcel/addparcel`, {
                         nama,
@@ -104,13 +104,35 @@ export const uploadParcel = (data) => {
                         gambar,
                         item
                     }).then((result)=>{
-                        console.log(result)
+                        const data = {
+                            Parcel : pushitem(result.data.allparcel,result.data.item)
+                        };
+                        dispatch({type:'LOAD',payload:data});
                     }).catch((error)=>{
-                        dispatch({type:'ERROR',payload:error.response.data.message})
+                        dispatch({type:'ERROR',payload:error});
                     });
         } catch (error) {
-            console.log(error)
-            dispatch({type:'ERROR',payload:error.message})
+            console.log(error);
+            dispatch({type:'ERROR',payload:error.message});
+        };
+    };
+};
+
+export const deleteParcel = id => {
+    return (dispatch) => {
+        dispatch({type:'LOADING'});
+        try {
+            Axios.post(`${API_URL_SQL}/parcel/deleteparcel`, {id})
+            .then((result)=>{
+                const data = {
+                    Parcel : pushitem(result.data.allparcel,result.data.item)
+                };
+                dispatch({type:'LOAD',payload:data});
+            }).error((error)=>{
+                dispatch({type:'ERROR',payload:"delete parcel error A"});
+            });
+        } catch (error) {
+            dispatch({type:'ERROR',payload:"delete parcel error on main"});
         };
     };
 };
