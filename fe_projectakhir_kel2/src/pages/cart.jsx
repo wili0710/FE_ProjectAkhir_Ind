@@ -43,6 +43,9 @@ const CartPage=()=>{
     const [editSatuan,setEditSatuan]=useState()             
     const [qtySatuan,setQtySatuan]=useState()
 
+    const [randomProduct,setRandomProduct]=useState()
+    const [overlayProduct,setOverlayProduct]=useState()
+
     const toggleModalEdit=()=>setShowEdit(!showEdit)
 
     useEffect(()=>{
@@ -57,13 +60,20 @@ const CartPage=()=>{
     
     const fetchdata=async()=>{
         try {
-            // Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
-            await Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
+            // await Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
+            Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
             .then((res)=>{
                 console.log(res.data)
                 dispatch({type:'CART',cart:res.data})
+            }).catch((err)=>{
+                console.log(err)
+            })
+            Axios.get(`${API_URL_SQL}/product/getRandomProduct`)
+            .then((res)=>{
+                setRandomProduct(res.data)
                 setLoading(false)
-                
+            }).catch((err)=>{
+                console.log(err)
             })
         } catch (error) {
             console.log(error)
@@ -97,6 +107,152 @@ const CartPage=()=>{
     }
 
     // End Pembayaran, dataforedit diambil dari transaksi detail yg ingin di edit
+
+    // Random Product
+
+    const renderRandomProduct=()=>{
+        console.log(randomProduct)
+        let render1=randomProduct.productSatuan.map((val,index)=>{
+            let unikId=val.id+"satuan"
+            return (
+                <div style={{
+                    paddingRight:10,
+                    paddingLeft:10,
+                    borderRight:"1px solid whitesmoke",
+                    borderLeft:"1px solid whitesmoke",
+                    cursor:"pointer",
+                    position:"relative",
+                }} onMouseEnter={()=>setOverlayProduct(unikId)} onMouseLeave={()=>setOverlayProduct("")}>
+                    <div style={{
+                        width:"100%",
+                        height:"100%",
+                        backgroundColor:"rgba(255, 255, 255, 0.5)",
+                        position:"absolute",
+                        display:overlayProduct==unikId?"flex":"none",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        left:0,
+                        animation: "rotateY 500ms ease-in-out forwards",
+                        transformOrigin: "top center"
+                    }}>
+                        <div style={{
+                            backgroundColor:"#66b0ff",
+                            border:"1px solid whitesmoke",
+                            padding:5,
+                            width:"50%",
+                            borderRadius:5,
+                            boxShadow:"0px 0px 15px 1px lighgrey",
+                            textAlign:"center",
+                            color:"white"
+                        }}>
+                            Add
+                        </div>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        justifyContent:"center"
+                    }}>
+                        <img src={val.image} alt={val.nama} width={80} height={80}/>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        justifyContent:"center"
+                    }}>
+                        <span style={{
+                            textAlign:"center"
+                        }}>
+                            {val.nama}
+                        </span>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        justifyContent:"flex-end"
+                    }}>
+                        <span style={{
+                            color:"#fa5a1e",
+                            fontWeight:"700"
+                        }}>
+                            Rp {numeral(val.harga).format('0,0')}
+                        </span>
+                    </div>
+                </div>
+            )
+        })
+        let render2=randomProduct.productParcel.map((val,index)=>{
+            let link=`/detailparcel/${val.id}`
+            let unikId=val.id+"parcel"
+            return (
+                <div style={{
+                    paddingRight:10,
+                    paddingLeft:10,
+                    borderRight:"1px solid whitesmoke",
+                    borderLeft:"1px solid whitesmoke",
+                    cursor:"pointer",
+                    position:"relative",
+                }} onMouseEnter={()=>setOverlayProduct(unikId)} onMouseLeave={()=>setOverlayProduct("")}>
+                    <div style={{
+                        width:"100%",
+                        height:"100%",
+                        backgroundColor:"rgba(255, 255, 255, 0.5)",
+                        position:"absolute",
+                        display:overlayProduct==unikId?"flex":"none",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        left:0,
+                        animation: "rotateY 500ms ease-in-out forwards",
+                        transformOrigin: "top center"
+                    }}>
+                        
+                            <div style={{
+                                backgroundColor:"#66b0ff",
+                                border:"1px solid whitesmoke",
+                                padding:5,
+                                width:"50%",
+                                borderRadius:5,
+                                boxShadow:"0px 0px 15px 1px lighgrey",
+                                textAlign:"center",
+                                color:"white"
+                            }}>
+                                <Link to={link} style={{width:"100%"}}>
+                                    <span style={{color:"white",textDecoration:"none"}}>Beli</span>
+                                </Link>
+                            </div>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        justifyContent:"center"
+                    }}>
+                        <img src={val.gambar} alt={val.nama} width={80} height={80}/>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        justifyContent:"center"
+                    }}>
+                        <span style={{
+                            textAlign:"center"
+                        }}>
+                            {val.nama}
+                        </span>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        justifyContent:"flex-end"
+                    }}>
+                        <span style={{
+                            color:"#fa5a1e",
+                            fontWeight:"700"
+                        }}>
+                            Rp {numeral(val.harga).format('0,0')}
+                        </span>
+                    </div>
+                </div>
+            )
+        })
+        let final=[render2,render1]
+        return final
+    }
+
+    //
     const onClickOpenEditParcel=(dataforedit)=>{
 
         setQtyParcel(dataforedit[0].qty)
@@ -1232,7 +1388,7 @@ const CartPage=()=>{
                     }}>
                         <div style={{
                             padding:20,
-                            width:500
+                            width:600
                         }}>
                             <div style={{
                                 display:"flex",
@@ -1266,6 +1422,41 @@ const CartPage=()=>{
                                         null
                                     }
                                         </span>
+                                    </div>
+                                </div>
+                                <div style={{
+                                    paddingTop:10,
+                                    paddingBottom:10,
+                                    borderBottom:"5px solid whitesmoke",
+                                    borderTop:"5px solid whitesmoke",
+                                    marginTop:20
+                                    }}>
+                                    <div style={{
+                                        display:"flex",
+                                        justifyContent:"space-between"
+                                    }}>
+                                        <div>
+                                            Tambah juga :
+                                        </div>
+                                        <div>
+                                            <Link to='/dataproduct'>
+                                                <span style={{
+                                                    color:"#318ae7",
+                                                    fontSize:14,
+                                                    cursor:"pointer",
+                                                }}>
+                                                    Lihat Semua
+                                                </span>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                    <div style={{
+                                        display:"flex",
+                                        justifyContent:"space-between",
+                                        marginTop:10,
+                                        marginBottom:5
+                                    }}>
+                                        {renderRandomProduct()}
                                     </div>
                                 </div>
                                 <div style={{

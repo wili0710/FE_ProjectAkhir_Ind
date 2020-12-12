@@ -40,8 +40,8 @@ const Register=(props)=>{
     },[])
     useEffect(()=>{
         console.log(newuser)
-        if(newuser.name===""){
-            delete newuser.name
+        if(newuser.nama===""){
+            delete newuser.nama
         }
         if(newuser.password===""){
             delete newuser.password
@@ -187,7 +187,7 @@ const Register=(props)=>{
     const onClickNewUser=(e)=>{
         e.preventDefault()
         console.log("jalan")
-        Axios.post(`${API_URL_SQL}/auth/register`,{email:email,password:newuser.password,nama:newuser.name,alamat:newuser.alamatlengkap,nomortelfon:newuser.nomorhandphone})
+        Axios.post(`${API_URL_SQL}/auth/register`,{email:email,password:newuser.password,nama:newuser.nama,alamat:newuser.alamatlengkap,nomortelfon:newuser.nomorhandphone})
         .then((res)=>{
             console.log(res)
             Swal.fire(
