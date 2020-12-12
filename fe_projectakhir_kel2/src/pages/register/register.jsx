@@ -27,6 +27,7 @@ const Register=(props)=>{
     const [isOtpDone,setIsOtpDone]=useState(false)
     const [otp,setOtp]=useState('')
     const [seePassword,setSeePassword]=useState(false)
+    const [isPasswordPass, setIsPasswordPass]=useState(true)
     
     useEffect(()=>{
         if(localStorage.getItem('registrasi')){
@@ -38,9 +39,83 @@ const Register=(props)=>{
         setLoading(false)
     },[])
     useEffect(()=>{
-        if(newuser.name,newuser.nama,newuser.password,newuser.nomorhandphone,newuser.city_id,newuser.alamatlengkap) return setDisable(false)
+        console.log(newuser)
+        if(newuser.name===""){
+            delete newuser.name
+        }
+        if(newuser.password===""){
+            delete newuser.password
+        }
+        if(newuser.nomorhandphone===""){
+            delete newuser.nomorhandphone
+        }
+        if(newuser.alamatlengkap===""){
+            delete newuser.alamatlengkap
+        }
+       
+        console.log((Object.entries(newuser)).length)
+        if((Object.entries(newuser)).length >=4) {
+            return setDisable(false)
+        }
         setDisable(true)
     },[newuser])
+
+    const passwordCheck=(e)=>{
+        console.log(e.target.value)
+
+        let upperCaseLetters = /[A-Z]/g
+        let numbers = /[0-9]/g;
+        
+        
+        if (e.target.value.match(upperCaseLetters) && e.target.value.match(numbers) && e.target.value.length>6){
+            setNewuser({...newuser,password:e.target.value})
+            console.log("true")
+            console.log(isPasswordPass)
+            setIsPasswordPass(true)
+        }
+        else{
+            console.log("false")
+            setNewuser({...newuser,password:''})
+            setIsPasswordPass(false)
+        }
+    }
+    const renderInputPassword=()=>{
+        if(seePassword){
+            return(
+                <>
+                    <span>Password : </span> <AiFillEye size={20} style={{color:"#0095DA",cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(false)}/>
+                    <input className='form-control' style={{
+                        transition:'500ms',
+                        border:!isPasswordPass?'1px solid red':null,
+                        boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
+                    }}  type='text' onChange={(e)=>passwordCheck(e)}/>
+                    {
+                        !isPasswordPass?
+                            <span style={{display:"inline-block", margin:5, fontSize:12}}>* Password harus ada angka, minimal 6, huruf besar dan kecil</span>
+                            :
+                            null
+                    }
+                </>
+            )
+        }else{
+            return(
+                <>
+                    <span>Password :</span> <AiFillEyeInvisible size={20} style={{cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(true)}/>
+                    <input className='form-control' style={{
+                        transition:'500ms',
+                        border:!isPasswordPass?'1px solid red':null,
+                        boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
+                    }} type='password' onChange={(e)=>passwordCheck(e)}/>
+                    {
+                        !isPasswordPass?
+                            <span style={{display:"block", margin:5, fontSize:12}}>* Password harus ada angka, minimal 6, huruf besar dan kecil</span>
+                            :
+                            null
+                    }
+                </>
+            )
+        }
+    }
 
     const onsendclick=()=>{
         setLoadingregister(true)
@@ -260,17 +335,38 @@ const Register=(props)=>{
                                 <form className='pt-3' style={{width:'80%', marginTop:10, borderTop:'2px solid #E5E7E7'}}>
                                     <span>Nama :</span>
                                     <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,name:e.target.value})}/>
-                                    {seePassword?
+                                    {renderInputPassword()}
+                                    {/* {seePassword?
                                         <>
                                             <span>Password : </span> <AiFillEye size={20} style={{color:"#0095DA",cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(false)}/>
-                                            <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,password:e.target.value})}/>
+                                            <input className='form-control' style={{
+                                                transition:'500ms',
+                                                border:!isPasswordPass?'1px solid red':null,
+                                                boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
+                                            }}  type='text' onChange={(e)=>passwordCheck(e)}/>
+                                            {
+                                                !isPasswordPass?
+                                                    <span>Password harus ada angka, minimal 6, huruf besar dan kecil</span>
+                                                    :
+                                                    null
+                                            }
                                         </>
                                         :
                                         <>
                                             <span>Password :</span> <AiFillEyeInvisible size={20} style={{cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(true)}/>
-                                            <input className='form-control' type='password' onChange={(e)=>setNewuser({...newuser,password:e.target.value})}/>
+                                            <input className='form-control' style={{
+                                                transition:'500ms',
+                                                border:!isPasswordPass?'1px solid red':null,
+                                                boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
+                                            }} type='password' onChange={(e)=>passwordCheck(e)}/>
+                                            {
+                                                !isPasswordPass?
+                                                    <span>Password harus ada angka, minimal 6, huruf besar dan kecil</span>
+                                                    :
+                                                    null
+                                            }
                                         </>
-                                    } 
+                                    }  */}
                                     <span>Nomor Handphone :</span>
                                     <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,nomorhandphone:e.target.value})}/>
                                     <span>Alamat Lengkap :</span>
