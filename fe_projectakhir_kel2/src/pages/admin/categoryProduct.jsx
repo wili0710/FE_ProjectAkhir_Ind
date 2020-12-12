@@ -144,7 +144,7 @@ class CategoryProduct extends Component {
                    <div className="user-right">
                         <div className="header-user">
                                 <div className="icon-group">
-                                <GiMilkCarton className="icon-size"/>
+                                <GiMilkCarton className="icon-user"/>
                                     <p style={{fontWeight:'600'}}>Category Product</p>
                                 </div>
                         </div>    

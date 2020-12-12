@@ -222,10 +222,10 @@ class Product extends Component {
                            <TableCell>
                                <img src={API_URL_SQL+val.image} alt={val.nama} style={{height:'50px',width:'50px'}}/>
                                </TableCell>
-                           <TableCell> Rp {numeral(val.harga).format('0,0')}</TableCell>
                            <TableCell>{val.stok}</TableCell>
                            <TableCell>{val.deskripsi}</TableCell>
                            <TableCell>{val.categoryproduct_id}</TableCell>
+                           <TableCell> Rp {numeral(val.harga).format('0,0')}</TableCell>
                            <TableCell> Rp {numeral(val.hargapokok).format('0,0')}</TableCell>
                            <TableCell>
                                <button onClick={()=>this.onDelete(val.id)}>Delete</button>
@@ -329,10 +329,10 @@ class Product extends Component {
                                         <TableCell>id</TableCell>
                                         <TableCell>Nama</TableCell>
                                         <TableCell>Gambar</TableCell>
-                                        <TableCell>Harga</TableCell>
                                         <TableCell>Stock</TableCell>
                                         <TableCell>Description</TableCell>
                                         <TableCell>Category Product</TableCell>
+                                        <TableCell>Harga</TableCell>
                                         <TableCell>Harga Pokok</TableCell>
                                         <TableCell>Action</TableCell>
                                     </TableRow>

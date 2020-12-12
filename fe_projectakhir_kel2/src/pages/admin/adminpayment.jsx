@@ -160,7 +160,7 @@ const AdminPayment=()=>{
         <div className="user-right">
             <div className="header-user">
                 <div className="icon-group">
-                    <FaMoneyCheckAlt className="icon-size" color="black"/>
+                    <FaMoneyCheckAlt className="icon-user" color="black"/>
                     <p style={{fontWeight:'600'}}>Payment</p>
                 </div>
             </div>

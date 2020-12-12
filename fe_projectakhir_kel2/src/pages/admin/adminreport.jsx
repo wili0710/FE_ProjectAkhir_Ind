@@ -93,7 +93,7 @@ const AdminReport=()=>{
                 <div className="user-right">
                     <div className="header-user">
                         <div className="icon-group">
-                            <HiDocumentReport className="icon-size" color="black"/>
+                            <HiDocumentReport className="icon-user" color="black"/>
                             <p style={{fontWeight:'600'}}>Report</p>
                         </div>
                     </div>
