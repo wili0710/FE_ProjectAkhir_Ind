@@ -447,18 +447,14 @@ class dataProduct extends Component {
                             <TabPane  tabId="1" className="tab-row-1 tabpanel">
                                 <Row className="tabpanel">
                                     <div className="container-prod">
-                                        <Zoom>
-                                            <div className="box">
+                                            <div className="box" style={{animation: 'growDown 1000ms ease-in-out forwards'}}>
                                                 <div style={{
                                                     display:'flex',
                                                     flexWrap:'wrap'
                                                 }}>
                                                     {this.renderParcel()}
                                                 </div>
-                                          
-                                          
                                             </div>            
-                                        </Zoom>  
                                     </div>
                                 </Row>
                             </TabPane>
@@ -466,7 +462,7 @@ class dataProduct extends Component {
                             <TabPane  tabId="2" className="tab-row-2 tabpanel">
                                 <Row className="tabpanel-2">
                                     <div className="container-prod" >
-                                        {/* <Zoom> */}
+                                        
                                             <div className="box-2" style={{animation: 'growDown 1000ms ease-in-out forwards'}}>
                                                     <div style={{
                                                          display:'flex',
@@ -476,15 +472,14 @@ class dataProduct extends Component {
                                                         {this.renderMinuman()}
                                                     </div>
                                             </div>
-                                        {/* </Zoom>   */}
+                                        
                                     </div>
                                 </Row>
                             </TabPane>
                             <TabPane  tabId="3" className="tab-row-2 tabpanel">
                                 <Row className="tabpanel-3">
                                     <div className="container-prod">
-                                        <Zoom>
-                                        <div className="box-2">
+                                        <div className="box-2" style={{animation: 'growDown 1000ms ease-in-out forwards'}}>
                                                     <div style={{
                                                          display:'flex',
                                                          flexWrap:'wrap'
@@ -493,16 +488,13 @@ class dataProduct extends Component {
                                                    
                                                     </div>
                                             </div>
-                                            
-                                        </Zoom>  
                                     </div>
                                 </Row>
                             </TabPane>
                             <TabPane  tabId="4" className="tab-row-2 tabpanel">
                                 <Row className="tabpanel-4">
                                     <div className="container-prod">
-                                        <Zoom>
-                                        <div className="box-2">
+                                        <div className="box-2" style={{animation: 'growDown 1000ms ease-in-out forwards'}}>
                                                     <div style={{
                                                          display:'flex',
                                                          flexWrap:'wrap'
@@ -510,7 +502,6 @@ class dataProduct extends Component {
                                                     {this.renderChocolate()}             
                                                     </div> 
                                             </div>
-                                        </Zoom>  
                                     </div>
                                 </Row>
                             </TabPane>

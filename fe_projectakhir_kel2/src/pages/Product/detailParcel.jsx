@@ -21,6 +21,7 @@ import Logo from './../../assets/logo.png'
 import {AiOutlineLogout,AiFillHome,AiFillDelete} from 'react-icons/ai'
 import {connect} from 'react-redux';
 import {LogoutFunc} from './../../redux/Actions'
+import Zoom from 'react-reveal/Zoom';
 class DetailParcel extends Component {
     state = { 
         dataParcelByIdMakanan:[],
@@ -449,7 +450,7 @@ class DetailParcel extends Component {
                  <>
                 <div className=" box-3 card product_item" key={val.id} >
                         <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel" />
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
                             <div className="hover"  >
                                 {
                                     total==this.state.dataParcelByIdMakanan.qty ?
@@ -496,9 +497,8 @@ class DetailParcel extends Component {
                  <>
                     <div className=" box-3 card product_item" key={val.id} >
                         <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel" />
-                            <div className="hover"  >
-                             
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
+                            <div className="hover"  >      
                             {
     
                                 total==this.state.dataParcelByIdMinuman.qty ?
@@ -543,7 +543,7 @@ class DetailParcel extends Component {
                  <>
                    <div className=" box-3 card product_item" key={val.id} >
                         <div className="cp_img">
-                            <img src={val.image} alt="logo" className="img-parcel" />
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
                             <div className="hover"  >
                             {
     
@@ -918,10 +918,12 @@ class DetailParcel extends Component {
                                     <p style={{marginLeft:'20px'}}>2.Pilih Minuman Yang Kamu Mau</p>
                                 </div>
                                 {this.state.MinumanVisible && <div onClose={this.toggleDialogMinuman}>
-                                    <div style={{display:'flex',flexWrap:'wrap'
-                                                        }}>
-                                        {this.renderMinuman()}
-                                    </div>
+                                    <Zoom>
+                                        <div style={{display:'flex',flexWrap:'wrap'
+                                                            }}>
+                                            {this.renderMinuman()}
+                                        </div>
+                                    </Zoom>
                                 </div>
                                 }
                                 <div className="k-button" onClick={this.toggleDialogChocolate}>

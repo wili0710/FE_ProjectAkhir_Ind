@@ -18,7 +18,7 @@ import ReactPaginate from 'react-paginate';
 import InputBase from '@material-ui/core/InputBase';
 import dataProduct from '../Product/dataProduct';
 import numeral from 'numeral';
-
+import Zoom from 'react-reveal/Zoom';
 class Product extends Component {
 
    

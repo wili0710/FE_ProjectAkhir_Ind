@@ -36,7 +36,7 @@ export const LoginThunk=(email,password)=>{
             }).catch((err)=>{
                 console.log('masuk ke error')
                 console.log(err)
-                dispatch({type:'Error',payload:err.response.data.message})
+                dispatch({type:'Error',payload:err.message})
             })
     }
 }
