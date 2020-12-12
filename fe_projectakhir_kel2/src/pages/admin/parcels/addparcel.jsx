@@ -42,11 +42,11 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     /* end of State */
     
     componentDidMount() {
-        console.log(this.props.Parcel)
+        // console.log(this.props.Parcel)
     };  
     
     componentDidUpdate() {
-        console.log(this.state.index_add_cat_product)
+        // console.log(this.state.index_add_cat_product)
         if(this.state.index_add_cat_product !== (-1)){
             draggableCard(".renderBx","left",1);
         };
@@ -317,7 +317,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     };
     
     render() {
-        console.log(this.props.Parcel)
+        // console.log(this.props.Parcel)
         return (
            <div className="mainparcel">
                 <section className="subheader">
