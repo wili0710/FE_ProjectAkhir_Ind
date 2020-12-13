@@ -154,7 +154,7 @@ const CartPage=()=>{
                         display:"flex",
                         justifyContent:"center"
                     }}>
-                        <img src={val.image} alt={val.nama} width={80} height={80}/>
+                        <img src={API_URL_SQL+val.image} alt={val.nama} width={80} height={80}/>
                     </div>
                     <div style={{
                         display:"flex",
@@ -534,7 +534,7 @@ const CartPage=()=>{
                             border:"5px solid #f4f6f8"
                         }}>
                             <div>
-                                <img src={val.image} alt={val.nama} width="100" height="100"/>
+                                <img src={API_URL_SQL+val.image} alt={val.nama} width="100" height="100"/>
                                 
                             </div>
                             <div>
@@ -612,7 +612,7 @@ const CartPage=()=>{
                     <div style={{
                         marginRight:10
                     }}>
-                        <img src={val.image} width="50" height="50"/>
+                        <img src={API_URL_SQL+val.image} width="50" height="50"/>
                     </div>
                     <div>
                         <h6>{val.nama}</h6>
@@ -693,7 +693,7 @@ const CartPage=()=>{
                     <div style={{
                         marginRight:10
                     }}>
-                        <img src={val.image} width="50" height="50"/>
+                        <img src={API_URL_SQL+val.image} width="50" height="50"/>
                     </div>
                     <div>
                         <h6>{val.nama}</h6>

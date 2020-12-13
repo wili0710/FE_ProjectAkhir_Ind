@@ -18,6 +18,7 @@ import {Dropdown} from 'react-bootstrap'
 import {AiOutlineLogout,AiFillHome} from 'react-icons/ai'
 import debounce from 'lodash.debounce';
 import numeral from 'numeral';
+import {LogoutFunc} from './../../redux/Actions'
 class dataProduct extends Component {
     state = {
         activeTab:"1",
@@ -299,6 +300,10 @@ class dataProduct extends Component {
 
     onLogoutClick=()=>{
         console.log('logout jalan')
+        localStorage.removeItem('id')
+        Swal.fire('Logout Berhasil')
+        this.props.LogoutFunc()
+        window.location.assign(`http://localhost:3000`)
     }
 
     onChangeSearch=debounce(function(e){
@@ -366,7 +371,7 @@ class dataProduct extends Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
+                                <Dropdown.Item href="/" onClick={this.onLogoutClick}>
                                     <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
                                     Logout
                                     </Dropdown.Item>
@@ -525,4 +530,4 @@ const MapStatetoprops=({Auth})=>{
     }
 }
  
-export default (connect(MapStatetoprops,{})(dataProduct));
+export default (connect(MapStatetoprops,{LogoutFunc})(dataProduct));
