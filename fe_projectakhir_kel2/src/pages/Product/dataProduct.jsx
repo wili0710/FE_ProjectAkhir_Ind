@@ -30,7 +30,8 @@ class dataProduct extends Component {
         dataChocolate:[],
         loadingParcel:true,
         showCart:false,
-        showMenuUser:false
+        showMenuUser:false,
+        randomCart:[]
 
 
 
@@ -82,6 +83,24 @@ class dataProduct extends Component {
         }).catch((err)=>{
             console.log(err)
         })
+
+        // Axios.get(`${API_URL_SQL}/product/getRandomProduct/4`)
+        //     .then((res)=>{
+        //         // setRandomProduct(res.data)
+        //         // setLoading(false)
+        //     }).catch((err)=>{
+        //         console.log(err)
+        //     })
+        // } catch (error) {
+        //     console.log(error)
+        // }
+        Axios.get(`${API_URL_SQL}/product/getRandomProduct/4`)
+        .then((res)=>{
+            console.log(res.data)
+            this.setState({dataRandom:res.data})
+        }).catch((err)=>{
+            console.log(err)
+        })
         
         
     }
@@ -95,14 +114,14 @@ class dataProduct extends Component {
         if(this.state.loading){
             return null
         }else{
-            console.log(this.state.allDataParcel)
+            // console.log(this.state.allDataParcel)
             return this.state.dataParcel.map((val,index)=>{
               var render=this.state.allDataParcel.filter(function(parcel){
         
                   return parcel.parcel_id == val.id
               })
             //   console.log(render, ' ini render line 76')
-                console.log('jalam dalem map ' , val.id)
+                // console.log('jalam dalem map ' , val.id)
                 return (
                     <div className="box-3 item " key={val.id} onClick={()=>this.onCheckData(val.id)} >
                         <Link to={'/detailParcel/'+val.id}>
@@ -178,8 +197,8 @@ class dataProduct extends Component {
    
     renderMinuman=()=>{
         return this.state.dataMinuman.map((val,index)=>{
-            console.log(val.image,' ini val image 181')
-            console.log(index,' 182')
+            // console.log(val.image,' ini val image 181')
+            // console.log(index,' 182')
             return(
                 <>
                 <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMakanan(val.id)}>
@@ -332,10 +351,10 @@ class dataProduct extends Component {
         
     }
     render() { 
-        console.log(this.props.name)
-        console.log(this.props.cart)
-        console.log(this.state.dataParcel)
-        console.log(this.props.isLogin)
+        // console.log(this.props.name)
+        // console.log(this.props.cart)
+        // console.log(this.state.dataParcel)
+        // console.log(this.props.isLogin)
 
         if(this.state.loadingParcel){
             return (
