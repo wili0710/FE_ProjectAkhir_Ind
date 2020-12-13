@@ -15,7 +15,36 @@ import ReactImageMagnify from 'react-image-magnify';
 import { namaPertama } from '../helpers/namapertama';
 import Swal from 'sweetalert2';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FcApprove } from 'react-icons/fc'
 
+const MsgAddSatuan = ({ nama }) =>{
+    console.log(nama)
+    return (
+        <div style={{display:"flex", alignContent:"center"}}>
+            <div style={{marginRight:5}}>
+                <FcApprove size={20} />
+            </div>
+            <div>
+                {nama} berhasil ditambahkan 1
+            </div>
+        </div>
+    )
+}
+const MsgEditSatuan = ({ nama,qty }) =>{
+    console.log(nama)
+        return (
+            <div style={{display:"flex", alignContent:"center"}}>
+                <div style={{marginRight:5}}>
+                    <FcApprove size={20} />
+                </div>
+                <div>
+                    {nama} berhasil diubah menjadi {qty}
+                </div>
+            </div>
+        )
+    }
 
 const CartPage=()=>{
     const Auth=useSelector(state=>state.Auth) 
@@ -111,6 +140,27 @@ const CartPage=()=>{
 
     // Random Product
 
+    // const notifyAddProductSatuan = () => toast.info("🦄Wow so easy !")
+    const notifyAddProductSatuan = (namaproduct) => toast.info(<MsgAddSatuan nama={namaproduct}/>)
+    const notifyEditProductSatuan = (namaproduct,qty) => toast.info(<MsgEditSatuan nama={namaproduct} qty={qty}/>)
+    
+
+    const addProductSatuan=async(products_id,namaproduct)=>{
+        try {
+            let addToBE=await Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
+                user_id:Auth.id,
+                products_id:products_id,
+                parcel_id:0,
+                qty:1,
+            })
+            console.log(addToBE)
+            dispatch({type:"CART",cart:addToBE.data})
+            notifyAddProductSatuan(namaproduct)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const renderRandomProduct=()=>{
         console.log(randomProduct)
         let render1=randomProduct.productSatuan.map((val,index)=>{
@@ -146,7 +196,7 @@ const CartPage=()=>{
                             boxShadow:"0px 0px 15px 1px lighgrey",
                             textAlign:"center",
                             color:"white"
-                        }}>
+                        }} onClick={()=>addProductSatuan(val.id,val.nama)}>
                             Add
                         </div>
                     </div>
@@ -731,7 +781,7 @@ const CartPage=()=>{
                                 editSatuan===val.transaksidetail_id?
                                 <>
                                     <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{
-                                        setEditSatuan();setEditSatuan(!editSatuan);clickSaveSatuan(val.products_id,val.transaksidetail_id)
+                                        setEditSatuan(!editSatuan);clickSaveSatuan(val.products_id,val.transaksidetail_id,val.nama,qtySatuan)
                                         }}>Save</span>
                                         | 
                                     <span style={{color:"red",cursor:"pointer"}} 
@@ -741,7 +791,7 @@ const CartPage=()=>{
                                 <>
                                     <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{
                                         setItemEdit(val);setQtySatuan(val.qty);setEditSatuan(val.transaksidetail_id)
-                                        }}>Edit</span>
+                                        }}>Edit </span>
                                         | 
                                     <span style={{color:"red",cursor:"pointer"}} 
                                     onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
@@ -861,7 +911,7 @@ const CartPage=()=>{
         }
     }
     
-    const clickSaveSatuan=(products_id,transaksidetail_id)=>{
+    const clickSaveSatuan=(products_id,transaksidetail_id,nama,qty)=>{
         let senttobe={
             user_id:`${Auth.id}`,
             products_id:`${products_id}`,
@@ -873,6 +923,7 @@ const CartPage=()=>{
             .then((res)=>{
                 console.log(res.data)
                 dispatch({type:'CART',cart:res.data})
+                notifyEditProductSatuan(nama,qty)
             }).catch((err)=>{
                 console.log(err)
             })
@@ -943,6 +994,17 @@ const CartPage=()=>{
             maxWidth:2000,
             justifyContent:"center",
         }}>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
             {/* MODAL Pembayaran */}
             {
                 showPembayaran?
@@ -1265,18 +1327,23 @@ const CartPage=()=>{
                                     </span>
                                 </div>
                                 <div>
-                                    {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
-                                    renderCart()
-                                    // null
-                                    :
-                                    <div style={{
-                                        display:"flex",
-                                        justifyContent:"center",
-                                        padding:10
-                                    }}>
-                                        <span>Masih Kosong</span>    
-                                    </div>
-                                    }
+                                    <Scrollbars autoHeight autoHeightMin={Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?400:0} 
+                                    autoHide>
+                                            
+                                        {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
+                                        renderCart()
+                                        // null
+                                        :
+                                        <div style={{
+                                            display:"flex",
+                                            justifyContent:"center",
+                                            padding:10
+                                        }}>
+                                            <span>Masih Kosong</span>    
+                                        </div>
+                                        }
+                                      
+                                    </Scrollbars>
                                 </div>
                             </div>
                         </div>
@@ -1461,7 +1528,7 @@ const CartPage=()=>{
                                             </Link>
                                         </div>
                                     </div>
-                                    <Scrollbars autoHeight autoHide>
+                                    <Scrollbars autoHeight>
                                         <div style={{
                                             display:"flex",
                                             justifyContent:"space-between",

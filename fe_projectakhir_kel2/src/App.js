@@ -23,6 +23,7 @@ import CartPage from './pages/cart';
 import AdminReport from './pages/admin/adminreport';
 import Example from './pages/hapusaja';
 import {LoginFunc,AddcartAction} from './redux/Actions'
+import notfound from './pages/notfound';
 
 function App(props) {
   
@@ -92,7 +93,7 @@ function App(props) {
         <Route exact path ='/cart' component={CartPage}/>
         <Route exact path ='/hapusaja' component={Example}/>
         {renderProtectedAdminRoutes()}
-        <Route path='*' component={Home}/>
+        <Route path='*' component={notfound}/>
 
       </Switch>
     </>
