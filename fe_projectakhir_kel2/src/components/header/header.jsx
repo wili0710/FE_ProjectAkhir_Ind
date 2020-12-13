@@ -16,7 +16,10 @@ export default () => {
         <header>
             <div className="navBx">   
                 <div className="nav-products">
-                    Our <span>Products</span>
+                    Our 
+                    <Link to="/dataproduct" style={{textDecoration:"none", marginLeft:5}}>
+                        <span>Products</span>
+                    </Link>
                 </div>
             </div>
             <div className="logoBx">

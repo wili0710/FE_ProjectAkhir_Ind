@@ -1,3 +1,4 @@
+import zIndex from '@material-ui/core/styles/zIndex';
 import React from 'react'
 
 export default (props) => {
@@ -22,7 +23,8 @@ const styled = {
         right: 0,
         bottom: 0,
         margin: "auto",
-        backgroundColor: "rgba(0,0,0, 0.5)"
+        backgroundColor: "rgba(0,0,0, 0.5)",
+        zIndex:99999
     },
     inner : {  
         position: "absolute", 

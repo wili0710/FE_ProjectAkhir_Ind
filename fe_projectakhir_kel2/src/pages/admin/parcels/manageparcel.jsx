@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { priceFormatter, renderOption, API_URL_SQL } from '../../../helpers';
 import { cat_2, d_parcel, icon } from '../../../assets';
-import { popup } from '../../../components';
+import { Popup } from '../../../components';
 import { IconContext } from 'react-icons';
 import { HiStar } from 'react-icons/hi';
 import { deleteParcel } from '../../../redux/Actions'
@@ -118,9 +118,9 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                 <div className="imageBx">
                                     {
                                         val.gambar!=="null"?
-                                        <img src={val.gambar}/>
+                                        <img src={val.gambar} alt="gambar parcel"/>
                                         :
-                                        <img src={d_parcel}/>
+                                        <img src={d_parcel} alt="gambar parcel"/>
                                     }
                                 </div>
                                 <h2>
@@ -205,15 +205,15 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
     };
 
     render() {
-        console.log(this.props.Parcel[this.state.index_edit])
-        console.log(this.state.index_edit)
-        console.log(this.props.AllData)
+        // console.log(this.props.Parcel[this.state.index_edit])
+        // console.log(this.state.index_edit)
+        // console.log(this.props.AllData)
         return (
             <>
             {
             this.state.showPopup?
-            <popup  text='click "x" to hide popup'
-                    closePopup={()=>this.setState({showPopup:!this.state.showPopup})}
+            <Popup  text='click "x" to hide popup'
+                    closepopup={()=>this.setState({showPopup:!this.state.showPopup})}
             />
             :
             null

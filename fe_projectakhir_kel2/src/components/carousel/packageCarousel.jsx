@@ -12,8 +12,8 @@ export default (props) => {
     console.log(props.obj)
     return (   
         <div className="cardBx">
-            {props.obj.map((val)=>{
-                console.log()
+            {
+            props.obj.map((val)=>{
                 return (
                     <div className="card" key={val.id}>
                         <div className="Bx">
