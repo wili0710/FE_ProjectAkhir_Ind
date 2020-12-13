@@ -126,7 +126,7 @@ class MyAccount extends Component {
         return ( 
             <>
             <Modal isOpen={this.state.isOpenPassword} toggle={this.toggle}>
-                <ModalHeader toggle={this.toggle}> Add Product</ModalHeader>
+                <ModalHeader toggle={this.toggle}> Ganti Password</ModalHeader>
                 <ModalBody>
                     <p>Silahkan Masukan Password Baru anda</p>
                     <input type='password' onChange={this.onNewPassword} placeholder='Masukan Password Baru Anda' style={{marginBottom:'5px'}}  />                                       
