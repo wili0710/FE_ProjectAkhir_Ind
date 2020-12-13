@@ -1,0 +1,333 @@
+.div-luar{
+    background-color:whitesmoke;
+    width:100%;
+    height:700px;
+    display:flex;
+    margin-top:30px;
+    
+}
+
+.div-dalem-kiri{
+    /* background-color: gray; */
+    width:50%;
+    height:650px;
+    margin-left:90px;
+    justify-content: center;
+    display:flex;
+    margin-top:50px;
+}
+
+
+.box-kiri{
+    background-color:#dfe6e9;
+    width:80%;
+    height:600px;
+    border:2px solid gray;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.img-kecil{
+    width:100%;
+    height:80px;
+    /* background-color: pink; */
+    display:flex;
+
+}
+.img-kecil img{
+    margin-top:15px;
+    margin-left:20px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    
+}
+.img-kecil p{
+    margin-top:25px;
+    margin-left:20px;
+    font-weight: 800;
+}
+
+.img-kecil2{
+    width:100%;
+    height:80px;
+    /* background-color: green; */
+    display:flex;
+}
+.img-kecil2 img{
+    margin-top:15px;
+    margin-left:20px;
+}
+.go-bay{
+    /* background-color:red; */
+    width:100%;
+    height:80px;
+    display:flex;
+    border-bottom:1px solid gray;
+}
+
+.gobay-kiri p {
+    font-size:13px;
+    margin-top:23px;
+    line-height: 3px;
+    margin-left:10px;
+}
+.gobay-kanan p {
+    font-size:13px;
+    margin-top:23px;
+    line-height: 3px;
+    margin-left:20px;
+    font-weight:800;
+}
+.ikon{
+    font-size:35px;
+    margin-top:20px;
+    margin-left:20px;
+}
+
+.div-saldo{
+    width:100%;
+    height:80px;
+    display:flex;
+    border-bottom:1px solid gray;
+}
+
+.img-kecil3{
+    width:100%;
+    height:80px;
+    /* background-color: pink; */
+    display:flex;
+
+}
+
+.go-bay-1{
+    width:100%;
+    height:80px;
+    display:flex;
+    border-bottom:1px solid gray;
+
+}
+
+.saldo-kiri p{
+    font-size:13px;
+    margin-top:35px;
+    line-height: 3px;
+    margin-left:10px;
+    font-weight:500;
+    width:100%;
+}
+
+.saldo-kanan p {
+    font-size:13px;
+    margin-top:35px;
+    line-height: 3px;
+    margin-left:90px;
+    font-weight:800;
+}
+
+.dd-atas{
+    background-color:#0884e3 !important;
+    width:100%;
+}
+.dd-bawah{
+    width:100%;
+}
+.dd-inside:hover{
+    background-color:pink !important;
+}
+.big-dd{
+    margin-bottom:20px;
+    margin-top:20px;
+}
+
+
+/* KANAN */
+.div-dalem-kanan{
+    /* background-color: blue; */
+    width:100%;
+    height:650px;
+    margin-right:70px;
+    margin-top:50px;
+    display:flex;
+    flex-direction: column;
+}
+.logokecil{
+    background-color:whitesmoke;
+    width:100%;
+    height:40px;
+    display:flex;
+}
+.logokecil p {
+    margin-left:5px;
+    margin-top:5px;
+}
+.logo-dlm{
+    font-size:30px;
+}
+.tabpanel{
+    /* background-color:red; */
+    width:100%;
+}
+.biodata{
+    width:100%;
+    background-color:#dfe6e9;
+    height:535px;
+    margin-left:15px;
+    border:2px solid gray;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.div-biodata{
+    /* background-color:red; */
+    width:100%;
+    height:500px;
+    display:flex;
+
+}
+.biodata-kiri{
+    /* background-color:yellow; */
+    height:530px;
+    width:100%;
+}
+
+.img-biodata{
+    background-color:pink;
+    border:2px solid white;
+    height:350px;
+    width:80%;
+    margin-top:50px;
+    margin-left:35px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.img-biodata img{
+    /* background-color:gray; */
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border:2px solid white;
+
+}
+.biodata-kanan{
+    /* background-color:green; */
+    height:500px;
+    width:100%;
+    display:flex;
+    
+}
+.btn-pilih{
+    width:80%;
+    height:30px;
+    background-color:whitesmoke;
+    border:1px solid gray;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-top:10px;
+    display:flex;
+    align-items: center;
+}
+.btn-pilih p{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    /* margin-left:10px; */
+    /* background-color:blue; */
+    width:100%;
+    margin-top:15px;
+}
+.btn-pilih:hover{
+    background-color:#0884e3;
+}
+
+.password-change{
+    /* background-color:blue; */
+    height:50px;
+    width:100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-top:30px;
+}
+.pin-purwa{
+    /* background-color:orange; */
+    height:50px;
+    width:100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-pass{
+    background-color: whitesmoke;
+    height:40px;
+    width:80%;
+    margin-left:-5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border:1px solid gray;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-pin{
+    background-color: whitesmoke;
+    height:40px;
+    width:80%;
+    margin-left:-5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border:1px solid gray;
+}
+
+.ikon-1{
+    font-size:20px;
+}
+.pass-1{
+    margin-left:5px;
+    margin-top:10px;
+}
+.bio-kiri{
+    /* background-color:pink; */
+    width:100%;
+    height:450px;
+    margin-top:50px;
+
+}
+.bio-kiri p {
+    font-weight:500;
+    line-height: 25px;
+}
+.bio-kanan{
+    /* background-color:red; */
+    width:100%;
+    height:400px;
+    margin-top:90px;
+}
+
+.ubah{
+    color:#0884e3;
+
+}
+.ubah:hover{
+    color:pink;
+}

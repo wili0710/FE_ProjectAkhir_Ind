@@ -961,7 +961,7 @@ class DetailParcel extends Component {
          let renderSatuan= this.state.renderRandomProduct.map((val,index)=>{
              return (
                 <>
-                    <div class="card" style={{width:'18rem'}}>
+                    <div class="card " style={{width:'18rem'}}>
                         <img class="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
                         <div class="card-body">
                             <h5 class="card-title">{val.nama}</h5>
