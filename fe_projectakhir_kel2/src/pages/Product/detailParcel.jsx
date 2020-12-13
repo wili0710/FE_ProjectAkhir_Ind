@@ -22,6 +22,9 @@ import {AiOutlineLogout,AiFillHome,AiFillDelete} from 'react-icons/ai'
 import {connect} from 'react-redux';
 import {LogoutFunc} from './../../redux/Actions'
 import Zoom from 'react-reveal/Zoom';
+
+import { Scrollbars } from 'react-custom-scrollbars';
+
 class DetailParcel extends Component {
     state = { 
         dataParcelByIdMakanan:[],
@@ -48,7 +51,9 @@ class DetailParcel extends Component {
         checklistChocolate:0,
         renderCartMinuman:[],
         renderCartMakanan:[],
-        renderCartChocolate:[]
+        renderCartChocolate:[],
+        renderRandomProduct:[],
+        renderRandomParcel:[]
      }
      
 
@@ -99,6 +104,18 @@ class DetailParcel extends Component {
          .then((res)=>{
              console.log(res.data,'line 83')
              this.setState({dataChocolate:res.data})
+         }).catch((err)=>{
+             console.log(err)
+         })
+
+         Axios.get(`${API_URL_SQL}/product/getRandomProduct/4`)
+         .then((res)=>{
+             console.log(res.data.productSatuan)
+             console.log(res.data.productParcel)
+            this.setState({
+                renderRandomProduct:res.data.productSatuan,
+                renderRandomParcel:res.data.productParcel
+            })
          }).catch((err)=>{
              console.log(err)
          })
@@ -569,7 +586,7 @@ class DetailParcel extends Component {
                                 <li className="new_price">Rp.{val.harga}</li>
                             </ul>
                         </div>
-                </div> 
+                    </div> 
                  </>
              )
          })
@@ -704,6 +721,8 @@ class DetailParcel extends Component {
         })
     }
 
+   
+
      saveMessage=()=>{
          console.log('button add message jalan')
             var limitMinuman = this.state.dataParcelByIdMinuman.qty
@@ -716,7 +735,6 @@ class DetailParcel extends Component {
             var arrProduct= sendToDb.map((val)=>val.parcel_id)
             var qtyProduct = sendToDb.map((val)=>val.qty)
             var userid=this.props.id
-
 
            
             console.log(filterprodminuman,' line 519')
@@ -818,9 +836,168 @@ class DetailParcel extends Component {
         window.location.assign(`http://localhost:3000`)
 
      }
+
+     productRandomSatuan=(id)=>{
+         console.log(id,' product random satuan')
+        let productid=id
+        let userid= this.props.id
+
+        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
+            user_id:userid,
+            products_id:productid,
+            parcel_id:0,
+            qty:1
+        }).then((res)=>{
+            Swal.fire({
+                title: 'Sweet!',
+                text: 'Berhasil Menambahkan Data',
+                imageUrl: `${API_URL_SQL+res.data.image}`,
+                imageWidth: 400,
+                imageHeight: 200,
+                imageAlt: '',
+              })
+            console.log(res.data)
+        }).catch((err)=>{
+            console.log(err)
+        })
+
+         
+     }
+
+     productRandomParcel=(id)=>{
+         console.log(id,' id parcel random')
+        var limitMinuman = this.state.dataParcelByIdMinuman.qty
+        var limitMakanan= this.state.dataParcelByIdMakanan.qty
+        var limitChocolate= this.state.dataParcelByIdChocolate.qty
+
+        var messagesend=this.state.arrMessage
+        var parcelid=this.state.dataParcelByIdChocolate.parcel_id
+        var sendToDb = this.state.dataArrMakanan
+        var arrProduct= sendToDb.map((val)=>val.parcel_id)
+        var qtyProduct = sendToDb.map((val)=>val.qty)
+        var userid=this.props.id
+
+        var totalQtyMinuman = 0
+        var totalQtyMakanan = 0
+        var totalQtyChocolate = 0
+
+        var productidminuman= this.state.dataParcelByIdMinuman.categoryproduct_id // product_id
+            console.log(this.state.dataArrMakanan)
+            var filterprodminuman = this.state.dataArrMakanan.filter((val)=>{
+                return val.categoryproduct_id === productidminuman
+            })
+            for(var i =0; i<filterprodminuman.length; i++){
+                totalQtyMinuman += filterprodminuman[i].qty
+            }
+
+            // looping makanan
+            var productidmakanan= this.state.dataParcelByIdMakanan.categoryproduct_id
+            var  filterprodmakanan= this.state.dataArrMakanan.filter((val)=>{
+                return val.categoryproduct_id === productidmakanan
+            })
+
+            for(var i =0; i<filterprodmakanan.length; i++){
+                totalQtyMakanan += filterprodmakanan[i].qty
+            }
+
+            // looping chocolate
+            var productidchocolate=this.state.dataParcelByIdChocolate.categoryproduct_id
+            var filterprodchocolate= this.state.dataArrMakanan.filter((val)=>{
+                return val.categoryproduct_id === productidchocolate
+            })
+
+            for(var i=0; i<filterprodchocolate.length; i++){
+                totalQtyChocolate += filterprodchocolate[i].qty
+            }
+
+            if(totalQtyMinuman == limitMinuman && totalQtyMakanan == limitMakanan && totalQtyChocolate == limitChocolate){
+                console.log('true')
+                Swal.fire({
+                    icon: 'success',
+                    title: `Perfect!!`,
+                    text: `Parcel Berhasil Ditambahkan ke Cart`                   
+                })
+                var obj = {
+                    user_id:userid,
+                    products_id:"0",
+                    parcel_id:parcelid,
+                    qty:"1",
+                    productforparcel_id:arrProduct,
+                    qtyproductforparcel:qtyProduct,
+                    message:messagesend
+                 }
+                 console.log(obj)
+                 Axios.post(`${API_URL_SQL}/transaksi/addtocart`,obj).then((res)=>{
+                     console.log('nberhasil')
+                    console.log(res.data)
+                 }).catch((err)=>{
+                     console.log(err)
+                 })
+
+            }else if(totalQtyMinuman < limitMinuman) {
+                Swal.fire({
+                    icon: 'error',
+                    title: `Ada Barang Yang Kurang, Selesaikan Isi Cart Terlebih Dahulu`,
+                    text: `Anda Harus Memilih ${limitMinuman} Minuman`                   
+                })
+            }else if (totalQtyMakanan < limitMakanan){
+                Swal.fire({
+                    icon: 'error',
+                    title: `Ada Barang Yang Kurang, Selesaikan Isi Cart Terlebih Dahulu`,
+                    text: `Anda Harus Memilih ${limitMakanan} Makanan`                  
+                })
+            }else if(totalQtyChocolate <limitChocolate){
+                Swal.fire({
+                    icon: 'error',
+                    title: `Ada Barang Yang Kurang, Selesaikan Isi Cart Terlebih Dahulu`,
+                    text: `Anda Harus Memilih ${limitChocolate} Chocolate`                    
+                })
+            }
+
+     }
+
+
+     renderCartRandom=()=>{
+         let renderSatuan= this.state.renderRandomProduct.map((val,index)=>{
+             return (
+                <>
+                    <div class="card" style={{width:'18rem'}}>
+                        <img class="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
+                        <div class="card-body">
+                            <h5 class="card-title">{val.nama}</h5>
+                            <p class="card-text">{val.deskripsi}</p>
+                            <a href="#" class="btn btn-primary" onClick={()=>this.productRandomSatuan(val.id)}> Beli</a>
+                        </div>
+                    </div>
+
+                </>
+             )
+         })
+
+         let renderParcel=this.state.renderRandomParcel.map((val,index)=>{
+             return (
+                 <>
+                    <div class="card card-css" style={{width:'18rem'}}>
+                        <img class="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
+                        <div class="card-body">
+                            <h5 class="card-title">{val.nama}</h5>
+                            <p class="card-text">{val.deskripsi}</p>
+                            <a href={'/detailParcel/'+val.id} class="btn btn-primary" onClick={()=>this.productRandomParcel(val.id)}> Beli</a>
+                        </div>
+                    </div>
+                 </>
+             )
+         })
+
+         let final=[renderParcel,renderSatuan]
+         return final
+
+     }
      
   
     render() { 
+       const child   = { width: `30em`, height: `100%`}
+        const parent  = { width: `60em`, height: `100%`}
             // console.log(this.state.dataArrMakanan)
             // console.log(this.state.dataMakanan)
             // console.log(this.state.dataParcelByIdMinuman.qty ,' ini maksimal beli minuman')
@@ -947,16 +1124,19 @@ class DetailParcel extends Component {
                                     <Zoom>
                                         <div style={{display:'flex',flexWrap:'wrap',flexDirection:'column'
                                                             }}>
-                                            <input type='text' className="form-control" onChange={(e)=>this.addMessage(e)} style={{transition:'500ms',width:'350px',marginTop:'10px'}}/>
+                                            <input type='text' className="form-control" onChange={(e)=>this.addMessage(e)} style={{transition:'500ms',width:'350px',marginTop:'10px'}} placeholder='Input Your Message'/>
                                             
                                         </div>
                                     </Zoom>
                                 </div>
                                 }
 
-                                <div style={{marginTop:'50px'}}>
-                                    card parcel
-                                </div>
+                                <Scrollbars autoHeight autoHide renderTrackHorizontal={this.renderTrackHorizontal}  renderThumbHorizontal={this.renderThumbHorizontal} >
+                                    <div style={{marginTop:'50px'}} className="random-cart">
+                                        {this.renderCartRandom()}
+                                    </div>
+                                </Scrollbars>
+                                
                         
                         </div>
                         

@@ -180,6 +180,7 @@ const CartPage=()=>{
                 </div>
             )
         })
+        
         let render2=randomProduct.productParcel.map((val,index)=>{
             let link=`/detailparcel/${val.id}`
             let unikId=val.id+"parcel"

@@ -309,3 +309,15 @@
        cursor: pointer;
    }
   
+   .random-cart{
+       display:flex;
+        justify-content: space-between;
+        margin-top:10;
+        margin-Bottom:5;
+        padding-Bottom:10;
+        /* width:400px; */
+   }
+
+   .card-css {
+       
+   }
