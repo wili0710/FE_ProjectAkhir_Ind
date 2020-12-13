@@ -1064,7 +1064,7 @@ const CartPage=()=>{
                             display:"flex",
                             width:"100%",
                         }}>
-                            <div style={{
+                            {/* <div style={{
                                 width:"30%",
                                 borderRight:"10px solid #f4f6f8",
                                 padding:20
@@ -1074,7 +1074,7 @@ const CartPage=()=>{
                                 }}>
                                     Transfer
                                 </div>
-                            </div>
+                            </div> */}
                             <div style={{
                                 padding:20,
                                 display:"flex",
@@ -1327,8 +1327,8 @@ const CartPage=()=>{
                                     </span>
                                 </div>
                                 <div>
-                                    <Scrollbars autoHeight autoHeightMin={Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?400:0} 
-                                    autoHide>
+                                    <Scrollbars autoHeight autoHeightMin={Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?50:0} 
+                                    autoHide autoHeightMax={400}>
                                             
                                         {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
                                         renderCart()
