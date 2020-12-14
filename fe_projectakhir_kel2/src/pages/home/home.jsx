@@ -1,12 +1,13 @@
 import React from "react";
 import "./home.scss";
-import { debounce, draggableCard, API_URL_SQL } from "../../helpers";
-import { icon, illustration_1 } from "../../assets";
-import { Header, packageCarousel } from "../../components";
-import { connect } from "react-redux";
-import { loadCategories, addtoTransaction, AddcartAction } from "../../redux/Actions";
-import { priceFormatter } from "../../helpers/apiUrl";
 import Axios from 'axios';
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { icon, illustration_1 } from "../../assets";
+import { debounce, API_URL_SQL, draggableCard, priceFormatter } from "../../helpers";
+import { Header, packageCarousel } from "../../components";
+import { loadCategories, addtoTransaction, AddcartAction } from "../../redux/Actions";
+// import { FullPageLoading } from '../../components/loading';
 
 const mapStatetoProps = (state) => {
   return {
@@ -20,24 +21,22 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
     inputSearch: "",
     filteredPackage: [],
     product_categories: [],
-    temp_cart:[]
+    isLoading:true
   };
 
   componentDidMount() {
     this.props.loadCategories();
-    this.setState({ 
-      product_categories: this.props.Parcel.Product_Category,
-      temp_cart : this.props.Auth.cart
-    });
-    draggableCard(".cardBx", "left", 2);
+    // console.log(this.props.Parcel.Product_Category)
+    this.setState({product_categories : this.props.Parcel.Product_Category});
+    // draggableCard(".cardBx", "left", 2);
   };
 
   componentDidUpdate() {
-    // console.log(this.props.Auth)
+    draggableCard(".cardBx", "left", 2);
   }
 
   onSearchInputChange(e, prop) {
-    console.log(prop.array);
+    // console.log(prop.array);
     let newArr = [];
     for (let i = 0; i < prop.array.length; i++) {
       if (prop.array[i].nama.toLowerCase().includes(e.target.value)) {
@@ -59,8 +58,7 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
   
   addprodtocart = id => {
     console.log(id)
-    const obj=this.state.temp_cart;
-    if(this.state.temp_cart.transaksidetailsatuan[this.state.temp_cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)]===undefined){
+    if(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)]===undefined){
       console.log('oke baru nih '+id)
       let data = {
         user_id     : this.props.Auth.id,
@@ -68,29 +66,53 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
         parcel_id   : 0,
         qty         : 1
       }
-      console.log(obj)
-      obj.transaksidetailsatuan.push(data);
-      console.log(obj)
+      Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,data)
+      .then((result)=>{
+        console.log(result.data)
+        this.props.AddcartAction(result.data)
+      }).catch((error)=>{
+        console.log(error)
+      })
     }else{
       console.log('udah ada nih item '+id)
+      console.log(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty)
       let data = {
         user_id     : this.props.Auth.id,
         products_id : id,
         parcel_id   : 0,
-        qty         : this.state.temp_cart.transaksidetailsatuan[this.state.temp_cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty+1
+        qty         : 1
       }
-      console.log(obj)
-      obj.transaksidetailsatuan.push(data);
-      console.log(obj)
+      Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,data)
+      .then((result)=>{
+        console.log(result.data)
+        this.props.AddcartAction(result.data)
+      }).catch((error)=>{
+        console.log(error)
+      })
     }
   };
 
   decprodincart = id => {
     if(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty-1===0){
-      let cart = this.props.Auth.cart;
-      cart.transaksidetailsatuan.splice(cart.transaksidetailsatuan[cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)],1)
-      this.props.AddcartAction(cart);
+      console.log('kurangin lagi habis loh ini')
+      console.log(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty-1)
+      try {
+        Axios.post(`${API_URL_SQL}/transaksi/removefromcart`,{
+            transaksi_id        : this.props.Auth.cart.transaksi[0].id,
+            transaksidetail_id  : this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].transaksidetail_id,
+            user_id             : this.props.Auth.id
+        })
+        .then((res)=>{
+          console.log(res.data)
+          this.props.AddcartAction(res.data);
+        }).catch((error)=>{
+          console.log(error);
+        });
+      } catch (error) {
+        console.log(error)
+      }
     }else{
+      console.log('kurangin 1 ya')
       let data = {
         user_id     : this.props.Auth.id,
         products_id : id,
@@ -99,6 +121,7 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
       };
       Axios.post(`${API_URL_SQL}/transaksi/addtocart`,data)
       .then((res)=>{
+        console.log(res.data)
         this.props.AddcartAction(res.data);
       }).catch((error)=>{
         console.log(error)
@@ -106,11 +129,18 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
     };
   };
 
-
   render() {
-    console.log("cart", this.state.temp_cart);
+    // console.log("cart", this.props.Auth.cart);
+    // console.log(this.state.product_categories);
     return (
       <>
+      {
+        // this.state.product_categories.length===0?
+        // <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+        //   {FullPageLoading(this.state.isLoading,1000,'#0095DA')}
+        // </div>
+        // :
+        <>
         <Header />
         <section className="banner">
           <div className="content">
@@ -183,10 +213,10 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
                       <div className="cat_list" key={val.id}>
                         <div>{val.nama}</div>
                         <input
-                          type="checkbox"
-                          name={val.nama}
-                          value={val.id}
-                          onChange={this.onChangeInput}
+                          type    = "checkbox"
+                          name    = {val.nama}
+                          value   = {val.id}
+                          onChange= {this.onChangeInput}
                         />
                       </div>
                     );
@@ -199,9 +229,9 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
                     <div className="border" key={val.id}>
                       <div className="search">
                         <div className="cat">{val.nama}</div>
-                        <input type       ="text"
-                               name       ="search"
-                               placeholder="insert product's name you want to search"
+                        <input type       = "text"
+                               name       = "search"
+                               placeholder= "insert product's name you want to search"
                         />
                         <button className="more">See All..</button>
                       </div>
@@ -219,16 +249,19 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
                                     {priceFormatter(item.harga)}
                                   </div>
                                   <div className="additem">
+                                  {
+                                  this.props.Auth.id?
+                                  <>
                                     <button className = "crement"
                                             onClick   = {()=>this.decprodincart(item.id)}
-                                            disabled  = {this.state.temp_cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)] === undefined? true:false }
+                                            disabled  = {this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)] === undefined? true:false }
                                     >
                                       -
                                     </button>
                                     <div className="amount">
                                       {
-                                      this.state.temp_cart.transaksidetailsatuan[this.state.temp_cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)] === undefined?
-                                      0 : this.state.temp_cart.transaksidetailsatuan[this.state.temp_cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)].qty
+                                      this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)] === undefined?
+                                      0 : this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)].qty
                                       }
                                     </div>
                                     <button className="crement"
@@ -236,6 +269,16 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
                                     >
                                       +
                                     </button>
+                                  </>
+                                  :
+                                  <>
+                                    <button className = "crement" disabled> - </button>
+                                    <div className="amount"> 0 </div>
+                                    <Link to="/login">
+                                      <button className="crement"> + </button>
+                                    </Link>
+                                  </>
+                                  }
                                   </div>
                                 </div>
                               );
@@ -250,6 +293,8 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
             </div>
           </div>
         </section>
+        </>
+      }
       </>
     );
   };

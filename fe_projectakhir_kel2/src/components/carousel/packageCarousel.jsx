@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './packageCarousel.scss';
 import { Link } from 'react-router-dom'
-import { priceFormatter } from '../../helpers';
+import { priceFormatter, draggableCard } from '../../helpers';
 import { IconContext } from 'react-icons';
 import { HiStar } from 'react-icons/hi';
 import { 
@@ -10,7 +10,7 @@ import {
 } from '../../assets'
 
 export default (props) => {
-    // console.log(props.obj)
+
     return (   
         <div className="cardBx">
             {
