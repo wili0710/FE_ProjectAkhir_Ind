@@ -16,7 +16,10 @@ export default () => {
         <header>
             <div className="navBx">   
                 <div className="nav-products">
-                    Our <span>Products</span>
+                    Our 
+                    <Link to="/dataproduct" style={{textDecoration:"none", marginLeft:5}}>
+                        <span>Products</span>
+                    </Link>
                 </div>
             </div>
             <div className="logoBx">
@@ -32,7 +35,9 @@ export default () => {
                     <IconContext.Provider value={{ style: {fontSize:"20px", color:"white", margin:"0 10px"} }}>
                         <div>
                             { Auth.role === "admin"?
+                            <Link to='/adminpanel'>
                             <HiBriefcase/>
+                            </Link>
                             :
                             <Link to='/cart'>
                                 <HiShoppingCart/>

@@ -12,8 +12,8 @@ export default (props) => {
     console.log(props.obj)
     return (   
         <div className="cardBx">
-            {props.obj.map((val)=>{
-                console.log()
+            {
+            props.obj.map((val)=>{
                 return (
                     <div className="card" key={val.id}>
                         <div className="Bx">
@@ -70,9 +70,9 @@ export default (props) => {
                                         </div>
                                         <div className="cards">
                                             {
-                                                val.items.map((item,index)=>{
+                                                val.item.map((item,index)=>{
                                                     return (
-                                                    <div className="cardo">
+                                                    <div className="cardo" kay={index}>
                                                         <div className="qty">
                                                             {item.qty}
                                                         </div>

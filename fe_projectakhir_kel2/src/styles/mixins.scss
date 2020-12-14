@@ -11,3 +11,7 @@
     border-right : $right;
     border-bottom: $bottom;
 }
+
+@mixin trans($time:.3s) {
+    transition: $time;
+}

@@ -1,9 +1,9 @@
 const INITIAL_STATE = {
-    id: 0,
-    nama: '',
+    id: 2,
+    nama: 'Fitrah',
     email: '',
-    role:'',
-    isLogin: false,
+    role:'admin',
+    isLogin: true,
     isLoading: false,
     error: '',
     cart:[],
