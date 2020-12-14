@@ -301,7 +301,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                         </>
                         }
                     </div>
-                    <div className="cardname">{val.name}</div>
+                    <div className="cardname">{val.nama}</div>
                     <div className="cardcategory">{this.props.Parcel.Parcel_Category[val.category-1].nama}</div>
                     <div className="imgBx">
                         <img src={val.gambar? val.gambar:Courier} alt="Foto Package"/>
