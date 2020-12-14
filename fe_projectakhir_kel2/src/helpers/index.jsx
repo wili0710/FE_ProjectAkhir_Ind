@@ -67,7 +67,7 @@ export function priceFormatter(num) {
 };
 
 export function renderOption(props) {
-    // console.log(props)
+    console.log(props)
     if(props.text !== "pilih kategori product") {
         return (
             <> 
@@ -93,7 +93,9 @@ export function renderOption(props) {
             });
         arr.splice(0,arr.length)
         arr.push(...a)
+        
     };
+    console.log(arr)
     return (
         <> 
             <option className="hide" value={0} disabled defaultValue>{props.text}</option>  
