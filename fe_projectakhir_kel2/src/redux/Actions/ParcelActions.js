@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import { compose } from 'redux';
 import {API_URL_SQL} from '../../helpers'
 
 const pushitem =(parcel,item)=>{
@@ -137,3 +138,27 @@ export const deleteParcel = id => {
     };
 };
 
+export const addtoTransaction = data => {
+    return (dispatch) => {
+        console.log(data.user_id)
+        dispatch({type:'LOADING'});
+        try {
+            Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${data.user_id}`)
+            
+            .then((result)=>{
+                // console.log(result.data)
+                Axios.post(`${API_URL_SQL}/transaksi/addtocart`,data)
+                .then((res2)=>{
+                    // console.log(res2.data)
+                    return res2.data
+                }).catch((error)=>{
+                    console.log(error)
+                })
+            }).catch((error)=>{
+                console.log(error)
+            })
+        } catch (error) {
+            dispatch({type:'ERROR',payload:"delete parcel error on main"});
+        };
+    };
+};

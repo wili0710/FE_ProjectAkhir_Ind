@@ -4,16 +4,17 @@ import { debounce, draggableCard } from "../../helpers";
 import { icon, illustration_1 } from "../../assets";
 import { Header, packageCarousel } from "../../components";
 import { connect } from "react-redux";
-import { loadCategories } from "../../redux/Actions";
+import { loadCategories, addtoTransaction } from "../../redux/Actions";
 import { priceFormatter } from "../../helpers/apiUrl";
 
 const mapStatetoProps = (state) => {
   return {
     Parcel: state.Parcel,
+    Auth  : state.Auth
   };
 };
 
-export default connect(mapStatetoProps, { loadCategories })(class Home extends React.Component {
+export default connect(mapStatetoProps, { loadCategories, addtoTransaction })(class Home extends React.Component {
   state = {
     inputSearch: "",
     filteredPackage: [],
@@ -25,8 +26,10 @@ export default connect(mapStatetoProps, { loadCategories })(class Home extends R
     this.setState({ product_categories: this.props.Parcel.Product_Category });
     draggableCard(".cardBx", "left", 2);
   };
+  componentDidUpdate() {
+    console.log(this.props.Auth)
+  }
 
-  componentDidUpdate() {}
   onSearchInputChange(e, prop) {
     console.log(prop.array);
     let newArr = [];
@@ -48,6 +51,17 @@ export default connect(mapStatetoProps, { loadCategories })(class Home extends R
     };
   };
   
+  addprodtocart = id => {
+    let data = {
+      user_id     : this.props.Auth.id,
+      products_id : id,
+      parcel_id   : 0,
+      qty         : 1,
+    }
+    console.log(this.props.addtoTransaction(data))
+  
+  };
+
   render() {
     console.log(this.props.Parcel);
     return (
@@ -153,16 +167,24 @@ export default connect(mapStatetoProps, { loadCategories })(class Home extends R
                               return (
                                 <div className="card" key={item.id}>
                                   <div className="imgBx">
-                                    <img src={item.image} />
+                                    <img src={item.image} alt={"gambar"+item.nama} />
                                   </div>
                                   <div className="namaitem">{item.nama}</div>
                                   <div className="hargaitem">
                                     {priceFormatter(item.harga)}
                                   </div>
                                   <div className="additem">
-                                    <div className="crement">-</div>
+                                    <button className="crement"
+                                            onClick={()=>this.addprodtocart(item.id)}
+                                    >
+                                      -
+                                    </button>
                                     <div className="amount">2</div>
-                                    <div className="crement">+</div>
+                                    <button className="crement"
+                                            onClick={()=>this.addprodtocart(item.id)}
+                                    >
+                                      +
+                                    </button>
                                   </div>
                                 </div>
                               );
