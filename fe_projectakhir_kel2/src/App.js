@@ -11,6 +11,7 @@ import {FullPageLoading } from './components/loading';
 import Axios from 'axios';
 import AdminPayment from './pages/admin/adminpayment';
 import HeaderAdmin from './../src/components/header/headerAdmin'
+import MyAccount from './../src/pages/user/MyAccount'
 import User from './../src/pages/admin/user'
 import Parcel from './../src/pages/admin/parcel'
 import Product from './../src/pages/admin/product'
@@ -75,6 +76,7 @@ function App(props) {
           <Route exact path='/adminpanel/headerAdmin' component={HeaderAdmin}/>
           <Route exact path ='/adminpanel/categoryProduct' component={CategoryProduct}/>
           <Route exact path ='/adminpanel/categoryParcel' component={CategoryParcel}/>
+          <Route exact path ='/adminpanel/useraccount' component={MyAccount}/>
           {/* <Route exact path='/dataproduct' component={DataProduct}/>
         <Route exact path='/detailParcel/:id' component={DetailParcel}/> */}
         </>
