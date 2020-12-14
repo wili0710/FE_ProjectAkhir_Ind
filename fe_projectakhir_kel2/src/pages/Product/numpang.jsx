@@ -1,20 +1,15 @@
-{
-    this.state.buttonMakanan?
-    <>
-    <BiMinus onClick={()=>this.hapusDataMakanan(val.id)}/>  
-    {/* <BiPlus onClick={()=>this.AddDataMakanan(val.id)}/> */}
-    </>
-    :
-    <>
-{
-    
-    total==this.state.dataParcelByIdMakanan.qty ?
-    null:
-    <>
-    <BiPlus onClick={()=>this.AddDataMakanan(val.id)}/>
-    </>
-
-}
-        <BiMinus onClick={()=>this.hapusDataMakanan(val.id)}/>      
-    </>
+getLimitProduct=async()=>{
+    try{
+        const getLimit = await Axios.get(`${API_URL_SQL}/product/getDataParcelById/${this.props.match.params.id}`)
+        const arrlimit = getLimit.data.map((val,index)=>{
+            return {
+                categoryproduct_id:val.categoryproduct_id,
+                category:val.namaProduct,
+                limitqty:val.qty
+            }
+        })
+        this.setState({limitProduct:arrlimit})
+    }catch(error){
+        console.log(error)
+    }
 }
