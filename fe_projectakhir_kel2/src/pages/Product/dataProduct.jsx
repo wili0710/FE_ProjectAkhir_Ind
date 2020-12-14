@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import Header from './../../components/header/header'
 import { Link } from 'react-router-dom'
-import { API_URL, API_URL_SQL } from '../../helpers/apiUrl';
+import { API_URL, API_URL_SQL, HOME_URL } from '../../helpers/apiUrl';
 import Axios from 'axios'
 import {FullPageLoading} from './../../components/loading'
 import {connect} from 'react-redux';
@@ -371,7 +371,7 @@ class dataProduct extends Component {
         localStorage.removeItem('id')
         Swal.fire('Logout Berhasil')
         this.props.LogoutFunc()
-        window.location.assign(`http://localhost:3000`)
+        window.location.assign(`${HOME_URL}`)
     }
 
     onChangeSearch=debounce(function(e){

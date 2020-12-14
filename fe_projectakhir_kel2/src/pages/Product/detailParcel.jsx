@@ -24,6 +24,7 @@ import {LogoutFunc} from './../../redux/Actions'
 import Zoom from 'react-reveal/Zoom';
 import HorizontalScroll from 'react-scroll-horizontal'
 import numeral from 'numeral';
+import {HOME_URL} from './../../helpers/apiUrl'
 
 import { Scrollbars } from 'react-custom-scrollbars';
 import { css } from '@emotion/react';
@@ -903,7 +904,7 @@ class DetailParcel extends Component {
         localStorage.removeItem('id')
         Swal.fire('Logout Berhasil')
         this.props.LogoutFunc()
-        window.location.assign(`http://localhost:3000`)
+        window.location.assign(`${HOME_URL}`)
 
      }
 
@@ -1079,6 +1080,8 @@ class DetailParcel extends Component {
         console.log(this.findCategoryProduct)
             console.log(this.state.categoryProduct)
             const {classes}= this.props
+
+           
             
         return ( 
             <>

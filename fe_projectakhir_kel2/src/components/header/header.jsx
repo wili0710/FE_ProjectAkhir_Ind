@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { IconContext } from 'react-icons';
 import { HiShoppingCart, HiChatAlt, HiBell, HiBriefcase } from 'react-icons/hi';
-
+import {HOME_URL} from './../../helpers/apiUrl'
 
 export default () => {
     const Auth      = useSelector(state => state.Auth);
@@ -78,7 +78,7 @@ export default () => {
                     Auth.nama?
                     <div className="username">
                         Hi!
-                        <span style={{cursor:"pointer"}} onClick={()=>{localStorage.removeItem("id");dispatch({type:'LOGOUT'})}}>{Auth.nama}</span>
+                        <span style={{cursor:"pointer"}} onClick={()=>{localStorage.removeItem("id");dispatch({type:'LOGOUT'}); window.location.assign(`${HOME_URL}`)}}>{Auth.nama}</span>
                     </div>
                     :
                     <Link to='/login'>
