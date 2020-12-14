@@ -45,7 +45,7 @@ class MyAccount extends Component {
         
     })
 
-    toggle = () => this.setState({isOpenPassword:false});
+    toggleModal = () => this.setState({isOpenPassword:false});
 
     onSave=()=>{
         let id = this.props.id
@@ -125,15 +125,15 @@ class MyAccount extends Component {
         console.log(this.props.nama)
         return ( 
             <>
-            <Modal isOpen={this.state.isOpenPassword} toggle={this.toggle}>
-                <ModalHeader toggle={this.toggle}> Ganti Password</ModalHeader>
+            <Modal isOpen={this.state.isOpenPassword} toggle={this.toggleModal}>
+                <ModalHeader toggle={this.toggleModal}> Ganti Password</ModalHeader>
                 <ModalBody>
                     <p>Silahkan Masukan Password Baru anda</p>
                     <input type='password' onChange={this.onNewPassword} placeholder='Masukan Password Baru Anda' style={{marginBottom:'5px'}}  />                                       
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={this.onSave}>Save</Button>
-                    <Button color="primary" onClick={this.toggle}>Cancel</Button>
+                    <Button color="primary" onClick={this.toggleModal}>Cancel</Button>
                 </ModalFooter>
             </Modal>
             
@@ -370,7 +370,7 @@ class MyAccount extends Component {
                                                             <p>Change Photo</p>
                                                         </div>
                                                     </div>
-                                                    <div className="password-change" onClick={this.onChangepassword}>
+                                                    <div className="password-change" >
                                                         <div className="btn-pass">
                                                             <FaKey className="ikon-1"/>
                                                             <p className="pass-1">Change Your Password</p>

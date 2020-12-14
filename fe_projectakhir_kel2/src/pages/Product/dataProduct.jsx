@@ -201,7 +201,7 @@ class dataProduct extends Component {
             // console.log(index,' 182')
             return(
                 <>
-                <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMakanan(val.id)}>
+                <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMinuman(val.id)}>
                     <div className="body">
                         <div className="cp_img">
                             <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel"/>
@@ -229,23 +229,39 @@ class dataProduct extends Component {
         let productid=id
         let userid=this.props.id
         console.log(userid)
-        
-        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
-            user_id:userid,
-            products_id:productid,
-            parcel_id:0,
-            qty:1
-        }).then((res)=>{
-            console.log(this.state.dataMinuman.id)
-            console.log('data berhasil ditambah')
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil Menambahkan Product',
-                text: 'Berhasil Menambahkan Product'                    
-            })
-        }).catch((err)=>{
-            console.log(err)
+        var dataMinuman = this.state.dataMinuman
+        var find = dataMinuman.findIndex((val)=>{
+            return val.id == id
         })
+        console.log(dataMinuman[find],' 236 dataproduct')
+
+        if(dataMinuman[find].stok -1 == -1){
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menambahkan Product',
+                text: 'Stock Habis'                    
+            })
+        }else {
+            Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
+                user_id:userid,
+                products_id:productid,
+                parcel_id:0,
+                qty:1
+            }).then((res)=>{
+                dataMinuman[find]= {...dataMinuman[find],stok:dataMinuman[find].stok-1}
+                console.log('data berhasil ditambah')
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menambahkan Product',
+                    text: 'Berhasil Menambahkan Product'                    
+                })
+                this.setState({dataMinuman:dataMinuman})
+            }).catch((err)=>{
+                console.log(err)
+            })
+
+        }
+        
 
     }
 
@@ -254,66 +270,100 @@ class dataProduct extends Component {
         let productid=id
         let userid=this.props.id
         console.log(userid)
-        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
-            user_id:userid,
-            products_id:productid,
-            parcel_id:0,
-            qty:1
-        }).then((res)=>{
-            console.log(res.data)
-            console.log('data berhasil ditambah')
-            Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
-                id:productid
+        var dataMakanan=this.state.dataMakanan
+        var find = dataMakanan.findIndex((val)=>{
+            return val.id == id
+        })
+
+        if(dataMakanan[find].stok -1 == -1){
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menambahkan Product',
+                text: 'Stock Habis'                    
+            })
+        }else {
+            Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
+                user_id:userid,
+                products_id:productid,
+                parcel_id:0,
+                qty:1
             }).then((res)=>{
                 console.log(res.data)
-                Swal.fire({
-                    title: 'Sweet!',
-                    text: 'Berhasil Menambahkan Data',
-                    imageUrl: `${API_URL_SQL+res.data.image}`,
-                    imageWidth: 400,
-                    imageHeight: 200,
-                    imageAlt: '',
-                  })
-
+                console.log('data berhasil ditambah')
+                Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
+                    id:productid
+                }).then((res)=>{
+                    console.log(res.data)
+                    dataMakanan[find]={...dataMakanan[find],stok:dataMakanan[find].stok-1}
+                    Swal.fire({
+                        title: 'Sweet!',
+                        text: 'Berhasil Menambahkan Data',
+                        imageUrl: `${API_URL_SQL+res.data.image}`,
+                        imageWidth: 400,
+                        imageHeight: 200,
+                        imageAlt: '',
+                      })
+                      this.setState({dataMakanan:dataMakanan})
+    
+                }).catch((err)=>{
+                    console.log(err)
+                })
+              
             }).catch((err)=>{
                 console.log(err)
             })
-          
-        }).catch((err)=>{
-            console.log(err)
-        })
+
+        }
+        
     }
 
     onCheckDataChocolate=(id)=>{
         console.log(id)
         let productid=id
         let userid=this.props.id
-        console.log(userid)
-        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
-            user_id:userid,
-            products_id:productid,
-            parcel_id:0,
-            qty:1
-        }).then((res)=>{
-            console.log(res.data)
-            console.log('berhasil masuk ke cart')
-            Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
-                id:productid
+
+        var dataChocolate=this.state.dataChocolate
+        var find= dataChocolate.findIndex((val)=>{
+            return val.id == id
+        })
+
+        if(dataChocolate[find].stok -1 == -1){
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menambahkan Product',
+                text: 'Stock Habis'                    
+            })
+        }else {
+            console.log(userid)
+            Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
+                user_id:userid,
+                products_id:productid,
+                parcel_id:0,
+                qty:1
             }).then((res)=>{
-                Swal.fire({
-                    title: 'Sweet!',
-                    text: 'Berhasil Menambahkan Data',
-                    src: `${API_URL_SQL+res.data.image}`,
-                    imageWidth: 400,
-                    imageHeight: 200,
-                    imageAlt: '',
-                  })
+                console.log(res.data)
+                console.log('berhasil masuk ke cart')
+                Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
+                    id:productid
+                }).then((res)=>{
+                    dataChocolate[find]= {...dataChocolate[find],stok:dataChocolate[find].stok-1}
+                    Swal.fire({
+                        title: 'Sweet!',
+                        text: 'Berhasil Menambahkan Data',
+                        src: `${API_URL_SQL+res.data.image}`,
+                        imageWidth: 400,
+                        imageHeight: 200,
+                        imageAlt: '',
+                      })
+                      this.setState({dataChocolate:dataChocolate})
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }).catch((err)=>{
                 console.log(err)
             })
-        }).catch((err)=>{
-            console.log(err)
-        })
+
+        }
     
     }
 
@@ -390,6 +440,10 @@ class dataProduct extends Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
+                            <Dropdown.Item href="/useraccount">
+                                        <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                        My Account
+                                </Dropdown.Item>
                                 <Dropdown.Item href="/" onClick={this.onLogoutClick}>
                                     <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
                                     Logout

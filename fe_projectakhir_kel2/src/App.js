@@ -76,7 +76,7 @@ function App(props) {
           <Route exact path='/adminpanel/headerAdmin' component={HeaderAdmin}/>
           <Route exact path ='/adminpanel/categoryProduct' component={CategoryProduct}/>
           <Route exact path ='/adminpanel/categoryParcel' component={CategoryParcel}/>
-          <Route exact path ='/adminpanel/useraccount' component={MyAccount}/>
+       
           {/* <Route exact path='/dataproduct' component={DataProduct}/>
         <Route exact path='/detailParcel/:id' component={DetailParcel}/> */}
         </>
@@ -91,6 +91,7 @@ function App(props) {
         <Route exact path ='/login' component={Login}/>
         <Route exact path ='/register' component={Register}/>
         <Route exact path='/dataproduct' component={DataProduct}/>
+        <Route exact path ='/useraccount' component={MyAccount}/>
         <Route exact path='/detailParcel/:id' component={DetailParcel}/>
         <Route exact path ='/cart' component={CartPage}/>
         <Route exact path ='/hapusaja' component={Example}/>

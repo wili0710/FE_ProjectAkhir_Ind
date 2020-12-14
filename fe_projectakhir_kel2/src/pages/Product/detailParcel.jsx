@@ -22,6 +22,7 @@ import {AiOutlineLogout,AiFillHome,AiFillDelete} from 'react-icons/ai'
 import {connect} from 'react-redux';
 import {LogoutFunc} from './../../redux/Actions'
 import Zoom from 'react-reveal/Zoom';
+import HorizontalScroll from 'react-scroll-horizontal'
 
 import { Scrollbars } from 'react-custom-scrollbars';
 
@@ -53,7 +54,10 @@ class DetailParcel extends Component {
         renderCartMakanan:[],
         renderCartChocolate:[],
         renderRandomProduct:[],
-        renderRandomParcel:[]
+        renderRandomParcel:[],
+        deleteUndefinedChocolate:false,
+        indexCartChocolate:0,
+        RandomParcel:false
      }
      
 
@@ -137,6 +141,11 @@ class DetailParcel extends Component {
     
         //   if(total <= this.state.dataParcelByIdMinuman.qty){
              var dataArrMakanan = this.state.dataArrMakanan
+             var dataMinuman = this.state.dataMinuman
+             var find = dataMinuman.findIndex((val)=>{
+                 return val.id == id
+             })
+
             //  console.log(dataArrMakanan)
             var a = dataArrMakanan.findIndex((val)=>{
                 console.log(val.parcel_id ,' parcel id 123')
@@ -147,15 +156,20 @@ class DetailParcel extends Component {
 
             if(dataArrMakanan[a].qty-1==0){
                 console.log('masuk ke a 132')
-                dataArrMakanan.splice(a,1)   
+                dataArrMakanan.splice(a,1)  
+                dataMinuman[find]={...dataMinuman[find],stok:dataMinuman[find].stok+1} 
+                // dataMakanan[find]= {...dataMakanan[find], stok:dataMakanan[find].stok+1}
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil Menghapus Product',
                     text: 'Cart Minuman Kosong'                    
-                })          
+                })    
+                this.setState({dataMinuman:dataMinuman})      
             }else {
                 console.log('masuk ke else 135')
                 dataArrMakanan[a].qty=dataArrMakanan[a].qty-1
+                dataMinuman[find]={...dataMinuman[find],stok:dataMinuman[find].stok+1} 
+                // dataMakanan[find]= {...dataMakanan[find], stok:dataMakanan[find].stok+1}
                 // this.setState({checklistMinuman:false})
                 // this.setState({renderCartMinuman:dataArrMakanan})
                 Swal.fire({
@@ -164,7 +178,7 @@ class DetailParcel extends Component {
                     text: 'Berhasil Menghapus Product'                    
                 })
             }
-            this.setState({dataArrMakanan:dataArrMakanan})
+            this.setState({dataArrMakanan:dataArrMakanan,dataMinuman:dataMinuman})
 
         //  }
 
@@ -189,6 +203,10 @@ class DetailParcel extends Component {
     
         //   if(total <= this.state.dataParcelByIdMakanan.qty){
              var dataArrMakanan = this.state.dataArrMakanan
+             var dataMakanan= this.state.dataMakanan
+             var find = dataMakanan.findIndex((val)=>{
+                 return val.id == id
+             })
             //  console.log(dataArrMakanan)
             var a = dataArrMakanan.findIndex((val)=>{
                 return val.parcel_id == id
@@ -197,16 +215,20 @@ class DetailParcel extends Component {
 
             if(dataArrMakanan[a].qty-1==0){
                 dataArrMakanan.splice(a,1) 
+                dataMakanan[find]={...dataMakanan[find],stok:dataMakanan[find].stok+1}
                 // console.log(filterprod,' ini filter prod 148')
                 // console.log(this.state.renderCartMinuman)   
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil Menghapus Product',
                     text: 'Cart Makanan Kosong'                    
-                })         
+                })    
+                this.setState({dataMakanan:dataMakanan})     
             }else {
                 
                 dataArrMakanan[a].qty=dataArrMakanan[a].qty-1
+                dataMakanan[find]={...dataMakanan[find],stok:dataMakanan[find].stok+1}
+
                 // this.setState({renderCartMakanan:dataArrMakanan})
                 // this.setState({checklistMakanan:false})
                 Swal.fire({
@@ -215,7 +237,7 @@ class DetailParcel extends Component {
                     text: 'Berhasil Menghapus Product'                    
                 })
             }
-            this.setState({dataArrMakanan:dataArrMakanan})
+            this.setState({dataArrMakanan:dataArrMakanan,dataMakanan:dataMakanan})
         //  }
          
      }
@@ -234,28 +256,51 @@ class DetailParcel extends Component {
     
         //   if(total <= this.state.dataParcelByIdChocolate.qty){
              var dataArrMakanan = this.state.dataArrMakanan
-            //  console.log(dataArrMakanan)
-            var a = dataArrMakanan.findIndex((val)=>{
+             var dataChocolate= this.state.dataChocolate
+             var dataCartChocolate= this.state.renderCartChocolate
+            console.log(dataCartChocolate,' cart render chocolate')
+            var findCartIndex= dataCartChocolate.findIndex((val)=>{
                 return val.parcel_id == id
             })
-            // console.log(a)
+            console.log(findCartIndex,' ini data find cart index 263')
 
-            if(dataArrMakanan[a].qty-1==0){
-                dataArrMakanan.splice(a,1) 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil Menghapus Product',
-                    text: 'Cart Chocolate Kosong'                    
-                })            
-            }else {
-                dataArrMakanan[a].qty=dataArrMakanan[a].qty-1
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil Menghapus Product',
-                    text: 'Berhasil Menghapus Product'                    
-                })
-            }
-            this.setState({dataArrMakanan:dataArrMakanan})
+            var find = dataChocolate.findIndex((val)=>{
+                return val.id == id
+            })
+            
+
+            var indexArrMakanan = dataArrMakanan.findIndex((val)=>{
+                return val.parcel_id == id
+            })
+            console.log(find, ' ini index dr datachocolate')
+            console.log(id, ' ini id buat compare sama index')
+            
+                
+                if(dataArrMakanan[indexArrMakanan].qty-1==0){
+                    dataArrMakanan.splice(indexArrMakanan,1) 
+                    dataChocolate[find]={...dataChocolate[find],stok:dataChocolate[find].stok+1}
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil Menghapus Product',
+                        text: 'Cart Chocolate Kosong'                    
+                    })  
+                    console.log(dataChocolate)
+
+                    this.setState({dataChocolate:dataChocolate})          
+                }else {
+                    console.log('masuk ke else')
+                    dataArrMakanan[indexArrMakanan].qty=dataArrMakanan[indexArrMakanan].qty-1
+                    dataChocolate[find]={...dataChocolate[find],stok:dataChocolate[find].stok+1}
+                    console.log(dataChocolate)
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil Menghapus Product',
+                        text: 'Berhasil Menghapus Product'                    
+                    })
+                }
+                this.setState({dataArrMakanan:dataArrMakanan,dataChocolate:dataChocolate})
+          
+            
 
         //  }
      }
@@ -268,6 +313,7 @@ class DetailParcel extends Component {
      
      
      AddDataMakanan=(id)=>{
+         
         var dataArrMakanan = this.state.dataArrMakanan
         
         var indexDataMakanan = dataArrMakanan.findIndex((val)=>{ // nyari index makanan
@@ -280,32 +326,57 @@ class DetailParcel extends Component {
         var find = findMakanan.findIndex((val=>{ // nyari index buat nama makaan pas di push
             return val.id == id
         }))
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil Menambahkan Product',
-            text: 'Berhasil Menambahkan Product'                    
-        })
-
+    
         
-        if(indexDataMakanan== -1){
-            var arrMakanan2=this.state.dataArrMakanan
-             arrMakanan2.push({
-                parcel_id:id,
-                qty:1,
-                categoryproduct_id:this.state.dataParcelByIdMakanan.categoryproduct_id,
-                namaProduct:this.state.dataMakanan[find].nama
-            })
-                
-            this.setState({dataArrMakanan:arrMakanan2})
-        }else {
+        if(indexDataMakanan== -1){ // kalau data kosong(-1) maka nge push semua data ke arr makanan
+            if(this.state.dataMakanan[find].stok -1 == -1){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menambahkan Product',
+                    text: 'Stock Habis'                    
+                })
+        
+            }else {
+                var arrMakanan2=this.state.dataArrMakanan
+                var dataMakanan=this.state.dataMakanan
+                 arrMakanan2.push({
+                    parcel_id:id,
+                    qty:1,
+                    categoryproduct_id:this.state.dataParcelByIdMakanan.categoryproduct_id,
+                    namaProduct:this.state.dataMakanan[find].nama
+                })
+                dataMakanan[find]={...dataMakanan[find],stok:dataMakanan[find].stok-1}
+                    
+                this.setState({dataArrMakanan:arrMakanan2,dataMakanan:dataMakanan})
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menambahkan Product',
+                    text: 'Berhasil Menambahkan Product'                    
+                })
 
-            var dataSama = this.state.dataArrMakanan
-            dataSama[indexDataMakanan]= {...dataSama[indexDataMakanan],qty:dataSama[indexDataMakanan].qty+1}
+            }
+        }else { // data udah ada, jadi cuma nambah qty
 
-            // arrMakanan2[a]={...arrMakanan2[a],qty:arrMakanan2[2].qty+1}
-            // addData={...addData,qty:addData.qty+1}
-            this.setState({dataArrMakanan:dataSama})
+            if(this.state.dataMakanan[find].stok -1 == -1){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menambahkan Product',
+                    text: 'Stock Habis'                    
+                })
+            }else {
+
+                var dataSama = this.state.dataArrMakanan
+                dataSama[indexDataMakanan]= {...dataSama[indexDataMakanan],qty:dataSama[indexDataMakanan].qty+1}
+                dataMakanan[find]={...dataMakanan[find],stok:dataMakanan[find].stok-1}
+                this.setState({dataArrMakanan:dataSama,dataMakanan:dataMakanan})
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menambahkan Product',
+                    text: 'Berhasil Menambahkan Product'                    
+                })
+            }
         }
+
         var totalQtyMakanan =0
         var limitMakanan = this.state.dataParcelByIdMakanan.qty
        var productidmakanan= this.state.dataParcelByIdMakanan.categoryproduct_id // product_id
@@ -314,6 +385,7 @@ class DetailParcel extends Component {
            return val.categoryproduct_id === productidmakanan
        })
        console.log(filterprodmakanan,' filterprod makanan 262')
+
        for(var i =0; i<filterprodmakanan.length; i++){
            totalQtyMakanan += filterprodmakanan[i].qty
        }
@@ -329,37 +401,70 @@ class DetailParcel extends Component {
 
      AddDataMinuman=(id)=>{
         
-
+        console.log(this.state.dataMinuman, '  minuman 337')
          var dataArrMakanan = this.state.dataArrMakanan
-         console.log(dataArrMakanan,' ini dataArrMakanan')
+         var dataMinuman = this.state.dataMinuman
          var indexMinuman = dataArrMakanan.findIndex((val)=>{ // find index si product minuman
 
              return val.parcel_id==id
          })
-         var findMinuman=this.state.dataMinuman
-         var find = findMinuman.findIndex((val=>{
+         
+         var find = dataMinuman.findIndex((val=>{
              return val.id == id
          }))
-         Swal.fire({
-            icon: 'success',
-            title: 'Berhasil Menambahkan Product',
-            text: 'Berhasil Menambahkan Product'                    
-        })
- 
+
+         console.log(this.state.dataMinuman[find].stok, ' stok minuman 349')
+      
+         console.log(this.state.dataMinuman[find].stok-1)
          if(indexMinuman== -1){
-             var arrMakanan2= this.state.dataArrMakanan
-             arrMakanan2.push({
-                 parcel_id:id,
-                 qty:1,
-                 categoryproduct_id:this.state.dataParcelByIdMinuman.categoryproduct_id,
-                 namaProduct:this.state.dataMinuman[find].nama
-             })
-                this.setState({dataArrMakanan:arrMakanan2})
+             if(this.state.dataMinuman[find].stok - 1 == -1 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menambahkan Product',
+                    text: 'Stock Habis'                    
+                })
+             }else {
+                 var arrMakanan2= this.state.dataArrMakanan
+                 
+                 arrMakanan2.push({
+                     parcel_id:id,
+                     qty:1,
+                     categoryproduct_id:this.state.dataParcelByIdMinuman.categoryproduct_id,
+                     namaProduct:this.state.dataMinuman[find].nama
+                 })
+
+                 console.log(dataMinuman[find].stok, ' data index yg di click minuman 369')
+                 console.log(dataMinuman[find].stok-1,'hasil data index di kurang 1')
+                    dataMinuman[find]= {...dataMinuman[find],stok:dataMinuman[find].stok-1}
+                    this.setState({dataArrMakanan:arrMakanan2,dataMinuman:dataMinuman})
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil Menambahkan Product',
+                        text: 'Berhasil Menambahkan Product'                    
+                    })
+
+             }
          }else {
+             if(this.state.dataMinuman[find].stok - 1 == -1 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menambahkan Product',
+                    text: 'Stock Habis'                    
+                })
+             }else {
+                 var dataSama = this.state.dataArrMakanan
+                 dataSama[indexMinuman]= {...dataSama[indexMinuman],qty:dataSama[indexMinuman].qty+1}
+                 dataMinuman[find]= {...dataMinuman[find],stok:dataMinuman[find].stok-1}
+                //  dataMinuman[find]= {...dataMinuman[find],stok:dataMinuman[find].stok-1}
+                 this.setState({dataArrMakanan:dataSama})
+                 Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menambahkan Product',
+                    text: 'Berhasil Menambahkan Product'                    
+                })
+
+             }
              
-             var dataSama = this.state.dataArrMakanan
-             dataSama[indexMinuman]= {...dataSama[indexMinuman],qty:dataSama[indexMinuman].qty+1}
-             this.setState({dataArrMakanan:dataSama})
          }
 
          var totalQtyMinuman =0
@@ -390,7 +495,7 @@ class DetailParcel extends Component {
         
 
         var dataArrMakanan = this.state.dataArrMakanan // data array chocolate 
-        var a = dataArrMakanan.findIndex((val)=>{
+        var indexChocolate = dataArrMakanan.findIndex((val)=>{
 
             return val.parcel_id==id
         })
@@ -403,21 +508,48 @@ class DetailParcel extends Component {
         var find = findChocolate.findIndex((val=>{
             return val.id == id
         }))
-        if(a== -1){
-            var arrMakanan2= this.state.dataArrMakanan
-            arrMakanan2.push({
-                parcel_id:id,
-                qty:1,
-                categoryproduct_id:this.state.dataParcelByIdChocolate.categoryproduct_id,
-                namaProduct:this.state.dataChocolate[find].nama
-            })
-                this.setState({dataArrMakanan:arrMakanan2, })
+        if(indexChocolate== -1){
+            if(this.state.dataChocolate[find].stok -1 == -1){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menambahkan Product',
+                    text: 'Stock Habis'                    
+                })
+            }else {
+
+                var arrMakanan2= this.state.dataArrMakanan
+                var dataChocolate= this.state.dataChocolate
+                arrMakanan2.push({
+                    parcel_id:id,
+                    qty:1,
+                    categoryproduct_id:this.state.dataParcelByIdChocolate.categoryproduct_id,
+                    namaProduct:this.state.dataChocolate[find].nama
+                })
+                dataChocolate[find]={...dataChocolate[find], stok:dataChocolate[find].stok-1}
+
+                    this.setState({dataArrMakanan:arrMakanan2,dataChocolate:dataChocolate })
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil Menambahkan Product',
+                        text: 'Berhasil Menambahkan Product'                    
+                    })
+            }
 
         }else {
+            if(this.state.dataChocolate[find].stok - 1 == -1){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menambahkan Product',
+                    text: 'Stock Habis'                    
+                })
+            }else {
+
+                var dataSama = this.state.dataArrMakanan
+                dataSama[indexChocolate]= {...dataSama[indexChocolate],qty:dataSama[indexChocolate].qty+1}
+                dataChocolate[find]= {...dataChocolate[find],stok:dataChocolate[find].stok-1}
+                this.setState({dataArrMakanan:dataSama,dataChocolate:dataChocolate})
+            }
             
-            var dataSama = this.state.dataArrMakanan
-            dataSama[a]= {...dataSama[a],qty:dataSama[a].qty+1}
-            this.setState({dataArrMakanan:dataSama})
         }
 
 
@@ -912,6 +1044,7 @@ class DetailParcel extends Component {
 
             if(totalQtyMinuman == limitMinuman && totalQtyMakanan == limitMakanan && totalQtyChocolate == limitChocolate){
                 console.log('true')
+                this.setState({RandomParcel:true})
                 Swal.fire({
                     icon: 'success',
                     title: `Perfect!!`,
@@ -958,15 +1091,16 @@ class DetailParcel extends Component {
 
 
      renderCartRandom=()=>{
+        const child   = { width: `30em`, height: `50%`}
          let renderSatuan= this.state.renderRandomProduct.map((val,index)=>{
              return (
                 <>
-                    <div class="card " style={{width:'18rem'}}>
-                        <img class="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
-                        <div class="card-body">
-                            <h5 class="card-title">{val.nama}</h5>
-                            <p class="card-text">{val.deskripsi}</p>
-                            <a href="#" class="btn btn-primary" onClick={()=>this.productRandomSatuan(val.id)}> Beli</a>
+                    <div className="card " style={{width:'18rem'}}>
+                        <img className="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
+                        <div className="card-body">
+                            <h5 className="card-title">{val.nama}</h5>
+                            <p className="card-text">{val.deskripsi}</p>
+                            <a href="#" className="btn btn-primary" onClick={()=>this.productRandomSatuan(val.id)}> Beli</a>
                         </div>
                     </div>
 
@@ -977,12 +1111,17 @@ class DetailParcel extends Component {
          let renderParcel=this.state.renderRandomParcel.map((val,index)=>{
              return (
                  <>
-                    <div class="card card-css" style={{width:'18rem'}}>
-                        <img class="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
-                        <div class="card-body">
-                            <h5 class="card-title">{val.nama}</h5>
-                            <p class="card-text">{val.deskripsi}</p>
-                            <a href={'/detailParcel/'+val.id} class="btn btn-primary" onClick={()=>this.productRandomParcel(val.id)}> Beli</a>
+                    <div className="card card-css" style={{width:'18rem'}}>
+                        <img className="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
+                        <div className="card-body">
+                            <h5 className="card-title">{val.nama}</h5>
+                            <p className="card-text">{val.deskripsi}</p>
+                            {
+                                this.state.RandomParcel?
+                                <a href={'/detailParcel/'+val.id} className="btn btn-primary" onClick={()=>this.productRandomParcel(val.id)}> Beli</a>
+                                :
+                                <a href='#' className="btn btn-primary" onClick={()=>this.productRandomParcel(val.id)}> Beli</a>
+                            }
                         </div>
                     </div>
                  </>
@@ -996,10 +1135,10 @@ class DetailParcel extends Component {
      
   
     render() { 
-       const child   = { width: `30em`, height: `100%`}
-        const parent  = { width: `60em`, height: `100%`}
+        console.log(API_URL_SQL)
             // console.log(this.state.dataArrMakanan)
             // console.log(this.state.dataMakanan)
+            console.log(this.state.dataParcelByIdChocolate)
             // console.log(this.state.dataParcelByIdMinuman.qty ,' ini maksimal beli minuman')
             // console.log(this.state.renderCartMakanan,' ini data render cart makanan')
             console.log(this.state.renderCartMinuman,' ini data render cart minuman')
@@ -1007,6 +1146,7 @@ class DetailParcel extends Component {
             console.log(this.state.checklistMinuman)
             
             const {classes}= this.props
+            
         return ( 
             <>
                 <div className="outer-detail">
@@ -1024,6 +1164,10 @@ class DetailParcel extends Component {
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>
+                                    <Dropdown.Item href="useraccount">
+                                                <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                                My Account
+                                        </Dropdown.Item>
                                         <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
                                             <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
                                             Logout
@@ -1131,11 +1275,15 @@ class DetailParcel extends Component {
                                 </div>
                                 }
 
-                                <Scrollbars autoHeight autoHide renderTrackHorizontal={this.renderTrackHorizontal}  renderThumbHorizontal={this.renderThumbHorizontal} >
+                                {/* <Scrollbars autoHeight autoHide  >
+                                 */}
+                                        <HorizontalScroll>
                                     <div style={{marginTop:'50px'}} className="random-cart">
-                                        {this.renderCartRandom()}
+                                                {this.renderCartRandom()}
                                     </div>
-                                </Scrollbars>
+                                        </HorizontalScroll>
+
+                                {/* </Scrollbars> */}
                                 
                         
                         </div>
