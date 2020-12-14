@@ -25,6 +25,7 @@ import Zoom from 'react-reveal/Zoom';
 import HorizontalScroll from 'react-scroll-horizontal'
 
 import { Scrollbars } from 'react-custom-scrollbars';
+import { css } from '@emotion/react';
 
 class DetailParcel extends Component {
     state = { 
@@ -77,7 +78,7 @@ class DetailParcel extends Component {
      componentDidMount(){
          Axios.get(`${API_URL_SQL}/product/getDataParcelById/${this.props.match.params.id}`)
          .then((res)=>{
-            console.log(res.data,' line 62')
+            console.log(res.data,' line 81')    
             this.setState({
             dataParcelByIdMakanan:res.data[1],
             dataParcelByIdMinuman:res.data[0],
@@ -274,11 +275,14 @@ class DetailParcel extends Component {
         //  }
      }
      onDeleteProduct=(id,categoryproduct_id)=>{
-        var dataCart = this.state.dataArrMakanan
+         console.log(id)
+         console.log(categoryproduct_id)
+         
+        var dataCart = this.state.dataArrMakanan // data yg dicart
         console.log(dataCart, ' ini dataarrmakanan')
-        console.log(categoryproduct_id)
+
         var find= dataCart.findIndex((val)=>{
-            return val.id == id
+            return val.parcel_id == id
         })
         console.log(dataCart[find])
         
@@ -287,20 +291,36 @@ class DetailParcel extends Component {
         this.setState({dataArrMakanan:dataCart})
 
         if(categoryproduct_id == 1){
-            console.log('minuman')
+            // console.log('minuman')
+            var dataMinuman=this.state.dataMinuman
+            var indexMinuman = dataMinuman.findIndex((val)=>{
+                return val.id == id
+            })
+
+            dataMinuman[indexMinuman]= {...dataMinuman[indexMinuman],stok:dataMinuman[indexMinuman].stok + dataCart[find].qty}
+            dataCart.splice(find,1)
+            this.setState({dataMinuman:dataMinuman})
+
         }else if (categoryproduct_id==2){
             console.log('makanan')
-            var dataMakanan= this.state.dataMakanan
+            var dataMakanan= this.state.dataMakanan // data yg di render
             var indexMakanan=dataMakanan.findIndex((val)=>{
                 return val.id == id
             })
-            console.log(dataMakanan)
-            console.log(dataCart[find])
-            // dataMakanan[indexMakanan]= {...dataMakanan[indexMakanan],stok:dataMakanan[indexMakanan].stok + dataCart[find].qty}
-            // this.setState({dataMakanan:dataMakanan})
-            dataCart.splice(id,1)
-        }else {
-            console.log('chocolate')
+       
+            dataMakanan[indexMakanan]= {...dataMakanan[indexMakanan],stok:dataMakanan[indexMakanan].stok + dataCart[find].qty}
+
+            dataCart.splice(find,1)
+            this.setState({dataMakanan:dataMakanan})
+        }else if (categoryproduct_id == 3) {
+            // console.log('chocolate')
+            var dataChocolate = this.state.dataChocolate
+            var indexChocolate = dataChocolate.findIndex((val)=>{
+                return val.id == id
+            })
+            dataChocolate[indexChocolate]={...dataChocolate[indexChocolate],stok:dataChocolate[indexChocolate].stok + dataCart[find].qty}
+            dataCart.splice(find,1)
+            this.setState({dataChocolate:dataChocolate})
         }
     }
 
@@ -315,8 +335,8 @@ class DetailParcel extends Component {
         })
 
         var findMakanan=this.state.dataMakanan
-        console.log(findMakanan)
-        console.log(dataArrMakanan)
+        // console.log(findMakanan)
+        // console.log(dataArrMakanan)
         var find = findMakanan.findIndex((val=>{ // nyari index buat nama makaan pas di push
             return val.id == id
         }))
@@ -374,22 +394,22 @@ class DetailParcel extends Component {
         var totalQtyMakanan =0
         var limitMakanan = this.state.dataParcelByIdMakanan.qty
        var productidmakanan= this.state.dataParcelByIdMakanan.categoryproduct_id // product_id
-       console.log(this.state.dataArrMakanan)
+       
        var filterprodmakanan = this.state.dataArrMakanan.filter((val)=>{
            return val.categoryproduct_id === productidmakanan
        })
-       console.log(filterprodmakanan,' filterprod makanan 262')
+       
 
        for(var i =0; i<filterprodmakanan.length; i++){
            totalQtyMakanan += filterprodmakanan[i].qty
        }
        if(totalQtyMakanan == limitMakanan){
-           console.log('checklistmakanan true 266')
+           
            this.setState({checklistMakanan:totalQtyMakanan,renderCartMakanan:filterprodmakanan})
        }else {
            this.setState({renderCartMakanan:filterprodmakanan})
        }
-       console.log(totalQtyMakanan,' total qty minuman 323')
+       
 
     }
 
@@ -427,8 +447,7 @@ class DetailParcel extends Component {
                      namaProduct:this.state.dataMinuman[find].nama
                  })
 
-                 console.log(dataMinuman[find].stok, ' data index yg di click minuman 369')
-                 console.log(dataMinuman[find].stok-1,'hasil data index di kurang 1')
+              
                     dataMinuman[find]= {...dataMinuman[find],stok:dataMinuman[find].stok-1}
                     this.setState({dataArrMakanan:arrMakanan2,dataMinuman:dataMinuman})
                     Swal.fire({
@@ -464,7 +483,7 @@ class DetailParcel extends Component {
          var totalQtyMinuman =0
          var limitMinuman = this.state.dataParcelByIdMinuman.qty
         var productidminuman= this.state.dataParcelByIdMinuman.categoryproduct_id // product_id
-        console.log(this.state.dataArrMakanan)
+        // console.log(this.state.dataArrMakanan)
         var filterprodminuman = this.state.dataArrMakanan.filter((val)=>{
             return val.categoryproduct_id === productidminuman
         })
@@ -473,12 +492,12 @@ class DetailParcel extends Component {
             totalQtyMinuman += filterprodminuman[i].qty
         }
         if(totalQtyMinuman == limitMinuman){
-            console.log('checklistminuman true 266')
+            // console.log('checklistminuman true 266')
             this.setState({checklistMinuman:true,renderCartMinuman:filterprodminuman})
         }else {
             this.setState({renderCartMinuman:filterprodminuman})
         }
-        console.log(totalQtyMinuman,' total qty minuman 323')
+        // console.log(totalQtyMinuman,' total qty minuman 323')
          
         // batas ngitung total qtyminuman
 
@@ -554,17 +573,17 @@ class DetailParcel extends Component {
         var filterprodchocolate = this.state.dataArrMakanan.filter((val)=>{
             return val.categoryproduct_id === productidminuman
         })
-        console.log(filterprodchocolate)
+        // console.log(filterprodchocolate)
         for(var i =0; i<filterprodchocolate.length; i++){
             totalQtyChocolate += filterprodchocolate[i].qty
         }
         if(totalQtyChocolate == limitChocolate){
-            console.log('checklistminuman true 266')
+            // console.log('checklistminuman true 266')
             this.setState({checklistChocolate:true,renderCartChocolate:filterprodchocolate})
         }else {
             this.setState({renderCartChocolate:filterprodchocolate})
         }
-        console.log(totalQtyChocolate,' total qty minuman 323')
+        // console.log(totalQtyChocolate,' total qty minuman 323')
         
        // batas ngitung total qtyminuman
         
@@ -579,7 +598,7 @@ class DetailParcel extends Component {
         var filterprod=this.state.dataArrMakanan.filter((val)=>{
             return val.categoryproduct_id === prodid
         })
-        console.log(filterprod, '333')
+        // console.log(filterprod, '333')
         var total =0
         for(var i=0; i<filterprod.length; i++){
             total += filterprod[i].qty
@@ -698,7 +717,7 @@ class DetailParcel extends Component {
 
                             }
                             {
-                                total==0 ?
+                                total==0 ?  
                                 null 
                                 :
                                 <BiMinus onClick={()=>this.hapusDataChocolate(val.id)} className="icondp"/>  
@@ -721,9 +740,9 @@ class DetailParcel extends Component {
     renderDataCartProduct=()=>{
         var limitQtyMakanan= this.state.dataParcelByIdMakanan.qty // product_id
         var checklistMakanan= this.state.checklistMakanan
-        console.log(checklistMakanan)
-        console.log(limitQtyMakanan)
-        console.log(this.state.dataArrMakanan)
+        // console.log(checklistMakanan)
+        // console.log(limitQtyMakanan)
+        // console.log(this.state.dataArrMakanan)
 
         return this.state.dataArrMakanan.map((val,index)=>{
             
@@ -733,7 +752,7 @@ class DetailParcel extends Component {
                    <td>{val.namaProduct}</td>
                     <td></td>
                    <td> {val.qty}</td>
-                   <td onClick={()=>this.onDeleteProduct(val.id,val.categoryproduct_id)}>
+                   <td onClick={()=>this.onDeleteProduct(val.parcel_id,val.categoryproduct_id)}>
                        <AiFillDelete className="delete-icon"/>
                    </td>
                 </tr>
@@ -1024,15 +1043,8 @@ class DetailParcel extends Component {
      
   
     render() { 
-        console.log(API_URL_SQL)
-            // console.log(this.state.dataArrMakanan)
-            // console.log(this.state.dataMakanan)
-            console.log(this.state.dataParcelByIdChocolate)
-            // console.log(this.state.dataParcelByIdMinuman.qty ,' ini maksimal beli minuman')
-            // console.log(this.state.renderCartMakanan,' ini data render cart makanan')
-            console.log(this.state.renderCartMinuman,' ini data render cart minuman')
-            // console.log(this.props.id, 'line 531')
-            console.log(this.state.checklistMinuman)
+        // console.log(API_URL_SQL)
+    //   console.log(this.state.dataArrMakanan)
             
             const {classes}= this.props
             

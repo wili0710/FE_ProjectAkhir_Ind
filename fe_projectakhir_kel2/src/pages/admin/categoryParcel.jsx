@@ -64,6 +64,7 @@ class CategoryParcel extends Component {
         }).then((res)=>{
             console.log(res.data)
             this.setState({categoryParcel:res.data})
+            this.pagination()
             this.setState({setModalParcel:false})
         }).catch((err)=>{
             console.log(err)

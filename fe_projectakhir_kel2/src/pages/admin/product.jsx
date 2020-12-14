@@ -164,6 +164,7 @@ class Product extends Component {
              .then((res)=>{
                 console.log(res.data)
                 this.setState({dataProduct:res.data})
+                this.pagination()
                 this.setState({setModalAdd:false})
              }).catch((err)=>{
                  console.log(err)
