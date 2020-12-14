@@ -1319,7 +1319,9 @@ const CartPage=()=>{
                 <div style={{
                     marginLeft:20
                 }}>
-                    <img src={Logo} alt="logo" width="145px" color="black"/>
+                    <Link to="/">
+                        <img src={Logo} alt="logo" width="145px" color="black"/>
+                    </Link>
                 </div>
                 <div style={{
                     display:"flex",
@@ -1592,7 +1594,7 @@ const CartPage=()=>{
                                     justifyContent:"center",
                                     marginTop:20
                                 }}>
-                                    {Auth.cart.transaksi.length==1?
+                                    {Auth.cart.transaksiparcel.length || Auth.cart.transaksidetailsatuan.length?
                                         <Button style={{
                                             width:200
                                         }} onClick={()=>setShowPembayaran(!showPembayaran)} color="primary">
