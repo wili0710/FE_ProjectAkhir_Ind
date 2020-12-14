@@ -49,15 +49,16 @@ export default () => {
                         </div>
                     </IconContext.Provider>
                 </div>
-                <div className="imgBx">
-                    {
-                        profilePic?
-                        
-                        <img src={profilePic} />
-                        :
-                        <img src={d_user} />
-                    }
-                </div>
+                <Link to='/useraccount'>
+                    <div className="imgBx">
+                        {
+                            profilePic?
+                            <img src={profilePic} alt="profile pic" />
+                            :
+                            <img src={d_user} alt="default pic"/>
+                        }
+                    </div>
+                </Link>
                 {
                     Auth.nama?
                     <div className="username">
