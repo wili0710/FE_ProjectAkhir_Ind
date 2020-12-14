@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { API_URL_SQL } from '../helpers/apiUrl';
 import Logo from './../assets/logo.png'
@@ -18,6 +18,10 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FcApprove } from 'react-icons/fc'
+import { AiFillMinusSquare,AiFillPlusSquare } from 'react-icons/ai'
+import Dropzone, {useDropzone} from 'react-dropzone'
+
+
 
 const MsgAddSatuan = ({ nama }) =>{
     console.log(nama)
@@ -76,6 +80,9 @@ const CartPage=()=>{
     const [randomProduct,setRandomProduct]=useState()
     const [overlayProduct,setOverlayProduct]=useState()
 
+    const [listProduk_ID,setListProduk_ID]=useState()
+    const [listProduk_Qty,setListProduk_Qty]=useState()
+
     const toggleModalEdit=()=>setShowEdit(!showEdit)
 
     useEffect(()=>{
@@ -110,13 +117,19 @@ const CartPage=()=>{
         }
     }
 
+    const onDrop = useCallback(acceptedFiles => {
+        console.log(acceptedFiles)
+        setImage(acceptedFiles[0])
+    }, [])
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+
     // Pembayaran
     const [showPembayaran,setShowPembayaran]=useState(false)        // Show PopUp / Modal Pembayaran
     const [image,setImage]=useState()                               // Set Image
 
     const clickSendBukti=(transaksi_id,users_id)=>{
         console.log(transaksi_id,users_id)
-        // let data={transaksi_id,users_id,image}
+
         let formData=new FormData()
         let options={
             header:{
@@ -471,14 +484,15 @@ const CartPage=()=>{
                     <div style={{
                         display:"flex",
                         justifyContent:"space-between",
-                        flex:4
+                        flex:3
                     }}>
                         <h6>- {val.nama} </h6>
                     </div>
                     <div style={{
                         display:"flex",
                         justifyContent:"space-around",
-                        flex:1
+                        flex:1,
+
                     }}>
                         <h6>: {val.qty}</h6>
                         <div style={{
@@ -486,8 +500,9 @@ const CartPage=()=>{
                             display:status[0].isAtZero?"none":"inline",
                             fontWeight:"700",
                             fontSize:20,
+
                         }} onClick={()=>clickMinus(val.nama)}>
-                            -
+                            <AiFillMinusSquare color={"red"} style={{verticalAlign:"0px"}}/>
                         </div>
                         <div style={{
                             cursor:"pointer",
@@ -495,7 +510,7 @@ const CartPage=()=>{
                             fontWeight:"700",
                             fontSize:20
                         }}onClick={()=>clickPlus(val.nama,val.category,val.products_id)}>
-                            +
+                            <AiFillPlusSquare color={"#318ae7"} style={{verticalAlign:"0px"}}/>
                         </div>
                     </div>
                 </div>
@@ -600,13 +615,13 @@ const CartPage=()=>{
                                     cursor:"pointer",
                                     display:status[0].isAtZero?"none":"inline"
                                 }} onClick={()=>clickMinus(val.nama)}>
-                                    -
+                                    <AiFillMinusSquare color={"red"}/>
                                 </div>
                                 <div style={{
                                     cursor:"pointer",
                                     display:status[0].isAtLimit?"none":"inline"
                                 }}onClick={()=>clickPlus(val.nama,val.categoryproduct,val.products_id)}>
-                                    +
+                                    <AiFillPlusSquare color={"#318ae7"}/>
                                 </div>
                                 
                             </div>
@@ -1094,8 +1109,17 @@ const CartPage=()=>{
                                 <div style={{padding:5}}>
                                     <h6>Upload Bukti Pembayaran :</h6>
                                 </div>
-                                <div style={{padding:5}}>   
-                                    <input onChange={(e)=>setImage(e.target.files[0])} type="file"/>
+                                <div style={{padding:5}}>  
+                                    <div {...getRootProps()}>
+                                        <input {...getInputProps()} />
+                                        {
+                                        isDragActive ?
+                                            <p>Drop the files here ...</p> :
+                                            <p>Drag 'n' drop some files here, or click to select files</p>
+                                        }
+                                    </div>
+
+                                    {/* <input onChange={(e)=>{console.log(e.target.files);setImage(e.target.files[0])}} type="file"/> */}
                                     {
                                         image?
                                         <ReactImageMagnify {...{
@@ -1253,8 +1277,6 @@ const CartPage=()=>{
                         </div>
                     </div>
                 </>
-                
-                
                 :
                 null
             }

@@ -24,7 +24,7 @@ export default connect(mapStatetoProps, { loadCategories })(
     componentDidMount() {
       this.props.loadCategories();
       this.setState({ product_categories: this.props.Parcel.Product_Category });
-      draggableCard(".cardBx", "left", 2);
+      // draggableCard(".cardBx", "left", 2);
     };
 
     componentDidUpdate() {}
@@ -110,7 +110,7 @@ export default connect(mapStatetoProps, { loadCategories })(
               </div>
             </div>
           </section>
-          <section className="packages">
+          {/* <section className="packages">
             <div className="bg">
               {this.state.filteredPackage.length
                 ? packageCarousel({
@@ -122,7 +122,7 @@ export default connect(mapStatetoProps, { loadCategories })(
                     rest: this.props.Parcel,
                   })}
             </div>
-          </section>
+          </section> */}
           <section className="products">
             <div className="content">
               <p>

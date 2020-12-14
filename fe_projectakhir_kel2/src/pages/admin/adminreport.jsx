@@ -15,39 +15,65 @@ const AdminReport=()=>{
     const [loading,setLoading]=useState(true)
     const [reportProduct,setReportProduct]=useState()
     const [reportParcel,setReportParcel]=useState()
+    const [reportTransaksi,setReportTransaksi]=useState()
+    const [reportTransaksiDetail,setReportTransaksiDetail]=useState()
+    const [displayTab,setDisplayTab]=useState(1)
 
     useEffect(()=>{
         fetchdata()
     },[])
     
-    const fetchdata=()=>{
+    const fetchdata=async()=>{
         try {
-            // Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${Auth.id}`)
-            Axios.get(`${API_URL_SQL}/report/getreportincome`)
-            .then((res)=>{
-                console.log(res.data)
-                setReport(res.data)
-                Axios.get(`${API_URL_SQL}/report/getreportproductsales`)
-                .then((res)=>{
-                    console.log(res.data.ParcelFavorit)
-                    setReportProduct(res.data.ItemProductFavorit)
-                    setReportParcel(res.data.ParcelFavorit)
+            let getReportIncome=await Axios.get(`${API_URL_SQL}/report/getreportincome`)
+            setReport(getReportIncome.data)
+            let getReportProductSales=await Axios.get(`${API_URL_SQL}/report/getreportproductsales`)
+            setReportProduct(getReportProductSales.data.ItemProductFavorit)
+            setReportParcel(getReportProductSales.data.ParcelFavorit)
 
-                })
-                setLoading(false)
-            })
+            let getReportTransaksi=await Axios.get(`${API_URL_SQL}/report/getreportTransaksi`)
+            setReportTransaksi(getReportTransaksi.data.transaksi)
+            setReportTransaksiDetail(getReportTransaksi.data.transaksiDetail)
+            console.log(getReportTransaksi)
+
+            setLoading(false)
         } catch (error) {
+            console.log("error")
             console.log(error)
         }
     }
+
+    const renderReportTransaksi=()=>{
+        return reportTransaksi.map((val,index)=>{
+            return(
+                <TableRow key={val.products_id}>
+                    <TableCell align="center"><span style={{fontSize:18}}>{val.id}</span></TableCell>
+                    <TableCell align="center"><span style={{fontSize:18,color:"tomato",fontWeight:"bold"}}>Rp {numeral(val.totaltransaksi-val.totalmodal).format('0,0')}</span></TableCell>
+                </TableRow>
+            )
+        })
+    }
+
+    const renderReportTransaksiDetail=()=>{
+        return reportTransaksiDetail.map((val,index)=>{
+            return(
+                <TableRow key={val.products_id}>
+                    <TableCell align="center"><span style={{fontSize:18}}>{val.transaksi_id}</span></TableCell>
+                    <TableCell align="center"><span style={{fontSize:18}}>{val.nama}</span></TableCell>
+                    <TableCell align="center"><span style={{fontSize:18,color:"tomato",fontWeight:"bold"}}>Rp {numeral(val.totaltransaksi-val.totalmodal).format('0,0')}</span></TableCell>
+                </TableRow>
+            )
+        })
+    }
+
     const renderTableProduct=()=>{
         console.log(reportProduct)
         if(reportProduct){
             return reportProduct.map((val,index)=>{
                 return(
                     <TableRow key={val.products_id}>
-                        <TableCell align="center">{val.nama}</TableCell>
-                        <TableCell align="center">{val.qty}</TableCell>
+                        <TableCell align="center"><span style={{fontSize:18}}>{val.nama}</span></TableCell>
+                        <TableCell align="center"><span style={{fontSize:18}}>{val.qty}</span></TableCell>
                     </TableRow>
                 )
             })
@@ -65,8 +91,8 @@ const AdminReport=()=>{
             return reportParcel.map((val,index)=>{
                 return(
                     <TableRow key={val.products_id}>
-                        <TableCell align="center">{val.nama}</TableCell>
-                        <TableCell align="center">{val.qty}</TableCell>
+                        <TableCell align="center"><span style={{fontSize:18}}>{val.nama}</span></TableCell>
+                        <TableCell align="center"><span style={{fontSize:18}}>{val.qty}</span></TableCell>
                     </TableRow>
                 )
             })
@@ -90,172 +116,353 @@ const AdminReport=()=>{
         <>
             <div className="user-container">
                 <HeaderAdmin/>
-                <div className="user-right">
-                    <div className="header-user">
-                        <div className="icon-group">
-                            <HiDocumentReport className="icon-user" color="black"/>
-                            <p style={{fontWeight:'600'}}>Report</p>
-                        </div>
-                    </div>
-                    <div style={{
-                        display:"flex",
-                        width:"90%",
-                        margin:50,
-                        flexWrap:"wrap",
-                        justifyContent:"space-around",
-                    }}>
+                <div style={{marginLeft:100,width:"100%"}}>
+                    <div>
                         <div style={{
-                            flexBasis:"40%"
+                            display:"flex",
+                            alignItems:"center",
+                            color:"#318ae7",
+                            padding:20,
+                            borderBottom:"5px solid whitesmoke"
+                            
                         }}>
-                            <h4>Potensi Penjualan</h4>
-                            <div style={{
-                                backgroundColor:"#158ae6",
-                                color:"white",
-                                padding:10,
-                                borderRadius:5,
-                                textAlign:"center"
-                            }}>
-                                Rp {numeral(report.PotensiPenjualan).format('0,0')}
+                            <div>
+                                <HiDocumentReport className="icon-user" color={"#318ae7"}/>
+                            </div>
+                            <div>
+                                <span style={{
+                                    fontWeight:'bold',
+                                    fontSize:20,
+
+                                }}>Report</span>
                             </div>
                         </div>
                         <div style={{
-                            flexBasis:"40%"
+                            display:"flex",
+                            alignItems:"center",
+                            padding:10,
+                            justifyContent:"center",
+                            borderBottom:"5px solid whitesmoke",
+                            fontSize:18
                         }}>
-                            <h4>Penjualan</h4>
                             <div style={{
-                                backgroundColor:"#158ae6",
-                                color:"white",
+                                borderRight:displayTab===1?"5px solid #f68e71":"5px solid whitesmoke",
+                                borderLeft:displayTab===1?"5px solid #f68e71":"5px solid whitesmoke",
                                 padding:10,
-                                borderRadius:5,
-                                textAlign:"center"
-                            }}>
-                                Rp {numeral(report.Penjualan).format('0,0')}
+                                fontWeight:displayTab===1?"bold":"normal",
+                                color:displayTab==1?"#318ae7":"black",
+                                marginRight:5,
+                                cursor:"pointer"
+                            }} onClick={()=>setDisplayTab(1)}>
+                                Ringkasan Umum
                             </div>
-                        </div>
-                        <div style={{
-                            flexBasis:"40%"
-                        }}>
-                            <h4>Pendapatan</h4>
                             <div style={{
-                                backgroundColor:"#158ae6",
-                                color:"white",
+                                borderRight:displayTab===2?"5px solid #f68e71":"5px solid whitesmoke",
+                                borderLeft:displayTab===2?"5px solid #f68e71":"5px solid whitesmoke",
                                 padding:10,
-                                borderRadius:5,
-                                textAlign:"center"
-                            }}>
-                                Rp {numeral(report.Pendapatan).format('0,0')}
+                                fontWeight:displayTab===2?"bold":"normal",
+                                color:displayTab==2?"#318ae7":"black",
+                                marginRight:5,
+                                cursor:"pointer"
+                            }} onClick={()=>setDisplayTab(2)}> 
+                                Report Transaksi
                             </div>
-                        </div>
-                        <div style={{
-                            flexBasis:"40%"
-                        }}>
-                            <h4>Penjualan Satuan</h4>
                             <div style={{
-                                backgroundColor:"#158ae6",
-                                color:"white",
+                                borderRight:displayTab===3?"5px solid #f68e71":"5px solid whitesmoke",
+                                borderLeft:displayTab===3?"5px solid #f68e71":"5px solid whitesmoke",
                                 padding:10,
-                                borderRadius:5,
-                                textAlign:"center"
-                            }}>
-                                Rp {numeral(report.Penjualan_Satuan).format('0,0')}
-                            </div>
-                        </div>
-                        <div style={{
-                            flexBasis:"40%"
-                        }}>
-                            <h4>Pendapatan Satuan</h4>
-                            <div style={{
-                                backgroundColor:"#158ae6",
-                                color:"white",
-                                padding:10,
-                                borderRadius:5,
-                                textAlign:"center"
-                            }}>
-                                Rp {numeral(report.Pendapatan_Satuan).format('0,0')}
-                            </div>
-                        </div>
-                        <div style={{
-                            flexBasis:"40%"
-                        }}>
-                            <h4>Penjualan Parcel</h4>
-                            <div style={{
-                                backgroundColor:"#158ae6",
-                                color:"white",
-                                padding:10,
-                                borderRadius:5,
-                                textAlign:"center"
-                            }}>
-                                Rp {numeral(report.Penjualan_Parcel).format('0,0')}
-                            </div>
-                        </div>
-                        <div style={{
-                            flexBasis:"40%"
-                        }}>
-                            <h4>Pendapatan Parcel</h4>
-                            <div style={{
-                                backgroundColor:"#158ae6",
-                                color:"white",
-                                padding:10,
-                                borderRadius:5,
-                                textAlign:"center"
-                            }}>
-                                Rp {numeral(report.Pendapatan_Parcel).format('0,0')}
+                                fontWeight:displayTab===3?"bold":"normal",
+                                color:displayTab==3?"#318ae7":"black",
+                                marginRight:5,
+                                cursor:"pointer"
+                            }} onClick={()=>setDisplayTab(3)}>
+                                Report Transaksi Detail
                             </div>
                         </div>
                     </div>
+
+                    {/* Tab 1 : Ringkasan Umum */}
+                    
                     <div style={{
-                        display:"flex"
+                        justifyContent:"center",
+                        display:displayTab===1?"flex":"none"
                     }}>
                         <div style={{
-                            flexBasis:"45%",
                             display:"flex",
                             flexDirection:"column",
-                            alignItems:"center",
-                            margin:10
+                            padding:10,
+                            marginRight:10,
+                            borderLeft:"5px solid whitesmoke",
+                            borderRight:"5px solid whitesmoke"
                         }}>
-                            <h4>Product Terjual</h4>
-                            <TableContainer>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell align="center">Product</TableCell>
-                                            <TableCell align="center">Terjual</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {renderTableProduct()}
-                                    </TableBody>
-                                </Table>
-                                {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
-                                {renderpaging()}
-                                </Pagination> */}
-                            </TableContainer>
+                            <div style={{
+                                padding:5,
+                                borderBottom:"5px solid whitesmoke"
+                            }}>
+                                <span style={{
+                                    fontSize:20
+                                }}>
+                                    Potensi Penjualan :
+                                </span>
+                                <div style={{
+                                    // backgroundColor:"#158ae6",
+                                    color:"tomato",
+                                    padding:10,
+                                    borderRadius:5,
+                                    textAlign:"right",
+                                    fontWeight:"700",
+                                    fontSize:20
+                                }}>
+                                    Rp {numeral(report.PotensiPenjualan).format('0,0')}
+                                </div>
+                            </div>
+                            <div style={{
+                                padding:5,
+                                borderBottom:"5px solid whitesmoke"
+                            }}>
+                                <span style={{
+                                    fontSize:20
+                                }}>
+                                    Penjualan Keseluruhan :
+                                </span>
+                                <div style={{
+                                    // backgroundColor:"#158ae6",
+                                    color:"tomato",
+                                    padding:10,
+                                    borderRadius:5,
+                                    textAlign:"right",
+                                    fontWeight:"700",
+                                    fontSize:20
+                                }}>
+                                    Rp {numeral(report.Penjualan).format('0,0')}
+                                </div>
+                            </div>
+                            <div style={{
+                                padding:5,
+                                borderBottom:"5px solid whitesmoke"
+                            }}>
+                                <span style={{
+                                    fontSize:20
+                                }}>
+                                    Pendapatan Bersih Keseluruhan :
+                                </span>
+                                <div style={{
+                                    // backgroundColor:"#158ae6",
+                                    color:"tomato",
+                                    padding:10,
+                                    borderRadius:5,
+                                    textAlign:"right",
+                                    fontWeight:"700",
+                                    fontSize:20
+                                }}>
+                                    Rp {numeral(report.Pendapatan).format('0,0')}
+                                </div>
+                            </div>
+                            <div style={{
+                                padding:5,
+                                borderBottom:"5px solid whitesmoke"
+                            }}>
+                                <span style={{
+                                    fontSize:20
+                                }}>
+                                    Penjualan Produk Satuan :
+                                </span>
+                                <div style={{
+                                    // backgroundColor:"#158ae6",
+                                    color:"tomato",
+                                    padding:10,
+                                    borderRadius:5,
+                                    textAlign:"right",
+                                    fontWeight:"700",
+                                    fontSize:20
+                                }}>
+                                    Rp {numeral(report.Penjualan_Satuan).format('0,0')}
+                                </div>
+                            </div>
+
+
+                            <div style={{
+                                padding:5,
+                                borderBottom:"5px solid whitesmoke"
+                            }}>
+                                <span style={{
+                                    fontSize:20
+                                }}>
+                                    Pendapatan Bersih Produk Satuan :
+                                </span>
+                                <div style={{
+                                    // backgroundColor:"#158ae6",
+                                    color:"tomato",
+                                    padding:10,
+                                    borderRadius:5,
+                                    textAlign:"right",
+                                    fontWeight:"700",
+                                    fontSize:20
+                                }}>
+                                    Rp {numeral(report.Pendapatan_Satuan).format('0,0')}
+                                </div>
+                            </div>
+                            <div style={{
+                                padding:5,
+                                borderBottom:"5px solid whitesmoke"
+                            }}>
+                                <span style={{
+                                    fontSize:20
+                                }}>
+                                    Penjualan Produk Parcel :
+                                </span>
+                                <div style={{
+                                    // backgroundColor:"#158ae6",
+                                    color:"tomato",
+                                    padding:10,
+                                    borderRadius:5,
+                                    textAlign:"right",
+                                    fontWeight:"700",
+                                    fontSize:20
+                                }}>
+                                    Rp {numeral(report.Penjualan_Parcel).format('0,0')}
+                                </div>
+                            </div>
+                            <div style={{
+                                padding:5,
+                                borderBottom:"5px solid whitesmoke"
+                            }}>
+                                <span style={{
+                                    fontSize:20
+                                }}>
+                                    Pendapatan Bersih Produk Parcel :
+                                </span>
+                                <div style={{
+                                    // backgroundColor:"#158ae6",
+                                    color:"tomato",
+                                    padding:10,
+                                    borderRadius:5,
+                                    textAlign:"right",
+                                    fontWeight:"700",
+                                    fontSize:20
+                                }}>
+                                    Rp {numeral(report.Pendapatan_Parcel).format('0,0')}
+                                </div>
+                            </div>
+                            
+                            
                         </div>
                         <div style={{
-                            flexBasis:"45%",
-                            display:"flex",
-                            flexDirection:"column",
-                            alignItems:"center",
-                            margin:10
+                            display:"flex"
                         }}>
-                            <h4>Parcel Terjual</h4>
-                            <TableContainer>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell align="center">Parcel</TableCell>
-                                            <TableCell align="center">Terjual</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {renderTableParcel()}
-                                    </TableBody>
-                                </Table>
-                                {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
-                                {renderpaging()}
-                                </Pagination> */}
-                            </TableContainer>
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                padding:10,
+                                marginRight:10,
+                                borderLeft:"5px solid whitesmoke",
+                                borderRight:"5px solid whitesmoke"
+                            }}>
+                                <span style={{
+                                    fontSize:20
+                                }}>
+                                    Product Terjual :
+                                </span>
+                                <TableContainer>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell align="center"><span style={{fontSize:20}}>Product</span></TableCell>
+                                                <TableCell align="center"><span style={{fontSize:20}}>Terjual</span></TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {renderTableProduct()}
+                                        </TableBody>
+                                    </Table>
+                                    {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+                                    {renderpaging()}
+                                    </Pagination> */}
+                                </TableContainer>
+                            </div>
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                padding:10,
+                                marginRight:10,
+                                borderLeft:"5px solid whitesmoke",
+                                borderRight:"5px solid whitesmoke"
+                            }}>
+                                <span style={{
+                                    fontSize:20
+                                }}>
+                                    Parcel Terjual :
+                                </span>
+                                <TableContainer>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell align="center"><span style={{fontSize:20}}>Parcel</span></TableCell>
+                                                <TableCell align="center"><span style={{fontSize:20}}>Terjual</span></TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {renderTableParcel()}
+                                        </TableBody>
+                                    </Table>
+                                    {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+                                    {renderpaging()}
+                                    </Pagination> */}
+                                </TableContainer>
+                            </div>
                         </div>
+                    </div>
+                    {/* Tab 2 : Report Transaksi */}
+                    <div style={{
+                        justifyContent:"center",
+                        display:displayTab===2?"flex":"none",
+                        flexDirection:"column",
+                        alignItems:"center",
+                        marginTop:10
+                    }}>
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="center"><span style={{fontSize:20}}>Transaksi ID</span></TableCell>
+                                        <TableCell align="center"><span style={{fontSize:20}}>Pendapatan Bersih</span></TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {renderReportTransaksi()}
+                                </TableBody>
+                            </Table>
+                            {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+                            {renderpaging()}
+                            </Pagination> */}
+                        </TableContainer>
+                    </div>
+
+                    {/* Tab 3 : Report Transaksi */}
+                    <div style={{
+                        justifyContent:"center",
+                        display:displayTab===3?"flex":"none",
+                        flexDirection:"column",
+                        alignItems:"center",
+                        marginTop:10
+                    }}>
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell align="center"><span style={{fontSize:20}}>Transaksi Detail ID</span></TableCell>
+                                        <TableCell align="center"><span style={{fontSize:20}}>Nama Parcel</span></TableCell>
+                                        <TableCell align="center"><span style={{fontSize:20}}>Pendapatan</span></TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {renderReportTransaksiDetail()}
+                                </TableBody>
+                            </Table>
+                            {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+                            {renderpaging()}
+                            </Pagination> */}
+                        </TableContainer>
                     </div>
                 </div>
             </div>

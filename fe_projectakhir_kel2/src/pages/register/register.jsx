@@ -7,6 +7,9 @@ import './register.css'
 import { AiFillEye,AiFillEyeInvisible } from 'react-icons/ai';
 import {useSelector,useDispatch} from 'react-redux'
 import {Redirect, Link} from 'react-router-dom'
+import { ModalResetPassword } from '../../components/modalresetpassword';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
+
 
 
 const Register=(props)=>{
@@ -28,6 +31,7 @@ const Register=(props)=>{
     const [otp,setOtp]=useState('')
     const [seePassword,setSeePassword]=useState(false)
     const [isPasswordPass, setIsPasswordPass]=useState(true)
+    const [showResetPassword,setShowResetPassword]=useState(false)
     
     useEffect(()=>{
         if(localStorage.getItem('registrasi')){
@@ -310,6 +314,44 @@ const Register=(props)=>{
     }
     return(
         <div className='d-flex justify-content-center'>
+
+            {/* Modal Reset Password */}
+            {
+                showResetPassword?
+                <div style={{
+                    height:"100%",
+                    width:"100%",
+                    backgroundColor:"rgba(0, 0, 0, 0.5)",
+                    position:"fixed",
+                    zIndex:2,
+                    top:0
+                }}>
+                    <div style={{
+                        backgroundColor:"white",
+                        width:"fit-content",
+                        height:"fit-content",
+                        display:"flex",
+                        flexDirection:"column",
+                        borderRadius:10,
+                        position:"fixed",
+                        zIndex:5,
+                        margin: "auto", /* Will not center vertically and won't work in IE6/7. */
+                        left: 0,
+                        right: -550,
+                        top:-150,
+                        bottom:0,
+                        animation: "rotateY 500ms ease-in-out forwards",
+                        transformOrigin: "top center",
+                        cursor:"pointer"
+                    }} onClick={()=>setShowResetPassword(!showResetPassword)}>
+                        <AiOutlineCloseCircle size={40}/>
+                    </div>
+                    <ModalResetPassword/>
+                </div>
+                :
+                null
+            }
+            {/* End Modal Reset password */}
                 {email && isverified?
                     <div style={{position:'fixed',zIndex:-1,width:'100vw',height:'100vh'}} className='d-flex justify-content-end align-items-end'>
                         <img src={`${API_URL_SQL}/frontend/img2png.png`} height='70%'/>
@@ -400,6 +442,7 @@ const Register=(props)=>{
                                     <form className='pt-3' style={{width:'80%', borderTop:'2px solid #E5E7E7'}}>
                                         {rendercekemail()}
                                     </form>
+                                    <span className='mt-3' style={{fontSize:'14px', fontWeight:'bold', cursor:"pointer",color:"#30a9e1"}} onClick={()=>{setShowResetPassword(!showResetPassword)}}>Reset Password</span>
                                     <span className='mt-3' style={{fontSize:'14px', fontWeight:'lighter'}}>Dengan mendaftar, saya menyetujui</span>
                                     <span className='mb-4' style={{fontSize:'14px', fontWeight:'lighter'}}><span style={{color:"#0095DA",fontWeight:'500',cursor:'pointer'}}>Syarat dan Ketentuan</span> serta <span style={{color:"#0095DA",fontWeight:'500',cursor:'pointer'}}>Kebijakan Privasi</span></span>
                                 </div>
