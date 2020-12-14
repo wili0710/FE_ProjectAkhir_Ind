@@ -1,34 +1,42 @@
 import React from "react";
 import "./home.scss";
-import { debounce, draggableCard } from "../../helpers";
-import { icon, illustration_1 } from "../../assets";
-import { Header, packageCarousel } from "../../components";
+import Axios from 'axios';
 import { connect } from "react-redux";
-import { loadCategories } from "../../redux/Actions";
-import { priceFormatter } from "../../helpers/apiUrl";
+import { Link } from "react-router-dom";
+import { icon, illustration_1 } from "../../assets";
+import { debounce, API_URL_SQL, draggableCard, priceFormatter } from "../../helpers";
+import { Header, packageCarousel } from "../../components";
+import { loadCategories, addtoTransaction, AddcartAction } from "../../redux/Actions";
+// import { FullPageLoading } from '../../components/loading';
 
 const mapStatetoProps = (state) => {
   return {
     Parcel: state.Parcel,
+    Auth  : state.Auth
   };
 };
 
-export default connect(mapStatetoProps, { loadCategories })(class Home extends React.Component {
+export default connect(mapStatetoProps, { loadCategories, addtoTransaction, AddcartAction })(class Home extends React.Component {
   state = {
     inputSearch: "",
     filteredPackage: [],
     product_categories: [],
+    isLoading:true
   };
 
   componentDidMount() {
     this.props.loadCategories();
-    this.setState({ product_categories: this.props.Parcel.Product_Category });
-    draggableCard(".cardBx", "left", 2);
+    // console.log(this.props.Parcel.Product_Category)
+    this.setState({product_categories : this.props.Parcel.Product_Category});
+    // draggableCard(".cardBx", "left", 2);
   };
 
-  componentDidUpdate() {}
+  componentDidUpdate() {
+    draggableCard(".cardBx", "left", 2);
+  }
+
   onSearchInputChange(e, prop) {
-    console.log(prop.array);
+    // console.log(prop.array);
     let newArr = [];
     for (let i = 0; i < prop.array.length; i++) {
       if (prop.array[i].nama.toLowerCase().includes(e.target.value)) {
@@ -48,10 +56,91 @@ export default connect(mapStatetoProps, { loadCategories })(class Home extends R
     };
   };
   
+  addprodtocart = id => {
+    console.log(id)
+    if(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)]===undefined){
+      console.log('oke baru nih '+id)
+      let data = {
+        user_id     : this.props.Auth.id,
+        products_id : id,
+        parcel_id   : 0,
+        qty         : 1
+      }
+      Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,data)
+      .then((result)=>{
+        console.log(result.data)
+        this.props.AddcartAction(result.data)
+      }).catch((error)=>{
+        console.log(error)
+      })
+    }else{
+      console.log('udah ada nih item '+id)
+      console.log(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty)
+      let data = {
+        user_id     : this.props.Auth.id,
+        products_id : id,
+        parcel_id   : 0,
+        qty         : 1
+      }
+      Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,data)
+      .then((result)=>{
+        console.log(result.data)
+        this.props.AddcartAction(result.data)
+      }).catch((error)=>{
+        console.log(error)
+      })
+    }
+  };
+
+  decprodincart = id => {
+    if(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty-1===0){
+      console.log('kurangin lagi habis loh ini')
+      console.log(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty-1)
+      try {
+        Axios.post(`${API_URL_SQL}/transaksi/removefromcart`,{
+            transaksi_id        : this.props.Auth.cart.transaksi[0].id,
+            transaksidetail_id  : this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].transaksidetail_id,
+            user_id             : this.props.Auth.id
+        })
+        .then((res)=>{
+          console.log(res.data)
+          this.props.AddcartAction(res.data);
+        }).catch((error)=>{
+          console.log(error);
+        });
+      } catch (error) {
+        console.log(error)
+      }
+    }else{
+      console.log('kurangin 1 ya')
+      let data = {
+        user_id     : this.props.Auth.id,
+        products_id : id,
+        parcel_id   : 0,
+        qty         : this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty-1
+      };
+      Axios.post(`${API_URL_SQL}/transaksi/addtocart`,data)
+      .then((res)=>{
+        console.log(res.data)
+        this.props.AddcartAction(res.data);
+      }).catch((error)=>{
+        console.log(error)
+      });
+    };
+  };
+
   render() {
-    console.log(this.props.Parcel);
+    // console.log("cart", this.props.Auth.cart);
+    // console.log(this.state.product_categories);
     return (
       <>
+      {
+        // this.state.product_categories.length===0?
+        // <div className='d-flex justify-content-center align-items-center' style={{height:"100vh", width:"100vw"}}>
+        //   {FullPageLoading(this.state.isLoading,1000,'#0095DA')}
+        // </div>
+        // :
+        <>
         <Header />
         <section className="banner">
           <div className="content">
@@ -124,10 +213,10 @@ export default connect(mapStatetoProps, { loadCategories })(class Home extends R
                       <div className="cat_list" key={val.id}>
                         <div>{val.nama}</div>
                         <input
-                          type="checkbox"
-                          name={val.nama}
-                          value={val.id}
-                          onChange={this.onChangeInput}
+                          type    = "checkbox"
+                          name    = {val.nama}
+                          value   = {val.id}
+                          onChange= {this.onChangeInput}
                         />
                       </div>
                     );
@@ -140,9 +229,9 @@ export default connect(mapStatetoProps, { loadCategories })(class Home extends R
                     <div className="border" key={val.id}>
                       <div className="search">
                         <div className="cat">{val.nama}</div>
-                        <input type       ="text"
-                               name       ="search"
-                               placeholder="insert product's name you want to search"
+                        <input type       = "text"
+                               name       = "search"
+                               placeholder= "insert product's name you want to search"
                         />
                         <button className="more">See All..</button>
                       </div>
@@ -153,16 +242,43 @@ export default connect(mapStatetoProps, { loadCategories })(class Home extends R
                               return (
                                 <div className="card" key={item.id}>
                                   <div className="imgBx">
-                                    <img src={item.image} />
+                                    <img src={item.image} alt={"gambar"+item.nama} />
                                   </div>
                                   <div className="namaitem">{item.nama}</div>
                                   <div className="hargaitem">
                                     {priceFormatter(item.harga)}
                                   </div>
                                   <div className="additem">
-                                    <div className="crement">-</div>
-                                    <div className="amount">2</div>
-                                    <div className="crement">+</div>
+                                  {
+                                  this.props.Auth.id?
+                                  <>
+                                    <button className = "crement"
+                                            onClick   = {()=>this.decprodincart(item.id)}
+                                            disabled  = {this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)] === undefined? true:false }
+                                    >
+                                      -
+                                    </button>
+                                    <div className="amount">
+                                      {
+                                      this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)] === undefined?
+                                      0 : this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)].qty
+                                      }
+                                    </div>
+                                    <button className="crement"
+                                            onClick={()=>this.addprodtocart(item.id)}
+                                    >
+                                      +
+                                    </button>
+                                  </>
+                                  :
+                                  <>
+                                    <button className = "crement" disabled> - </button>
+                                    <div className="amount"> 0 </div>
+                                    <Link to="/login">
+                                      <button className="crement"> + </button>
+                                    </Link>
+                                  </>
+                                  }
                                   </div>
                                 </div>
                               );
@@ -177,6 +293,8 @@ export default connect(mapStatetoProps, { loadCategories })(class Home extends R
             </div>
           </div>
         </section>
+        </>
+      }
       </>
     );
   };

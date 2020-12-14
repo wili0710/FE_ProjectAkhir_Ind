@@ -14,7 +14,6 @@ export const AddcartAction=(cart)=>{
         type:'CART',
         cart:cart
     }    
-    
 }
 
 export const LogoutFunc=()=>{

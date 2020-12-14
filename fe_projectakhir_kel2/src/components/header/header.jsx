@@ -2,16 +2,17 @@ import React from 'react';
 import './header.scss'
 import { logo, d_user } from '../../assets';
 import { Link } from 'react-router-dom';
-import { useSelector} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { IconContext } from 'react-icons';
 import { HiShoppingCart, HiChatAlt, HiBell, HiBriefcase } from 'react-icons/hi';
 
 
 export default () => {
-    const Auth = useSelector(state => state.Auth);
-    console.log(Auth)
+    const Auth      = useSelector(state => state.Auth);
+    const dispatch  = useDispatch()
     const [profilePic,setProfilePic]=('');
     
+    console.log(Auth.cart)
     return (
         <header>
             <div className="navBx">   
@@ -33,41 +34,52 @@ export default () => {
             <div className="userBx">
                 <div className="usermenuBx">
                     <IconContext.Provider value={{ style: {fontSize:"20px", color:"white", margin:"0 10px"} }}>
-                        <div>
+                        <div style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
                             { Auth.role === "admin"?
                             <Link to='/adminpanel'>
-                            <HiBriefcase/>
+                                <HiBriefcase/>
                             </Link>
                             :
                             <Link to='/cart'>
+                                {
+                                Auth.cart===undefined?
                                 <HiShoppingCart/>
+                                :
+                                <div style={{position:"relative"}}>
+                                    <HiShoppingCart />
+                                    <div className="notif" style={{position:"absolute",top:-10,right:0,background:"tomato",fontSize:10,padding:"2px 6px",borderRadius:4,color:"white"}}>
+                                        {Auth.cart.transaksidetailsatuan.length + Auth.cart.transaksidetailparcel.length}
+                                    </div>
+                                </div>
+                                }
                             </Link>
                             }
                             <HiChatAlt/>
                             <HiBell/>
-                            
+                        
                         </div>
                     </IconContext.Provider>
                 </div>
-                <div className="imgBx">
-                    {
-                        profilePic?
-                        <img src={profilePic} />
-                        :
-                        <img src={d_user} />
-                    }
-                </div>
+                <Link to='/useraccount'>
+                    <div className="imgBx">
+                        {
+                            profilePic?
+                            <img src={profilePic} alt="profile pic" />
+                            :
+                            <img src={d_user} alt="default pic"/>
+                        }
+                    </div>
+                </Link>
                 {
                     Auth.nama?
                     <div className="username">
                         Hi!
-                        <span>{Auth.nama}</span>
+                        <span onClick={()=>dispatch({type:'LOGOUT'})}>{Auth.nama}</span>
                     </div>
                     :
                     <Link to='/login'>
                     <div className="buttonBx">
                         <div className="buttonBorder" />
-                        
                         <button>Sign in</button>
                     </div>
                     </Link>
