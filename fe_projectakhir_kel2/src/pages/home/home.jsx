@@ -185,6 +185,9 @@ export default connect(mapStatetoProps, { loadCategories })(
                                       <div className="crement">+</div>
                                     </div>
                                   </div>
+
+
+
                                 );
                               }
                             })}

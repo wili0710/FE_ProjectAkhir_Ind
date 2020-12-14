@@ -70,7 +70,7 @@ export default (props) => {
                                         </div>
                                         <div className="cards">
                                             {
-                                                val.items.map((item,index)=>{
+                                                val.item.map((item,index)=>{
                                                     return (
                                                     <div className="cardo">
                                                         <div className="qty">
