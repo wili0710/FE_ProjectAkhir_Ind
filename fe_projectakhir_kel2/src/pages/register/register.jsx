@@ -199,7 +199,7 @@ const Register=(props)=>{
                 'Ingin mengirimkan Parcel Custom? Serahkan pada kami!',
                 'success'
             )
-            dispatch({type:'LOGIN',payload:res.data,cart:''})
+            dispatch({type:'LOGIN',payload:res.data,cart:{transaksi:[],transaksidetailsatuan:[],transaksidetailparcel:[]}})
             localStorage.setItem('id',res.data.id)
             localStorage.removeItem("registrasi")
             localStorage.removeItem("verified")
