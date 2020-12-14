@@ -110,7 +110,6 @@ class dataProduct extends Component {
 
 
     renderParcel=()=>{
-        console.log(this.state.loading)
         if(this.state.loading){
             return null
         }else{
