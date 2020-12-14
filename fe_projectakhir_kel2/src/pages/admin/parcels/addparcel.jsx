@@ -42,7 +42,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     /* end of State */
     
     componentDidMount() {
-        // console.log(this.props.Parcel)
+        console.log(this.props.Parcel)
     };  
     
     componentDidUpdate() {
@@ -164,7 +164,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                     harga               : ""
                 });
             }else{
-                // console.log('masuk')
+                console.log('masuk')
                 const obj = {
                     category: id_category_parcel,
                     name    : nama_parcel,
@@ -172,6 +172,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                     gambar  : url_files,
                     item    : []
                 };
+                console.log(obj)
                 this.props.setTempParcel([obj])
                 // console.log(this.props.Parcel.init_Parcel, "sil url")
                 this.setState({
@@ -217,7 +218,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
         if(this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item.length) {
             const obj = this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item;
             const newObj = {
-                category_item   : parseInt(this.state.item_category),
+                categoryproduct_id   : parseInt(this.state.item_category),
                 qty_item        : parseInt(this.state.item_qty)
             };
             obj.push(newObj);
@@ -228,7 +229,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
             });
         }else{
             const obj = {
-                category_item   : parseInt(this.state.item_category),
+                categoryproduct_id   : parseInt(this.state.item_category),
                 qty_item        : parseInt(this.state.item_qty)
             };
             temp_parcel[this.state.index_add_cat_product].item.push(obj)
@@ -284,6 +285,8 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     };  
     
     renderTempParcel = (val,index) => {
+        console.log(this.props.Parcel)
+        console.log(this.props.Parcel.Parcel_Category[this.props.Parcel.Parcel_Category.findIndex(vals=>vals.id===Number(val.category))].nama)
         return (
             <div key={val.id} className="newparcel">
                 <div className="subsubborder">
@@ -301,8 +304,8 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                         </>
                         }
                     </div>
-                    <div className="cardname">{val.nama}</div>
-                    <div className="cardcategory">{this.props.Parcel.Parcel_Category[val.category-1].nama}</div>
+                    <div className="cardname">{val.name}</div>
+                    <div className="cardcategory">{this.props.Parcel.Parcel_Category[this.props.Parcel.Parcel_Category.findIndex(vals=>vals.id===Number(val.category))].nama}</div>
                     <div className="imgBx">
                         <img src={val.gambar? val.gambar:Courier} alt="Foto Package"/>
                     </div>
@@ -317,7 +320,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     };
     
     render() {
-        // console.log(this.props.Parcel)
+        console.log(this.props.Parcel)
         return (
            <div className="mainparcel">
                 <section className="subheader">
@@ -492,7 +495,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                                                         <div className="category"> 
                                                                 Any
                                                                 <br/>
-                                                                {this.props.Parcel.Product_Category[this.props.Parcel.Product_Category.findIndex(vals=>vals.id===val.category_item)].nama}
+                                                                {this.props.Parcel.Product_Category[this.props.Parcel.Product_Category.findIndex(vals=>vals.id===val.categoryproduct_id)].nama}
                                                                 <br/>
                                                                 <span> Qty : {val.qty_item} </span>
                                                             </div> 
@@ -513,7 +516,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                                                         value       = {this.state.item_category}
                                                         disabled    = {this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item.length === this.props.Parcel.Product_Category.length? true:false}
                                                 >
-                                                    {renderOption({state:this.props.Parcel.Product_Category,change:this.props.Parcel.init_Parcel,text:"pilih kategori product",index:this.state.index_add_cat_product})}
+                                                    {renderOption({state:this.props.Parcel.Product_Category,change:this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item,text:"pilih kategori product",index:this.state.index_add_cat_product})}
                                                 </select>
                                                 <input className    = "input0" 
                                                        type         = "number"
