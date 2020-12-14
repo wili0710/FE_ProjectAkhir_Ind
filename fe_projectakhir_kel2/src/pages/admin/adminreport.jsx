@@ -74,26 +74,43 @@ const AdminReport=()=>{
     }
 
     const renderReportTransaksi=()=>{
-        return reportTransaksi.map((val,index)=>{
-            return(
-                <TableRow key={val.products_id}>
-                    <TableCell align="center"><span style={{fontSize:18}}>{val.id}</span></TableCell>
-                    <TableCell align="center"><span style={{fontSize:18,color:"tomato",fontWeight:"bold"}}>Rp {numeral(val.totaltransaksi-val.totalmodal).format('0,0')}</span></TableCell>
-                </TableRow>
+        if(reportTransaksi==undefined){
+            return (
+                <div>
+                    Belum Ada
+                </div>
             )
-        })
+        }
+        else{
+            return reportTransaksi.map((val,index)=>{
+                return(
+                    <TableRow key={val.products_id}>
+                        <TableCell align="center"><span style={{fontSize:18}}>{val.id}</span></TableCell>
+                        <TableCell align="center"><span style={{fontSize:18,color:"tomato",fontWeight:"bold"}}>Rp {numeral(val.totaltransaksi-val.totalmodal).format('0,0')}</span></TableCell>
+                    </TableRow>
+                )
+            })
+        }
     }
 
     const renderReportTransaksiDetail=()=>{
-        return reportTransaksiDetail.map((val,index)=>{
-            return(
-                <TableRow key={val.products_id}>
-                    <TableCell align="center"><span style={{fontSize:18}}>{val.transaksi_id}</span></TableCell>
-                    <TableCell align="center"><span style={{fontSize:18}}>{val.nama}</span></TableCell>
-                    <TableCell align="center"><span style={{fontSize:18,color:"tomato",fontWeight:"bold"}}>Rp {numeral(val.totaltransaksi-val.totalmodal).format('0,0')}</span></TableCell>
-                </TableRow>
+        if(reportTransaksiDetail==undefined){
+            return (
+                <div>
+                    Belum Ada
+                </div>
             )
-        })
+        }else{
+            return reportTransaksiDetail.map((val,index)=>{
+                return(
+                    <TableRow key={val.products_id}>
+                        <TableCell align="center"><span style={{fontSize:18}}>{val.transaksi_id}</span></TableCell>
+                        <TableCell align="center"><span style={{fontSize:18}}>{val.nama}</span></TableCell>
+                        <TableCell align="center"><span style={{fontSize:18,color:"tomato",fontWeight:"bold"}}>Rp {numeral(val.totaltransaksi-val.totalmodal).format('0,0')}</span></TableCell>
+                    </TableRow>
+                )
+            })
+        }
     }
 
     const renderTableProduct=()=>{
@@ -266,7 +283,6 @@ const AdminReport=()=>{
                             color:"#318ae7",
                             padding:20,
                             borderBottom:"5px solid whitesmoke"
-                            
                         }}>
                             <div>
                                 <HiDocumentReport className="icon-user" color={"#318ae7"}/>

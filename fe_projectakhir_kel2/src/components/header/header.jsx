@@ -42,7 +42,7 @@ export default () => {
                             :
                             <Link to='/cart'>
                                 {
-                                Auth.cart===undefined?
+                                !Auth.isLogin?
                                 <HiShoppingCart/>
                                 :
                                 <div style={{position:"relative"}}>
