@@ -95,7 +95,7 @@ function App(props) {
         <Route exact path='/detailParcel/:id' component={DetailParcel}/>
         <Route exact path ='/cart' component={CartPage}/>
         <Route exact path ='/hapusaja' component={Example}/>
-        <Route exact path ='/bayutest' component={bayuTest}/>
+        <Route exact path ='/bayutest/:id' component={bayuTest}/>
         {renderProtectedAdminRoutes()}
         <Route path='*' component={notfound}/>
 
