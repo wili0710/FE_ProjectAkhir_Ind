@@ -86,11 +86,10 @@ export function renderOption(props) {
     };
     let a;
     let arr = [];
-    console.log(props.change.item)
     arr.push(...props.state)
-    for (let i = 0; i < props.change.item.length; i++){
+    for (let i = 0; i < props.change.length; i++){
         a = arr.filter(val => {
-                return val.id !== props.change.item[i].categoryproduct_id
+                return val.id !== props.change[i].categoryproduct_id
             });
         arr.splice(0,arr.length)
         arr.push(...a)

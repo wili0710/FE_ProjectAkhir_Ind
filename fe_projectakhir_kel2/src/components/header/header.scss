@@ -1,6 +1,7 @@
 @import '../../styles/mixins.scss';
 @import '../../styles/variables.scss';
 
+
 header {
     @include flexin($r, $cn, $cn);
     background-color: $primary;

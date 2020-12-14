@@ -35,7 +35,9 @@ export default () => {
                     <IconContext.Provider value={{ style: {fontSize:"20px", color:"white", margin:"0 10px"} }}>
                         <div>
                             { Auth.role === "admin"?
+                            <Link to='/adminpanel'>
                             <HiBriefcase/>
+                            </Link>
                             :
                             <Link to='/cart'>
                                 <HiShoppingCart/>

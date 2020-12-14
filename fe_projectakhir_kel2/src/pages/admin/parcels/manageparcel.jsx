@@ -38,61 +38,82 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
 
         // rest state
         filteredparcel          : [],
+        curpage                 : 1,
+        viewperpage             : 1,
 
         // component toggle 
-        showPopup               : false
+        showPopup               : false,
+        temp_gambar_parcel_upl  : null,
+        
     };
     
     componentDidMount() {
         // console.log(this.props.Parcel)
     }
     componentDidUpdate() {
-        // console.log(this.props.Parcel)
+        console.log(this.props.Parcel)
+        // console.log(this.state.edit_gambar_parcel_url)
     }
 
     onResetEditParcel = () => {
         if(this.props.Parcel[this.state.index_edit].gambar && this.props.Parcel[this.state.index_edit].gambar.includes(API_URL_SQL)){
+            console.log('a')
+            console.log(this.props.Parcel[this.state.index_edit].item)
             this.setState({
                 edit_category_parcel    : this.props.Parcel[this.state.index_edit].categoryparcel_id,
                 edit_nama_parcel        : this.props.Parcel[this.state.index_edit].nama,
                 edit_harga_parcel       : this.props.Parcel[this.state.index_edit].harga,
                 edit_gambar_parcel_upl  : this.props.Parcel[this.state.index_edit].gambar,
                 edit_item_parcel        : this.props.Parcel[this.state.index_edit].item,
+                temp_gambar_parcel_upl  : null
             });
         }else{
+            console.log('b')
+            console.log(this.props.Parcel[this.state.index_edit].item)
             this.setState({
                 edit_category_parcel    : this.props.Parcel[this.state.index_edit].categoryparcel_id,
                 edit_nama_parcel        : this.props.Parcel[this.state.index_edit].nama,
                 edit_harga_parcel       : this.props.Parcel[this.state.index_edit].harga,
                 edit_gambar_parcel_url  : this.props.Parcel[this.state.index_edit].gambar,
                 edit_item_parcel        : this.props.Parcel[this.state.index_edit].item,
+                temp_gambar_parcel_upl  : null
             });
         };
-    }
+    };
 
     onEditParcelCLick = index => {
+        console.log(this.props.Parcel[index].item)
         if(this.props.Parcel[index].gambar && this.props.Parcel[index].gambar.includes(API_URL_SQL)){
             this.setState({
-                index_edit              : index,
                 edit_category_parcel    : this.props.Parcel[index].categoryparcel_id,
                 edit_nama_parcel        : this.props.Parcel[index].nama,
                 edit_harga_parcel       : this.props.Parcel[index].harga,
                 edit_gambar_parcel_upl  : this.props.Parcel[index].gambar,
                 edit_item_parcel        : this.props.Parcel[index].item,
+                index_edit              : index,
+            });
+        }else if(this.props.Parcel[index].gambar==="null"){
+            this.setState({
+                edit_category_parcel    : this.props.Parcel[index].categoryparcel_id,
+                edit_nama_parcel        : this.props.Parcel[index].nama,
+                edit_harga_parcel       : this.props.Parcel[index].harga,
+                edit_item_parcel        : this.props.Parcel[index].item,
+                index_edit              : index,
             });
         }else{
             this.setState({
-                index_edit              : index,
                 edit_category_parcel    : this.props.Parcel[index].categoryparcel_id,
                 edit_nama_parcel        : this.props.Parcel[index].nama,
                 edit_harga_parcel       : this.props.Parcel[index].harga,
                 edit_gambar_parcel_url  : this.props.Parcel[index].gambar,
                 edit_item_parcel        : this.props.Parcel[index].item,
+                index_edit              : index,
             });
-        };
+        }
     };
 
     onChangeInput = (e) =>{
+        console.log(e.target.name,e.target.value)
         if(e.target.name === ("edit_harga_parcel")) {
             if(e.target.value > 0) {
                 this.setState({[e.target.name]:e.target.value})
@@ -102,118 +123,282 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
         };
     };
 
+    onInputUploadFileChange = (e) => {  
+        if(e.target.files[0]){
+            this.setState({
+                temp_gambar_parcel_upl: URL.createObjectURL(e.target.files[0])
+            });
+        };
+    };
+
+    onDeletePreview = () => {
+        this.setState({temp_gambar_parcel_upl : null});
+    };
+    
+    onCancelEditGambar = () => {
+        this.setState({
+            edit_gambar_parcel_url:"",
+            temp_gambar_parcel_upl:null,
+            showPopup:!(this.state.showPopup)
+        });
+    };
+
+    onSaveGambarClick = () => {
+        console.log('a')
+        this.setState({
+            edit_gambar_parcel_upl:this.state.temp_gambar_parcel_upl,
+            showPopup:!(this.state.showPopup)
+        });
+    };
+
+    onDeleteEditItem = (index) => {
+        console.log(this.state.edit_item_parcel)
+        const obj = this.state.edit_item_parcel;
+        console.log(obj)
+        console.log(this.props.Parcel[this.state.index_edit].item)
+        obj.splice(index,1)
+        console.log(obj)
+        console.log(this.props.Parcel[this.state.index_edit].item)
+        this.setState({edit_item_parcel:obj})
+    };
+
+    onAddItem = () => {
+        const obj = this.state.edit_item_parcel;
+        if(this.state.edit_item_parcel.length) {
+            const newObj = {
+                parcel_id            : parseInt(this.props.Parcel[this.state.index_edit].id),
+                categoryproduct_id   : parseInt(this.state.item_category),
+                qty                  : parseInt(this.state.item_qty)
+            };
+            obj.push(newObj);
+            this.setState({
+                edit_item_parcel: obj,
+                item_qty        : "",
+                item_category   : 0
+            });
+        }else{
+            const newObj = {
+                parcel_id            : parseInt(this.props.Parcel[this.state.index_edit].id),
+                categoryproduct_id   : parseInt(this.state.item_category),
+                qty                  : parseInt(this.state.item_qty)
+            };
+            obj.push(newObj)
+            this.setState({
+                edit_item_parcel: obj,
+                item_qty        :"",
+                item_category   :0
+            });
+        };
+    };
+
     onDeleteParcel = (id) => {
         this.props.deleteParcel(id);
     };
 
     renderParcel(props) {
         console.log(props);
+        console.log(((Number(this.state.curpage)-1)*Number(this.state.viewperpage)+1)+Number(this.state.viewperpage)-1)
         return (
         <div className="cardBox">
             { props.obj.map((val,index)=>{
-                return (
-                    <div className="card" key={val.id}>
-                        <div className="Bx">
-                            <div className="content">
-                                <div className="imageBx">
-                                    {
-                                        val.gambar!=="null"?
-                                        <img src={val.gambar} alt="gambar parcel"/>
-                                        :
-                                        <img src={d_parcel} alt="gambar parcel"/>
-                                    }
-                                </div>
-                                <h2>
-                                    {val.nama}
-                                </h2>
-                                <p>
-                                    {props.rest.Parcel_Category[props.rest.Parcel_Category.findIndex(vals=>vals.id===val.categoryparcel_id)].nama} 
-                                </p>
-                                <IconContext.Provider value={{style:{fontSize:"15px", color:"lightgray"}}}>
-                                    <div>
-                                        <HiStar/>
-                                        <HiStar/>
-                                        <HiStar/>
-                                        <HiStar/>
-                                        <HiStar/>
+                if(index<((Number(this.state.curpage)-1)*Number(this.state.viewperpage)+1)+Number(this.state.viewperpage)-1&&index>=(this.state.curpage-1)){
+                    console.log(index, "card")
+                
+                 
+                        
+                    return (
+                        <div className="card" key={val.id}>
+                            <div className="Bx">
+                                <div className="content">
+                                    <div className="imageBx">
+                                        {
+                                            val.gambar!=="null"?
+                                            <img src={val.gambar} alt="gambar parcel"/>
+                                            :
+                                            <img src={d_parcel} alt="gambar parcel"/>
+                                        }
                                     </div>
-                                </IconContext.Provider>
+                                    <h2>
+                                        {val.nama}
+                                    </h2>
+                                    <p>
+                                        {props.rest.Parcel_Category[props.rest.Parcel_Category.findIndex(vals=>vals.id===val.categoryparcel_id)].nama} 
+                                    </p>
+                                    <IconContext.Provider value={{style:{fontSize:"15px", color:"lightgray"}}}>
+                                        <div>
+                                            <HiStar/>
+                                            <HiStar/>
+                                            <HiStar/>
+                                            <HiStar/>
+                                            <HiStar/>
+                                        </div>
+                                    </IconContext.Provider>
+                                </div>
+                                <div className="detail">
+                                    <div className="upper">
+                                        <div className="hargaBx">
+                                            <div className="imgBx">
+                                                <img src={icon} alt="icon app"/>
+                                            </div>
+                                            <div className="harga">
+                                                {priceFormatter(val.harga)}
+                                            </div>
+                                        </div>
+                                        <p className="desc">
+                                            the right parcel for the right person at the right time
+                                            {/* val.desc */}
+                                        </p>
+                                    </div>
+                                    <div className="lower">
+                                        <p className="inform">
+                                            You can fill your special parcel with any item that match these selected amounts and categories for a same price! 
+                                        </p>
+                                        <div className="categoryBx">
+                                            <div className="label">
+                                                item categories:
+                                            </div>
+                                            <div className="cards">
+                                                {
+                                                    val.item.map((item,index)=>{
+                                                        return (
+                                                        <div className="cardo">
+                                                            <div className="qty">
+                                                                {item.qty}
+                                                            </div>
+                                                            <div className="categories">
+                                                                {props.rest.Product_Category[props.rest.Product_Category.findIndex(prod=>prod.id === item.categoryproduct_id)].nama}
+                                                            </div>
+                                                        </div>
+                                                        )
+                                                    })
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="detail">
-                                <div className="upper">
-                                    <div className="hargaBx">
-                                        <div className="imgBx">
-                                            <img src={icon}/>
-                                        </div>
-                                        <div className="harga">
-                                            {priceFormatter(val.harga)}
-                                        </div>
-                                    </div>
-                                    <p className="desc">
-                                        the right parcel for the right person at the right time
-                                        {/* val.desc */}
-                                    </p>
-                                </div>
-                                <div className="lower">
-                                    <p className="inform">
-                                        You can fill your special parcel with any item that match these selected amounts and categories for a same price! 
-                                    </p>
-                                    <div className="categoryBx">
-                                        <div className="label">
-                                            item categories:
-                                        </div>
-                                        <div className="cards">
-                                            {
-                                                val.item.map((item,index)=>{
-                                                    return (
-                                                    <div className="cardo">
-                                                        <div className="qty">
-                                                            {item.qty}
-                                                        </div>
-                                                        <div className="categories">
-                                                            {props.rest.Product_Category[props.rest.Product_Category.findIndex(prod=>prod.id === item.categoryproduct_id)].nama}
-                                                        </div>
-                                                    </div>
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="setting">
+                                <button className  = "parcel-edit" 
+                                     disabled   = {this.state.index_edit!==-1? true:false}
+                                     onClick    = {()=>this.onEditParcelCLick(index)}
+                                >
+                                    edit
+                                </button>
+                                <button className  = "parcel-delete" 
+                                     onClick    = {()=>this.onDeleteParcel(val.id)}
+                                     disabled   = {this.state.index_edit!==-1? true:false}
+                                     
+                                >
+                                    delete
+                                </button>
                             </div>
                         </div>
-                        <div className="setting">
-                            <button className  = "parcel-edit" 
-                                 disabled   = {this.state.index_edit!==-1? true:false}
-                                 onClick    = {()=>this.onEditParcelCLick(index)}
-                            >
-                                edit
-                            </button>
-                            <button className  = "parcel-delete" 
-                                 onClick    = {()=>this.onDeleteParcel(val.id)}
-                                 disabled   = {this.state.index_edit!==-1? true:false}
-                                 
-                            >
-                                delete
-                            </button>
-                        </div>
-                    </div>
-                )
-            })}
+                    )
+                    }
+                }
+            )}
         </div> 
         );
     };
 
+    rendpage() {
+        let arr=[]
+        for(let i=1;i<=(this.props.Parcel.length/this.state.viewperpage);i++){
+            arr.push(
+                <button onClick = {()=>this.setState({curpage:i})}
+                        disabled= {this.state.curpage===i?true:false}
+                >
+                    {i}
+                </button>
+            )
+        }
+        return arr;
+    }
+
     render() {
-        // console.log(this.props.Parcel[this.state.index_edit])
-        // console.log(this.state.index_edit)
-        // console.log(this.props.AllData)
+        // console.log(this.state.edit_gambar_parcel_url)
+        // console.log(this.state.edit_gambar_parcel_upl)
+        // console.log(this.state.temp_gambar_parcel_upl)
+        console.log(this.state.edit_item_parcel)
+        
         return (
             <>
             {
             this.state.showPopup?
-            <Popup  text='click "x" to hide popup'
-                    closepopup={()=>this.setState({showPopup:!this.state.showPopup})}
+            <Popup
+                title       = 'Ganti Gambar Parcel'
+                content     = {
+                    <>
+                    <div className="container">
+                        <div className="previewBx">
+                            <div className="imgBx">
+                                {
+                                this.state.temp_gambar_parcel_upl?
+                                    <button className   = "delete_preview"
+                                            onClick     = {this.onDeletePreview}
+                                    >
+                                        x
+                                    </button>
+                                    :
+                                    null
+                                }
+                                <img src = {
+                                    this.state.edit_gambar_parcel_url?
+                                    this.state.edit_gambar_parcel_url:
+                                    this.state.temp_gambar_parcel_upl?
+                                    this.state.temp_gambar_parcel_upl:
+                                    this.props.Parcel[this.state.index_edit].gambar? 
+                                    this.props.Parcel[this.state.index_edit].gambar:
+                                    d_parcel
+                                    } 
+                                    alt = "Gambar Parcel "
+                                />
+                            </div>
+                        </div>
+                        <div className="inputBx">
+                            <p>
+                                <span>Ganti gambar parcel dengan cara:</span>
+                                <br/>
+                                1. Memasukkan gambar dalam bentuk text URL kedalam box "URL", atau 
+                                <br/>
+                                2. Klik 'upload gambar' untuk memasukkan gambar parcel ke dalam database.
+                            </p>
+                            <input  className   = "edit_gambar_parcel_url"
+                                    name        = "edit_gambar_parcel_url"
+                                    type        = "text"
+                                    value       = {this.state.edit_gambar_parcel_url}
+                                    placeholder = "masukkan url gambar"
+                                    onChange    = {this.onChangeInput}
+                                    disabled    = {this.state.temp_gambar_parcel_upl? true:false}
+                            />
+                            <span>atau</span>  
+                            <div className      = "fakeBx">
+                                upload gambar
+                                <input  className   = "edit_gambar_upl"
+                                        name        = "temp_gambar_parcel_upl"
+                                        type        = "file"
+                                        onChange    = {this.onInputUploadFileChange}
+                                        disabled    = {this.state.edit_gambar_parcel_url? true:false}    
+                                />
+                            </div> 
+                        </div>
+                    </div>
+                    <div className="actionBtn">
+                        <button className   = "act_cancel" 
+                                onClick     = {this.onCancelEditGambar}
+                        >
+                            Cancel
+                        </button>
+                        <button className   = "act_save"
+                                onClick     = {this.onSaveGambarClick}
+                                disabled    = {this.state.edit_gambar_parcel_url===""&&this.state.temp_gambar_parcel_upl===null? true:false}
+                        > 
+                            Save 
+                        </button>
+                    </div>
+                    </>
+                }
+                closepopup  = {()=>this.setState({showPopup:!this.state.showPopup})}
             />
             :
             null
@@ -227,7 +412,7 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                             <Link to='/adminpanel/parcel' style={{ textDecoration: 'none' }}>
                                 <div className="subnav">Add Parcel</div>
                             </Link>
-                            <Link to='/parcel/deploy' style={{ textDecoration: 'none' }}>
+                            <Link to='/adminpanel/parcel/deploy' style={{ textDecoration: 'none' }}>
                                 <div className="subnav">Deploy Parcel</div>
                             </Link>
                         </section>
@@ -253,10 +438,15 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                         </select> 
                                         <div className="imageBx">
                                             <div className="edit_buttonBx">
-                                                <button className="ganti_gambar" onClick={()=>this.setState({showPopup:!this.state.showPopup})}> ... </button>
-                                                <button className="hapus_gambar"> x </button>
+                                                <button className="ganti_gambar" onClick={()=>this.setState({showPopup:!this.state.showPopup})}> edit </button>
                                             </div>
-                                            <img src = {this.state.edit_gambar_parcel_upl? this.state.edit_gambar_parcel_upl : this.state.edit_gambar_parcel_url!=="null"? this.state.edit_gambar_parcel_url:d_parcel} 
+                                            <img src = {
+                                                this.state.edit_gambar_parcel_url?
+                                                this.state.edit_gambar_parcel_url:
+                                                this.state.edit_gambar_parcel_upl? 
+                                                this.state.edit_gambar_parcel_upl:
+                                                d_parcel
+                                                } 
                                                 alt = "Gambar Parcel"
                                             />
                                         </div>
@@ -287,16 +477,23 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                             }
                             <div className="edititemContent">
                                 <h2 className="title">
-                                    Choose Parcel 
+                                { this.state.index_edit >= 0?
+                                    <>
+                                    On Edit
                                     <span>
-                                        {
-                                            this.state.index_edit >= 0?
-                                            this.props.Parcel[this.state.index_edit].nama
-                                            :
-                                            <> EDIT </>
-                                        }
+                                       {this.props.Parcel[this.state.index_edit].nama}
                                     </span>
-                                    to Change its Details
+                                    Parcel Detail
+                                    </>
+                                    :
+                                    <>
+                                    Click on
+                                    <span>
+                                      Edit
+                                    </span>
+                                    Button below Parcel to Change its details
+                                    </>
+                                }
                                 </h2>
                                 <div className="subcaption"> 
                                     Press 
@@ -305,18 +502,18 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                     <span className="span1">Finish</span>
                                     to set finish editing the parcel, and 
                                     <span className="span2">Cancel</span>
-                                    to cancel to cancel parcel edited but beware of losing all changes
+                                    to cancel editing a parcel `but beware of losing all changes`
                                 </div>
                                 <div className="renderBx_edit">
                                     {
                                     this.state.index_edit >= 0?
-                                    this.props.Parcel[this.state.index_edit].item.map((val,index)=>{
+                                    this.state.edit_item_parcel.map((val,index)=>{
                                     return (
                                     <div className="itemBx_edit" key={val.id}>
                                         <div className="content">
                                             <div className="itemhead">
                                                 <div className="id"> SET {index+1}</div>
-                                                <button>X</button>
+                                                <button onClick={()=>this.onDeleteEditItem(index)}>X</button>
                                             </div>
                                             <div className="category"> 
                                                 Any
@@ -347,7 +544,7 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                                 value       = {this.state.item_category}
                                                 disabled    = {this.props.Parcel[this.state.index_edit].item.length === this.props.Product_Category.length? true:false}
                                         >
-                                            {renderOption({state:this.props.Product_Category,change:this.props.Parcel[this.state.index_edit],text:"pilih kategori product"})}
+                                            {renderOption({state:this.props.Product_Category,change:this.state.edit_item_parcel,text:"pilih kategori product"})}
                                         </select>
                                         <input className    = "input0" 
                                                type         = "number"
@@ -359,15 +556,15 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                                placeholder  = "masukkan angka jumlah item per product"
                                         />
                                         <button className   = "button0"
-                                                // onClick     = {this.onSaveItem}
-                                                // disabled = {this.state.item_qty && this.state.item_category? false:true}
+                                                onClick     = {this.onAddItem}
+                                                disabled    = {this.state.item_qty && this.state.item_category? false:true}
                                         >
                                             Add
                                         </button>
                                     </div>
                                     <div className="buttonBx_active">
                                         <button className   = "button2" 
-                                                onClick     = {this.onCancelAddItem}
+                                                onClick     = {this.onResetEditParcel}
                                         >
                                             Reset
                                         </button>
@@ -378,7 +575,7 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                             Finish
                                         </button>
                                         <button className   = "button1" 
-                                                // onClick     = {this.onCancelAddItem}
+                                                onClick     = {()=>this.setState({index_edit:-1})}
                                         >
                                             Cancel
                                         </button>
@@ -406,6 +603,36 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                 </section>
                 <section className="parcellist">
                     <div className="subborder">
+                        <div style={{display:"flex",justifyContent:"space-between", background:"tomato", padding:10}}>
+                            <select>
+                                {renderOption({state:this.props.Parcel_Category,text:"pilih kategori parcel"})}
+                            </select>
+                            <input  type="text"
+                                    name="viewperpage"
+                                    onChange={this.onChangeInput}
+
+                            />
+                            <div>
+                                <input type="number"/>
+                                -
+                                <input type="number"/>
+                            </div>
+                        </div>
+                        <div style={{display:"flex",justifyContent:"space-between", background:"tomato", padding:10}}>
+                            <div style={{background:"gray"}}>
+                                {this.props.Parcel.length} Parcels | Page {this.state.curpage} / {Math.floor(this.props.Parcel.length/this.state.viewperpage)}
+                            </div>
+                            <div style={{display:"flex"}}>
+                                {this.rendpage()}
+                                <input type     = "number"
+                                       name     = "viewperpage"
+                                       max      = {this.props.Parcel.length}
+                                       min      = {1}
+                                       value    = {this.state.viewperpage}
+                                       onChange = {this.onChangeInput}
+                                /> 
+                            </div>
+                        </div>
                     {   
                         this.state.filteredparcel.length?
                         this.renderParcel({
