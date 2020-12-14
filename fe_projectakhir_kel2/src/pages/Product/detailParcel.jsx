@@ -22,6 +22,7 @@ import {AiOutlineLogout,AiFillHome,AiFillDelete} from 'react-icons/ai'
 import {connect} from 'react-redux';
 import {LogoutFunc} from './../../redux/Actions'
 import Zoom from 'react-reveal/Zoom';
+import HorizontalScroll from 'react-scroll-horizontal'
 
 import { Scrollbars } from 'react-custom-scrollbars';
 
@@ -53,7 +54,8 @@ class DetailParcel extends Component {
         renderCartMakanan:[],
         renderCartChocolate:[],
         renderRandomProduct:[],
-        renderRandomParcel:[]
+        renderRandomParcel:[],
+        RandomParcel:false
      }
      
 
@@ -912,6 +914,7 @@ class DetailParcel extends Component {
 
             if(totalQtyMinuman == limitMinuman && totalQtyMakanan == limitMakanan && totalQtyChocolate == limitChocolate){
                 console.log('true')
+                this.setState({RandomParcel:true})
                 Swal.fire({
                     icon: 'success',
                     title: `Perfect!!`,
@@ -958,15 +961,16 @@ class DetailParcel extends Component {
 
 
      renderCartRandom=()=>{
+        const child   = { width: `30em`, height: `50%`}
          let renderSatuan= this.state.renderRandomProduct.map((val,index)=>{
              return (
                 <>
-                    <div class="card " style={{width:'18rem'}}>
-                        <img class="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
-                        <div class="card-body">
-                            <h5 class="card-title">{val.nama}</h5>
-                            <p class="card-text">{val.deskripsi}</p>
-                            <a href="#" class="btn btn-primary" onClick={()=>this.productRandomSatuan(val.id)}> Beli</a>
+                    <div className="card " style={{width:'18rem'}}>
+                        <img className="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
+                        <div className="card-body">
+                            <h5 className="card-title">{val.nama}</h5>
+                            <p className="card-text">{val.deskripsi}</p>
+                            <a href="#" className="btn btn-primary" onClick={()=>this.productRandomSatuan(val.id)}> Beli</a>
                         </div>
                     </div>
 
@@ -977,12 +981,17 @@ class DetailParcel extends Component {
          let renderParcel=this.state.renderRandomParcel.map((val,index)=>{
              return (
                  <>
-                    <div class="card card-css" style={{width:'18rem'}}>
-                        <img class="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
-                        <div class="card-body">
-                            <h5 class="card-title">{val.nama}</h5>
-                            <p class="card-text">{val.deskripsi}</p>
-                            <a href={'/detailParcel/'+val.id} class="btn btn-primary" onClick={()=>this.productRandomParcel(val.id)}> Beli</a>
+                    <div className="card card-css" style={{width:'18rem'}}>
+                        <img className="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
+                        <div className="card-body">
+                            <h5 className="card-title">{val.nama}</h5>
+                            <p className="card-text">{val.deskripsi}</p>
+                            {
+                                this.state.RandomParcel?
+                                <a href={'/detailParcel/'+val.id} className="btn btn-primary" onClick={()=>this.productRandomParcel(val.id)}> Beli</a>
+                                :
+                                <a href='#' className="btn btn-primary" onClick={()=>this.productRandomParcel(val.id)}> Beli</a>
+                            }
                         </div>
                     </div>
                  </>
@@ -996,10 +1005,10 @@ class DetailParcel extends Component {
      
   
     render() { 
-       const child   = { width: `30em`, height: `100%`}
-        const parent  = { width: `60em`, height: `100%`}
+        console.log(API_URL_SQL)
             // console.log(this.state.dataArrMakanan)
             // console.log(this.state.dataMakanan)
+            console.log(this.state.dataParcelByIdChocolate)
             // console.log(this.state.dataParcelByIdMinuman.qty ,' ini maksimal beli minuman')
             // console.log(this.state.renderCartMakanan,' ini data render cart makanan')
             console.log(this.state.renderCartMinuman,' ini data render cart minuman')
@@ -1007,6 +1016,7 @@ class DetailParcel extends Component {
             console.log(this.state.checklistMinuman)
             
             const {classes}= this.props
+            
         return ( 
             <>
                 <div className="outer-detail">
@@ -1135,11 +1145,15 @@ class DetailParcel extends Component {
                                 </div>
                                 }
 
-                                <Scrollbars autoHeight autoHide renderTrackHorizontal={this.renderTrackHorizontal}  renderThumbHorizontal={this.renderThumbHorizontal} >
+                                {/* <Scrollbars autoHeight autoHide  >
+                                 */}
+                                        <HorizontalScroll>
                                     <div style={{marginTop:'50px'}} className="random-cart">
-                                        {this.renderCartRandom()}
+                                                {this.renderCartRandom()}
                                     </div>
-                                </Scrollbars>
+                                        </HorizontalScroll>
+
+                                {/* </Scrollbars> */}
                                 
                         
                         </div>
