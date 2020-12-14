@@ -67,7 +67,9 @@ class newDetailParcel extends Component {
         limitProduct:[],
         arrCategoryId:[],
         arrProductCategory:[],
-        newRenderOpen:0
+        newRenderOpen:0,
+        setStatusPerCategory:[],
+        setIsAllLimit:null
      }
      
 
@@ -135,6 +137,7 @@ class newDetailParcel extends Component {
              console.log(err)
          })
          this.getLimitProduct()
+         this.inStatusPerCategory()
          
 
      }
@@ -170,22 +173,171 @@ class newDetailParcel extends Component {
         }
     }
 
+    inStatusPerCategory=async()=>{
+       var  dataArrMakanan= this.state.dataArrMakanan
+        var limitProduct=this.state.limitProduct
+        let saring =limitProduct.map((val)=>{
+            let komposisi = dataArrMakanan.filter((filtering)=>{
+                return filtering.category == val.category
+            })
+
+            if(komposisi.length ==0){
+                return [{
+                    category:val.category,
+                    qty:0
+                }]
+            }else {
+                return komposisi
+            }
+        })
+
+        let qtypercategory=saring.map((val,index)=>{
+            let qty=0
+            val.map((value,index)=>{
+                qty+=value.qty
+            })
+            return  {
+                category:val[0].category,
+                qty:qty
+            }
+        })
+
+        let letstatusperCategory=qtypercategory.map((val,index)=>{
+            if(val.qty >=limitProduct[index].limitqty ){
+                return {
+                    categoryproduct_id:limitProduct[index].categoryproduct_id,
+                    category:val.category,
+                    isAtLimit:true,
+                    isAtZero:false
+                }
+            }else if(val.qty==0){
+                return {
+                    categoryproduct_id:limitProduct[index].categoryproduct_id,
+                    category:val.category,
+                    isAtLimit:false,
+                    isAtZero:true
+                }
+            }else {
+                return {
+                    categoryproduct_id:limitProduct[index].categoryproduct_id,
+                    category:val.category,
+                    isAtLimit:false,
+                    isAtZero:false,
+                }
+            }
+        })
+
+        this.setState({setStatusPerCategory:letstatusperCategory})
+
+        let isAllLimitFind=letstatusperCategory.find((filtering)=>{
+            return filtering.isAtLimit==false
+        })
+        if(isAllLimitFind==undefined){
+            isAllLimitFind={isAtLimit:true}
+        }
+        let isAllLimit = isAllLimitFind.isAtLimit
+        if(isAllLimit !==false){
+            isAllLimit=true
+        }
+
+        this.setState({setIsAllLimit:isAllLimit})
+    }
+
+    clickPlus=(nama,category,products_id,limitqty)=>{
+        console.log('masuk button plus')
+        console.log(nama)
+        console.log(category)
+        console.log(products_id)
+        // console.log(limitqty)
+
+        var dataArrMakanan= this.state.dataArrMakanan
+        let plusInput=dataArrMakanan.map((val,index)=>{
+            if(val.nama== nama){
+                return {...val,qty:val.qty+1}
+            }else {
+                return {...val}
+            }
+        })
+        console.log(plusInput)
+                let isMax = this.state.setStatusPerCategory.filter((filtering)=>{
+                    return filtering.category === category
+                })
+                // let isInKomposisi=dataArrMakanan.filter((filtering)=>{
+                //     return filtering.nama===nama
+                // })
+
+                console.log(isMax)
+                // console.log(isInKomposisi)
+
+
+                // if(!isMax[0].isAtLimit && isInKomposisi.length ===0){
+                //     let newkomposisi={
+                //         products_id:products_id,
+                //         category:category,
+                //         nama:nama,
+                //         qty:1
+                //     }
+                //     plusInput.push(newkomposisi)
+                // }
+
+                this.setState({dataArrMakanan:plusInput})
+
+        // let plusInput=komposisiParcel.map((val,index)=>{
+
+        //     // Jika sesuai maka +1
+        //     if(val.nama==nama){
+        //         return{...val,qty:val.qty+1}
+        //     }else{
+        //         return {...val}
+        //     }
+        // })
+        // let isMax=statusPerCategory.filter((filtering)=>{
+        //     return filtering.category===category
+        // })
+
+        // let isInKomposisi=komposisiParcel.filter((filtering)=>{
+        //     return filtering.nama===nama
+        // })
+
+        // // Jika belum limit di category produk tersebut dan produk itu tidak ada, maka tambah produk tersebut
+        // if(!isMax[0].isAtLimit&&isInKomposisi.length===0){
+        //     let newkomposisi={
+        //         products_id:products_id,
+        //         category:category,
+        //         nama:nama,
+        //         qty:1
+        //     }
+        //     plusInput.push(newkomposisi)
+        // }
+
+    }
+    clickMinus=(nama)=>{
+        console.log(nama)
+        console.log('masuk button minus')
+
+    }
+
     newRenderCart=()=>{
         const limitProduct= this.state.limitProduct
 
          return limitProduct.map((val,index)=>{
+            //  console.log(val.limitqty)
             let listprod=this.state.arrProductCategory.filter((filtering)=>{
                 return filtering.categoryproduct == val.category
             })
-            
+
 
             let maplistprod = listprod.map((val,index)=>{
+                // console.log(val)
                 return (
                     <div className=" box-3 card product_item" key={val.id} >
                         <div className="cp_img">
                             <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
                             <div className="hover"  >
-
+                            {/* <BiPlus onClick={()=>this.AddDataMakanan(val.id)} className="icondp"/>
+                            <BiMinus onClick={()=>this.hapusDataMakanan(val.id)} className="icondp"/>   */}
+                            <BiPlus onClick={()=>this.clickPlus(val.nama,val.categoryproduct,val.products_id,)} className="icondp"/> 
+                            <BiMinus onClick={()=>this.clickMinus(val.nama)} className="icondp"/>
                                 {/* {
                                     total==this.state.dataParcelByIdMakanan.qty ?
                                     null:
@@ -197,7 +349,6 @@ class newDetailParcel extends Component {
                                     total==0 ?
                                     null 
                                     :
-                                    <BiMinus onClick={()=>this.hapusDataMakanan(val.id)} className="icondp"/>  
                                 } */}
                             
                             </div>
@@ -1172,8 +1323,10 @@ class newDetailParcel extends Component {
     render() { 
         // console.log(API_URL_SQL)
     //   console.log(this.state.dataArrMakanan)
-            console.log(this.state.limitProduct)
-            console.log(this.state.arrProductCategory)
+            console.log(this.state.dataArrMakanan)
+            console.log(this.state.setStatusPerCategory)
+            // console.log(this.state.limitProduct)
+            // console.log(this.state.arrProductCategory)
             const {classes}= this.props
             
         return ( 

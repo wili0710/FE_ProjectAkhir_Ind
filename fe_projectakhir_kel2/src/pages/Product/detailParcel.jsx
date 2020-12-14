@@ -23,6 +23,7 @@ import {connect} from 'react-redux';
 import {LogoutFunc} from './../../redux/Actions'
 import Zoom from 'react-reveal/Zoom';
 import HorizontalScroll from 'react-scroll-horizontal'
+import numeral from 'numeral';
 
 import { Scrollbars } from 'react-custom-scrollbars';
 import { css } from '@emotion/react';
@@ -659,7 +660,7 @@ class DetailParcel extends Component {
                             <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
                             <ul className="product_price list-unstyled">
                                 <li className="old_price">Stock:{val.stok}</li>
-                                <li className="new_price">Rp.{val.harga}</li>
+                                <li className="new_price">Rp{numeral(val.harga).format('0,0')}</li>
                             </ul>
                         </div>
                 </div>
@@ -707,7 +708,7 @@ class DetailParcel extends Component {
                             <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
                             <ul className="product_price list-unstyled">
                                 <li className="old_price">Stock:{val.stok}</li>
-                                <li className="new_price">Rp.{val.harga}</li>
+                                <li className="new_price">Rp{numeral(val.harga).format('0,0')}</li>
                             </ul>
                         </div>
                 </div>
@@ -753,7 +754,7 @@ class DetailParcel extends Component {
                             <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
                             <ul className="product_price list-unstyled">
                                 <li className="old_price">Stock:{val.stok}</li>
-                                <li className="new_price">Rp.{val.harga}</li>
+                                <li className="new_price">Rp{numeral(val.harga).format('0,0')}</li>
                             </ul>
                         </div>
                     </div> 
@@ -1032,11 +1033,12 @@ class DetailParcel extends Component {
          let renderSatuan= this.state.renderRandomProduct.map((val,index)=>{
              return (
                 <>
-                    <div className="card " style={{width:'18rem'}}>
-                        <img className="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
+                    <div className="card card-css" style={{width:'20rem'}}>
+                        <img className="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap" style={{height:'100px',width:'150px'}}/>
                         <div className="card-body">
                             <h5 className="card-title">{val.nama}</h5>
                             <p className="card-text">{val.deskripsi}</p>
+                            <p className="card-text">Rp{numeral(val.harga).format('0,0')}</p>
                             <a href="#" className="btn btn-primary" onClick={()=>this.productRandomSatuan(val.id)}> Beli</a>
                         </div>
                     </div>
@@ -1208,11 +1210,11 @@ class DetailParcel extends Component {
 
                                 {/* <Scrollbars autoHeight autoHide  >
                                  */}
-                                        <HorizontalScroll>
-                                    <div style={{marginTop:'50px'}} className="random-cart">
-                                                {this.renderCartRandom()}
-                                    </div>
-                                        </HorizontalScroll>
+                                            <div style={{marginTop:'50px'}} className="random-cart">
+                                                <HorizontalScroll>
+                                                                {this.renderCartRandom()}
+                                                </HorizontalScroll>
+                                            </div>
 
                                 {/* </Scrollbars> */}
                                 
