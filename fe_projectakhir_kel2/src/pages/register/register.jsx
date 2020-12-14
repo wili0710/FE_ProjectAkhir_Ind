@@ -332,7 +332,7 @@ const Register=(props)=>{
                         height:"fit-content",
                         display:"flex",
                         flexDirection:"column",
-                        borderRadius:10,
+                        borderRadius:100,
                         position:"fixed",
                         zIndex:5,
                         margin: "auto", /* Will not center vertically and won't work in IE6/7. */
@@ -438,7 +438,7 @@ const Register=(props)=>{
                                 }}>
                                 <div className='d-flex flex-column align-items-center mx-5 py-3' style={{border:'1px solid #E5E7E7',borderRadius:"5px",boxShadow:"0 0 10px 1px #E5E7E7"}}>
                                     <h4 className='mt-3'>Daftar Sekarang</h4>
-                                    <span className='mb-3' style={{fontWeight:'lighter'}}>Sudah punya akun? <span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}}>Masuk</span></span>
+                                    <span className='mb-3' style={{fontWeight:'lighter'}}>Sudah punya akun? <Link to="/login"><span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}}>Masuk</span></Link></span>
                                     <form className='pt-3' style={{width:'80%', borderTop:'2px solid #E5E7E7'}}>
                                         {rendercekemail()}
                                     </form>

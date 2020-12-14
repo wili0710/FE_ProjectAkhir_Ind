@@ -36,19 +36,32 @@ const MsgAddSatuan = ({ nama }) =>{
         </div>
     )
 }
-const MsgEditSatuan = ({ nama,qty }) =>{
+const MsgEditSatuan = ({ nama,qty,indexs }) =>{
     console.log(nama)
-        return (
-            <div style={{display:"flex", alignContent:"center"}}>
-                <div style={{marginRight:5}}>
-                    <FcApprove size={20} />
-                </div>
-                <div>
-                    {nama} berhasil diubah menjadi {qty}
-                </div>
+    return (
+        <div style={{display:"flex", alignContent:"center"}}>
+            <div style={{marginRight:5}}>
+                <FcApprove size={20} />
             </div>
-        )
-    }
+            <div>
+                {nama} berhasil diubah menjadi {qty}
+            </div>
+        </div>
+    )
+}
+    const MsgEditParcel = ({ nama,indexs }) =>{
+        console.log(nama)
+            return (
+                <div style={{display:"flex", alignContent:"center"}}>
+                    <div style={{marginRight:5}}>
+                        <FcApprove size={20} />
+                    </div>
+                    <div>
+                        {indexs}: {nama} berhasil diubah
+                    </div>
+                </div>
+            )
+        }
 
 const CartPage=()=>{
     const Auth=useSelector(state=>state.Auth) 
@@ -80,8 +93,12 @@ const CartPage=()=>{
     const [randomProduct,setRandomProduct]=useState()
     const [overlayProduct,setOverlayProduct]=useState()
 
-    const [listProduk_ID,setListProduk_ID]=useState()
-    const [listProduk_Qty,setListProduk_Qty]=useState()
+    const [indexparceltoas,setindexparceltoas]=useState()
+    const [namaparceltoas,setnamaparceltoas]=useState()
+
+    // const [listProduk_ID,setListProduk_ID]=useState()
+    // const [listProduk_Qty,setListProduk_Qty]=useState()
+
 
     const toggleModalEdit=()=>setShowEdit(!showEdit)
 
@@ -155,7 +172,9 @@ const CartPage=()=>{
 
     // const notifyAddProductSatuan = () => toast.info("🦄Wow so easy !")
     const notifyAddProductSatuan = (namaproduct) => toast.info(<MsgAddSatuan nama={namaproduct}/>)
-    const notifyEditProductSatuan = (namaproduct,qty) => toast.info(<MsgEditSatuan nama={namaproduct} qty={qty}/>)
+    const notifyEditProductSatuan = (namaproduct,qty,indexs) => toast.info(<MsgEditSatuan nama={namaproduct} qty={qty} indexs={indexs}/>)
+
+    const notifyEditProductParcel = (namaproduct,indexs) => toast.info(<MsgEditParcel nama={namaparceltoas} indexs={indexparceltoas}/>)
     
 
     const addProductSatuan=async(products_id,namaproduct)=>{
@@ -795,8 +814,10 @@ const CartPage=()=>{
                             {
                                 editSatuan===val.transaksidetail_id?
                                 <>
-                                    <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{
-                                        setEditSatuan(!editSatuan);clickSaveSatuan(val.products_id,val.transaksidetail_id,val.nama,qtySatuan)
+                                    <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={(e)=>{
+                                        e.preventDefault()
+                                        setEditSatuan(!editSatuan)
+                                        clickSaveSatuan(val.products_id,val.transaksidetail_id,val.nama,qtySatuan,index)
                                         }}>Save</span>
                                         | 
                                     <span style={{color:"red",cursor:"pointer"}} 
@@ -858,7 +879,7 @@ const CartPage=()=>{
                         display:"flex",
                         flexDirection:"column"
                     }}>
-                        <h6>{val.nama}</h6>
+                        <h6>{index+1}: {val.nama}</h6>
                         <h6>Isi Parcel</h6>
                         <div style={{
                             marginLeft:10,
@@ -893,7 +914,7 @@ const CartPage=()=>{
                             cursor:"default",
                             marginBottom:10
                         }}> 
-                            <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>onClickOpenEditParcel(dataforedit)}>Edit</span> | 
+                            <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{setnamaparceltoas(val.nama);setindexparceltoas(index+1);onClickOpenEditParcel(dataforedit)}}>Edit</span> | 
                             <span style={{color:"red",cursor:"pointer"}} onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
                         </div>
                         <h6>Total</h6>
@@ -926,7 +947,7 @@ const CartPage=()=>{
         }
     }
     
-    const clickSaveSatuan=(products_id,transaksidetail_id,nama,qty)=>{
+    const clickSaveSatuan=(products_id,transaksidetail_id,nama,qty,indexs)=>{
         let senttobe={
             user_id:`${Auth.id}`,
             products_id:`${products_id}`,
@@ -938,12 +959,12 @@ const CartPage=()=>{
             .then((res)=>{
                 console.log(res.data)
                 dispatch({type:'CART',cart:res.data})
-                notifyEditProductSatuan(nama,qty)
+                notifyEditProductSatuan(nama,qty,indexs)
             }).catch((err)=>{
                 console.log(err)
             })
     }
-    const onClickSaveParcel=(transaksidetail_id,parcel_id)=>{
+    const onClickSaveParcel=(transaksidetail_id,parcel_id,indexs)=>{
         console.log(komposisiParcel)
 
         if(!isAllLimit){
@@ -979,6 +1000,7 @@ const CartPage=()=>{
                 console.log(res.data)
                 dispatch({type:'CART',cart:res.data})
                 setShowEdit(!showEdit)
+                notifyEditProductParcel()
             }).catch((err)=>{
                 setShowEdit(!showEdit)
                 console.log(err)

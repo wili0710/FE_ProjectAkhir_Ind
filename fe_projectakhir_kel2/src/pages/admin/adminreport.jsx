@@ -7,6 +7,7 @@ import { FullPageLoading } from '../../components/loading';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import {HiDocumentReport} from 'react-icons/hi'
 import numeral from 'numeral';
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 const AdminReport=()=>{
     const Auth=useSelector(state=>state.Auth) 
@@ -18,24 +19,53 @@ const AdminReport=()=>{
     const [reportTransaksi,setReportTransaksi]=useState()
     const [reportTransaksiDetail,setReportTransaksiDetail]=useState()
     const [displayTab,setDisplayTab]=useState(1)
+    const [pages,setpages]=useState(1)
+    const [maxpages3,setmaxpages3]=useState(0)
+    const [maxpages2,setmaxpages2]=useState(0)
+    const [maxpages1,setmaxpages1]=useState(0)
+    const [maxpages0,setmaxpages0]=useState(0)
 
     useEffect(()=>{
         fetchdata()
+  
     },[])
+    useEffect(()=>{
+        fetchdatapage()
+    },[pages])
+    useEffect(()=>{
+        setpages(1)
+    },[displayTab])
     
-    const fetchdata=async()=>{
+    const fetchdatapage=async()=>{
         try {
-            let getReportIncome=await Axios.get(`${API_URL_SQL}/report/getreportincome`)
-            setReport(getReportIncome.data)
-            let getReportProductSales=await Axios.get(`${API_URL_SQL}/report/getreportproductsales`)
+            let getReportProductSales=await Axios.get(`${API_URL_SQL}/report/getreportproductsales?page=${pages}`)
             setReportProduct(getReportProductSales.data.ItemProductFavorit)
             setReportParcel(getReportProductSales.data.ParcelFavorit)
 
-            let getReportTransaksi=await Axios.get(`${API_URL_SQL}/report/getreportTransaksi`)
-            setReportTransaksi(getReportTransaksi.data.transaksi)
-            setReportTransaksiDetail(getReportTransaksi.data.transaksiDetail)
-            console.log(getReportTransaksi)
+            let getReportTransaksiLimit=await Axios.get(`${API_URL_SQL}/report/getreportTransaksi?page=${pages}`)
+            setReportTransaksi(getReportTransaksiLimit.data.transaksi)
+            setReportTransaksiDetail(getReportTransaksiLimit.data.transaksiDetail)
 
+            
+        } catch (error) {
+            console.log("error")
+            console.log(error)
+        }
+    }
+    const fetchdata=async()=>{
+        try {
+
+            let getReportIncome=await Axios.get(`${API_URL_SQL}/report/getreportincome`)
+            console.log(getReportIncome)
+            setReport(getReportIncome.data)
+            // let getReportProductSales=await Axios.get(`${API_URL_SQL}/report/getreportproductsales`)
+            // setReportProduct(getReportProductSales.data.ItemProductFavorit)
+            // setReportParcel(getReportProductSales.data.ParcelFavorit)
+
+            let getReportTransaksi=await Axios.get(`${API_URL_SQL}/report/getreportTransaksi`)
+            setmaxpages2(getReportTransaksi.data.transaksi.length)
+            setmaxpages3(getReportTransaksi.data.transaksiDetail.length)
+            console.log(getReportTransaksi)
             setLoading(false)
         } catch (error) {
             console.log("error")
@@ -104,6 +134,118 @@ const AdminReport=()=>{
             )
         }
     }
+    const pindahpage=(a)=>{
+        console.log(a)
+        setpages(a)
+      }
+    const renderpaging0=()=>{
+    console.log("jalan")
+    console.log(maxpages0)
+    var jumlahpage=Math.ceil(maxpages0/10)
+    var arr=new Array(jumlahpage)
+    console.log(jumlahpage)
+    console.log(arr)
+    for(let i=0;i<arr.length;i++){
+        if((i+1)===pages){
+        arr[i]=(<PaginationItem key={i} disabled>
+                    <PaginationLink>
+                    {i+1}
+                    </PaginationLink>
+                </PaginationItem>)
+        }else{
+        console.log(i)
+        arr[i]=(
+            <PaginationItem key={i} onClick={()=>pindahpage(i+1)}>
+                <PaginationLink>
+                    {i+1}
+                </PaginationLink>
+                </PaginationItem>
+        )
+        }
+    }
+    return arr
+    }
+    const renderpaging1=()=>{
+    console.log("jalan")
+    console.log(maxpages1)
+    var jumlahpage=Math.ceil(maxpages1/10)
+    var arr=new Array(jumlahpage)
+    console.log(jumlahpage)
+    console.log(arr)
+    for(let i=0;i<arr.length;i++){
+        if((i+1)===pages){
+        arr[i]=(<PaginationItem key={i} disabled>
+                    <PaginationLink>
+                    {i+1}
+                    </PaginationLink>
+                </PaginationItem>)
+        }else{
+        console.log(i)
+        arr[i]=(
+            <PaginationItem key={i} onClick={()=>pindahpage(i+1)}>
+                <PaginationLink>
+                    {i+1}
+                </PaginationLink>
+                </PaginationItem>
+        )
+        }
+    }
+    return arr
+    }
+    const renderpaging2=()=>{
+        console.log("jalan")
+        console.log(maxpages2)
+        var jumlahpage=Math.ceil(maxpages2/5)
+        var arr=new Array(jumlahpage)
+        console.log(jumlahpage)
+        console.log(arr)
+        for(let i=0;i<arr.length;i++){
+          if((i+1)===pages){
+            arr[i]=(<PaginationItem key={i} disabled>
+                      <PaginationLink>
+                        {i+1}
+                      </PaginationLink>
+                    </PaginationItem>)
+          }else{
+            console.log(i)
+            arr[i]=(
+              <PaginationItem key={i} onClick={()=>pindahpage(i+1)}>
+                    <PaginationLink>
+                      {i+1}
+                    </PaginationLink>
+                  </PaginationItem>
+            )
+          }
+        }
+        return arr
+      }
+      const renderpaging3=()=>{
+        console.log("jalan")
+        console.log(maxpages3)
+        var jumlahpage=Math.ceil(maxpages3/5)
+        var arr=new Array(jumlahpage)
+        console.log(jumlahpage)
+        console.log(arr)
+        for(let i=0;i<arr.length;i++){
+          if((i+1)===pages){
+            arr[i]=(<PaginationItem key={i} disabled>
+                      <PaginationLink>
+                        {i+1}
+                      </PaginationLink>
+                    </PaginationItem>)
+          }else{
+            console.log(i)
+            arr[i]=(
+              <PaginationItem key={i} onClick={()=>pindahpage(i+1)}>
+                    <PaginationLink>
+                      {i+1}
+                    </PaginationLink>
+                  </PaginationItem>
+            )
+          }
+        }
+        return arr
+      }
 
     if(loading){
         return(
@@ -375,9 +517,9 @@ const AdminReport=()=>{
                                             {renderTableProduct()}
                                         </TableBody>
                                     </Table>
-                                    {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
-                                    {renderpaging()}
-                                    </Pagination> */}
+                                    <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+                                    {renderpaging0()}
+                                    </Pagination>
                                 </TableContainer>
                             </div>
                             <div style={{
@@ -405,9 +547,9 @@ const AdminReport=()=>{
                                             {renderTableParcel()}
                                         </TableBody>
                                     </Table>
-                                    {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
-                                    {renderpaging()}
-                                    </Pagination> */}
+                                    <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+                                    {renderpaging1()}
+                                    </Pagination>
                                 </TableContainer>
                             </div>
                         </div>
@@ -432,9 +574,9 @@ const AdminReport=()=>{
                                     {renderReportTransaksi()}
                                 </TableBody>
                             </Table>
-                            {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
-                            {renderpaging()}
-                            </Pagination> */}
+                            <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+                            {renderpaging2()}
+                            </Pagination>
                         </TableContainer>
                     </div>
 
@@ -459,9 +601,9 @@ const AdminReport=()=>{
                                     {renderReportTransaksiDetail()}
                                 </TableBody>
                             </Table>
-                            {/* <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
-                            {renderpaging()}
-                            </Pagination> */}
+                            <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+                            {renderpaging3()}
+                            </Pagination>
                         </TableContainer>
                     </div>
                 </div>
