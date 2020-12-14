@@ -1080,8 +1080,7 @@ class DetailParcel extends Component {
     render() { 
         // console.log(API_URL_SQL)
     //   console.log(this.state.dataArrMakanan)
-        console.log(this.findCategoryProduct)
-            console.log(this.state.categoryProduct)
+        console.log(this.state.limitProduct)
             const {classes}= this.props
             
         return ( 

@@ -59,6 +59,7 @@ class DetailParcel extends Component {
         deleteUndefinedChocolate:false,
         indexCartChocolate:0,
         RandomParcel:false,
+        allowedBeli:false,
 
         // 
 
@@ -842,6 +843,7 @@ class DetailParcel extends Component {
 
 
             if(totalQtyMinuman == limitMinuman && totalQtyMakanan == limitMakanan && totalQtyChocolate == limitChocolate){
+                this.setState({allowedBeli:true})
                 console.log('true')
                 var obj = {
                     user_id:userid,
@@ -861,18 +863,21 @@ class DetailParcel extends Component {
                  })
 
             }else if(totalQtyMinuman < limitMinuman) {
+                this.setState({allwoedBeli:false})
                 Swal.fire({
                     icon: 'error',
                     title: `Ada Barang Yang Kurang`,
                     text: `Anda Harus Memilih ${limitMinuman} Minuman`                   
                 })
             }else if (totalQtyMakanan < limitMakanan){
+                this.setState({allwoedBeli:false})
                 Swal.fire({
                     icon: 'error',
                     title: `Ada Barang Yang Kurang`,
                     text: `Anda Harus Memilih ${limitMakanan} Makanan`                  
                 })
             }else if(totalQtyChocolate <limitChocolate){
+                this.setState({allwoedBeli:false})
                 Swal.fire({
                     icon: 'error',
                     title: `Ada Barang Yang Kurang`,
@@ -1252,11 +1257,21 @@ class DetailParcel extends Component {
                                             </table>
                                         
                                     </div>
+                                    {
+                                        this.state.allowedBeli ?
                                         <a href="/cart">
                                             <div className="button-add" onClick={this.saveMessage}>
                                                 <p>Beli</p>
                                             </div>
                                         </a>
+                                        :
+                                        <a href="#">
+                                        <div className="button-add" onClick={this.saveMessage}>
+                                            <p>Beli</p>
+                                        </div>
+                                    </a>
+
+                                    }
 
                             </div>
 
