@@ -366,6 +366,7 @@ const CartPage=()=>{
                     limitqty:val.qty
                 }
             })
+            console.log(arrlimit)
             setLimitProduct(arrlimit)
             getProductList(arrlimit,dataforedit)
             

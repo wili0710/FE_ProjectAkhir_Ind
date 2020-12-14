@@ -143,7 +143,7 @@ class DetailParcel extends Component {
      })
 
      
-
+     
    
   
      hapusDataMinuman=(id)=>{
