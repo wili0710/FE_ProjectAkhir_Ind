@@ -16,8 +16,8 @@
 
         .subborder2 {
             @include bordering(none, $borderset, $borderset, none);
-            @include flexin(row,center,center);
-            padding        : 20px 30px 0 30px;
+            @include flexin(row, center, center);
+            padding: 20px 30px 0 30px;
 
             .addcard {
                 @include flexin(null, center, center);
@@ -34,11 +34,12 @@
                     font-weight   : 600;
                     font-size     : 40px;
                 }
+
                 .imgBx {
                     position: relative;
-                    width : 250px;
-                    height: 250px;
-                    margin: 0 30px 0 10px;
+                    width   : 250px;
+                    height  : 250px;
+                    margin  : 0 30px 0 10px;
 
                     .erase {
                         position        : absolute;
@@ -59,10 +60,12 @@
                             opacity         : 1;
                             background-color: $dk_tertiary;
                         }
+
                         &:focus {
                             outline: none;
                         }
                     }
+
                     img {
                         position  : relative;
                         width     : 100%;
@@ -70,6 +73,7 @@
                         object-fit: cover;
                     }
                 }
+
                 .formBx {
                     @include flexin(column, center, center);
                     color: $dk_gray;
@@ -79,17 +83,20 @@
                             @include flexin(row, center, center);
                             width: 100%;
                         }
+
                         span {
                             color    : $tertiary;
                             font-size: 10px;
                             margin   : -5px 0 0 10px;
                         }
                     }
+
                     label {
                         margin-right: 20px;
                         width       : 300px;
                         font-size   : 14px;
                     }
+
                     select {
                         background-color: $lt_gray;
                         color           : $tertiary;
@@ -107,6 +114,7 @@
                         &:hover {
                             cursor: pointer;
                         }
+
                         &:focus {
                             outline: none;
 
@@ -114,6 +122,7 @@
                                 display: none;
                             }
                         }
+
                         option {
                             border : none;
                             outline: none;
@@ -125,6 +134,7 @@
                             }
                         }
                     }
+
                     input {
                         color: $tertiary;
                         width: 100%;
@@ -143,23 +153,26 @@
                                     color: $lt_gray;
                                 }
                             }
+
                             &:hover:not([disabled]) {
                                 letter-spacing: 0.5px;
-                                
+
                                 &::placeholder {
                                     color         : $tertiary;
                                     letter-spacing: 0.5px;
                                 }
                             }
+
                             &::placeholder {
                                 // text-align  : center;
-                                font-weight : 400;
-                                font-size   : 12px;
-                                padding     : 20px;
-                                font-family : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                                font-weight  : 400;
+                                font-size    : 12px;
+                                padding      : 20px;
+                                font-family  : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
                                 // transition: 0.3s;
                             }
                         }
+
                         &[type="file"] {
                             position: relative;
                             opacity : 0;
@@ -168,14 +181,16 @@
                             &:disabled {
                                 cursor: not-allowed;
 
-                                &~.fakeBx{
+                                &~.fakeBx {
                                     background-color: $lt_gray !important;
                                 }
                             }
+
                             &:focus {
                                 outline: none;
                                 border : 1px solid $tertiary;
                             }
+
                             &:hover:not([disabled]) {
                                 cursor: pointer;
 
@@ -184,23 +199,27 @@
                                     letter-spacing  : 1px;
                                 }
                             }
+
                             &:focus,
                             &:active {
                                 outline: none;
-                                border: none;
+                                border : none;
                             }
                         }
+
                         &:focus {
                             outline: none;
                             border : 1px solid $tertiary;
                         }
-                        
+
                     }
+
                     .urlBx {
                         div {
                             @include flexin(column, center, center);
                         }
                     }
+
                     .fakeBx {
                         background-color: $tertiary;
                         color           : $white;
@@ -214,6 +233,7 @@
                         font-weight     : 600;
                     }
                 }
+
                 .rotate270 {
                     color         : $lt_gray;
                     transform     : rotate(90deg);
@@ -224,6 +244,7 @@
                 }
             }
         }
+
         .buttonBx {
             @include flexin(row, center, center);
             border-left : $borderset;
@@ -240,10 +261,11 @@
                 transition      : 0.5s;
 
                 &:disabled {
-                    color   : $lt_gray;
-                    border  : 1px dashed $lt_gray;
-                    opacity : .5;
+                    color  : $lt_gray;
+                    border : 1px dashed $lt_gray;
+                    opacity: .5;
                 }
+
                 &:hover:not([disabled]) {
                     color         : $lt_primary;
                     font-weight   : bold;
@@ -252,13 +274,15 @@
                     border        : 1px dashed $lt_primary;
                     cursor        : pointer;
                 }
+
                 &:focus {
                     outline: none;
                 }
+
                 &:active {
                     background-color: $lt_primary;
-                    color: $white;
-                    outline: none;
+                    color           : $white;
+                    outline         : none;
                 }
             }
         }
@@ -270,14 +294,14 @@
         padding         : 0 30px 30px 30px;
 
         .subborder3 {
-            @include bordering(none,$borderset,$borderset,$borderset);
-            @include flexin(column,center,center);
+            @include bordering(none, $borderset, $borderset, $borderset);
+            @include flexin(column, center, center);
             position: relative;
-            padding: 40px 60px 40px 60px;
+            padding : 40px 60px 40px 60px;
 
             p {
                 font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-                font-size: 14px;
+                font-size  : 14px;
             }
 
             h1 {
@@ -298,11 +322,12 @@
                     margin-right    : 10px;
                 }
             }
+
             .tempcards {
                 @include flexin(row, center, center);
-                position: relative;
+                position : relative;
                 flex-wrap: wrap;
-                width: 100%;
+                width    : 100%;
 
                 .newparcel {
                     background-color: $white;
@@ -311,8 +336,9 @@
                     transition      : 0.5s;
 
                     &:hover {
-                        box-shadow  : 0px 2px 10px 1px rgba(gray,.2);
+                        box-shadow: 0px 2px 10px 1px rgba(gray, .2);
                     }
+
                     .subsubborder {
                         border          : $borderset;
                         background-color: $white;
@@ -321,6 +347,7 @@
                         &:hover {
                             border: 1px solid $tertiary;
                         }
+
                         .cardhead {
                             @include flexin(row, space-between, center);
 
@@ -328,6 +355,7 @@
                                 color      : $dk_tertiary;
                                 font-weight: 600;
                             }
+
                             button {
                                 background-color: $tertiary;
                                 color           : $white;
@@ -340,11 +368,13 @@
                                 &:disabled {
                                     background-color: $lt_gray;
                                 }
+
                                 &:hover:not([disabled]) {
                                     background-color: $dk_tertiary;
                                 }
                             }
                         }
+
                         .cardname {
                             border-bottom : $borderset;
                             font-weight   : bolder;
@@ -353,6 +383,7 @@
                             letter-spacing: 1px;
                             padding       : 3px;
                         }
+
                         .cardcategory {
                             text-align    : center;
                             font-size     : 14px;
@@ -360,6 +391,7 @@
                             letter-spacing: 2px;
                             margin        : 5px;
                         }
+
                         .imgBx {
                             margin: 5px 0 10px 0;
                             width : 200px;
@@ -372,21 +404,24 @@
                                 width     : 100%;
                             }
                         }
+
                         .cardharga {
                             background-color: $dk_tertiary;
                             color           : $white;
                             text-align      : center;
                             font-weight     : bolder;
                         }
+
                         .carditem {
                             @include flexin(row, space-between, center);
                             width  : 100%;
                             padding: 0 10px;
-                            
+
                             .texted {
-                                font-size: 15px;
+                                font-size  : 15px;
                                 font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
                             }
+
                             button {
                                 position        : relative;
                                 background-color: transparent;
@@ -404,6 +439,7 @@
                         }
                     }
                 }
+
                 .addingitemBx {
                     @include flexin(row, center, center);
                     background-color: $dk_gray;
@@ -414,30 +450,30 @@
                     height          : 500px;
 
                     .additemContent {
-                        @include bordering($borderset,none,$borderset,$borderset);
+                        @include bordering($borderset, none, $borderset, $borderset);
                         @include flexin(column, center, center);
-                        position    : relative;
-                        text-align  : center;
-                        margin-left : -3px;
-                        padding     : 40px 40px 10px 40px;
-                        height      : 100%;
-                        width       : 100%;
+                        position   : relative;
+                        text-align : center;
+                        margin-left: -3px;
+                        padding    : 40px 40px 10px 40px;
+                        height     : 100%;
+                        width      : 100%;
 
                         h2 {
                             color : $lt_gray;
                             margin: -10px 0 10px 0;
 
                             span {
-                                color           : $tertiary;
-                                border-bottom   : $borderset;
-                                margin          : 0 10px;
-                                padding         : 0 5px;
+                                color        : $tertiary;
+                                border-bottom: $borderset;
+                                margin       : 0 10px;
+                                padding      : 0 5px;
                             }
                         }
                         .subcaption {
-                            color       : $lt_gray;
-                            padding     : 5px 0 20px 0;
-                            font-family : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                            color      : $lt_gray;
+                            padding    : 5px 0 20px 0;
+                            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 
                             .span0 {
                                 color      : $tertiary;
@@ -460,6 +496,7 @@
                                 font-size       : 15px;
                             }
                         }
+
                         .renderBx {
                             position     : relative;
                             overflow     : hidden;
@@ -483,7 +520,7 @@
                                 width           : 150px;
 
                                 &:start {
-                                    margin-left : 10px;
+                                    margin-left: 10px;
                                 }
                                 &:end {
                                     margin-right: 10px;
@@ -547,15 +584,17 @@
                                 }
                             }
                         }
+
+                        
                         .selectBx {
                             @include flexin(row, space-between, center);
-                            position    : relative;
-                            width       : 100%;
-                            margin      : 5px 0;
-                            font-size   : 14px;
+                            position : relative;
+                            width    : 100%;
+                            margin   : 5px 0;
+                            font-size: 14px;
 
                             select {
-                                @include bordering($borderset,$borderset,4px solid $tertiary,$borderset);
+                                @include bordering($borderset, $borderset, 4px solid $tertiary, $borderset);
                                 color           : $tertiary;
                                 position        : relative;
                                 background-color: transparent;
@@ -565,17 +604,17 @@
                                 width           : 30%;
                                 font-size       : 14px;
                                 font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-                                
-                                
-                                &:hover {
+
+                                &:hover:not(:disabled) {
                                     border-style: solid;
                                 }
-                                &:focus {
+                                &:focus,
+                                &:active {
                                     outline     : none;
-                                    border-style: solid;;
+                                    border-style: solid;
 
                                     .hide {
-                                        display: none;
+                                        display: none !important;
                                     }
                                 }
                                 option {
@@ -587,43 +626,48 @@
                                     font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
                                 }
                             }
+
                             input {
-                                @include bordering(1px dashed $lt_gray,none,none,1px dashed $lt_gray);
-                                color       : $lt_gray;
-                                background  : transparent;
-                                position    : relative;
-                                font-weight : 700;
-                                padding     : 10px;
-                                width       : 60%;
-                                
+                                @include bordering(1px dashed $lt_gray, none, none, 1px dashed $lt_gray);
+                                color      : $lt_gray;
+                                background : transparent;
+                                position   : relative;
+                                font-weight: 700;
+                                padding    : 10px;
+                                width      : 60%;
+
 
                                 &:disabled {
                                     opacity: .6;
                                 }
+
                                 &:focus {
-                                    outline : none;
-                                    border  : 1px solid $lt_gray;
+                                    outline: none;
+                                    border : 1px solid $lt_gray;
                                 }
+
                                 &::placeholder {
-                                    color       : $lt_gray;
-                                    font-weight : 400;
-                                    font-family     : Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                                    color      : $lt_gray;
+                                    font-weight: 400;
+                                    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
                                 }
                             }
+
                             button {
-                                @include bordering(none,4px solid $lt_gray,none,none);
+                                @include bordering(none, 4px solid $lt_gray, none, none);
                                 background-color: $lt_gray;
                                 color           : $tertiary;
                                 position        : relative;
                                 font-weight     : 600;
                                 width           : 10%;
                                 padding         : 10px;
-                                
+
                                 &:disabled {
                                     color: $white;
                                 }
                             }
                         }
+
                         .buttonBx {
                             @include flexin(row, space-evenly, center);
                             position: relative;
@@ -633,6 +677,7 @@
                             .button1 {
                                 padding: 5px;
                             }
+
                             .button0 {
                                 background-color: $primary;
                                 color           : $white;
@@ -645,6 +690,7 @@
                                     cursor          : not-allowed;
                                 }
                             }
+
                             .button1 {
                                 background-color: $dk_tertiary;
                                 color           : $white;
@@ -655,6 +701,7 @@
                         }
                     }
                 }
+
                 .maincaption {
                     background-color: $tertiary;
                     text-align      : center;

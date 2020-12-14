@@ -378,8 +378,9 @@ class DetailParcel extends Component {
                     text: 'Stock Habis'                    
                 })
             }else {
-
                 var dataSama = this.state.dataArrMakanan
+                console.log(dataSama)
+                console.log(dataMakanan)
                 dataSama[indexDataMakanan]= {...dataSama[indexDataMakanan],qty:dataSama[indexDataMakanan].qty+1}
                 dataMakanan[find]={...dataMakanan[find],stok:dataMakanan[find].stok-1}
                 console.log(dataMakanan)

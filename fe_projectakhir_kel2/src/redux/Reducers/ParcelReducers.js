@@ -12,9 +12,9 @@ const INITIAL_STATE = {
 export default (state=INITIAL_STATE, action)=>{
     switch(action.type){
         case 'LOAD'     :
-            return {...state,...action.payload,isLoading:true};
+            return {...state,...action.payload,isLoading:false};
         case 'LOADING'  :
-            return {...state,isLoading:false};
+            return {...state,isLoading:true};
         case 'Error'    :
             return {...state,error:action.payload,isLoading:false};
         default         :

@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { API_URL_SQL } from '../helpers/apiUrl';
 import Logo from './../assets/logo.png'
@@ -15,7 +15,53 @@ import ReactImageMagnify from 'react-image-magnify';
 import { namaPertama } from '../helpers/namapertama';
 import Swal from 'sweetalert2';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FcApprove } from 'react-icons/fc'
+import { AiFillMinusSquare,AiFillPlusSquare } from 'react-icons/ai'
+import Dropzone, {useDropzone} from 'react-dropzone'
 
+
+
+const MsgAddSatuan = ({ nama }) =>{
+    console.log(nama)
+    return (
+        <div style={{display:"flex", alignContent:"center"}}>
+            <div style={{marginRight:5}}>
+                <FcApprove size={20} />
+            </div>
+            <div>
+                {nama} berhasil ditambahkan 1
+            </div>
+        </div>
+    )
+}
+const MsgEditSatuan = ({ nama,qty,indexs }) =>{
+    console.log(nama)
+    return (
+        <div style={{display:"flex", alignContent:"center"}}>
+            <div style={{marginRight:5}}>
+                <FcApprove size={20} />
+            </div>
+            <div>
+                {nama} berhasil diubah menjadi {qty}
+            </div>
+        </div>
+    )
+}
+    const MsgEditParcel = ({ nama,indexs }) =>{
+        console.log(nama)
+            return (
+                <div style={{display:"flex", alignContent:"center"}}>
+                    <div style={{marginRight:5}}>
+                        <FcApprove size={20} />
+                    </div>
+                    <div>
+                        {indexs}: {nama} berhasil diubah
+                    </div>
+                </div>
+            )
+        }
 
 const CartPage=()=>{
     const Auth=useSelector(state=>state.Auth) 
@@ -46,6 +92,13 @@ const CartPage=()=>{
 
     const [randomProduct,setRandomProduct]=useState()
     const [overlayProduct,setOverlayProduct]=useState()
+
+    const [indexparceltoas,setindexparceltoas]=useState()
+    const [namaparceltoas,setnamaparceltoas]=useState()
+
+    // const [listProduk_ID,setListProduk_ID]=useState()
+    // const [listProduk_Qty,setListProduk_Qty]=useState()
+
 
     const toggleModalEdit=()=>setShowEdit(!showEdit)
 
@@ -81,13 +134,19 @@ const CartPage=()=>{
         }
     }
 
+    const onDrop = useCallback(acceptedFiles => {
+        console.log(acceptedFiles)
+        setImage(acceptedFiles[0])
+    }, [])
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+
     // Pembayaran
     const [showPembayaran,setShowPembayaran]=useState(false)        // Show PopUp / Modal Pembayaran
     const [image,setImage]=useState()                               // Set Image
 
     const clickSendBukti=(transaksi_id,users_id)=>{
         console.log(transaksi_id,users_id)
-        // let data={transaksi_id,users_id,image}
+
         let formData=new FormData()
         let options={
             header:{
@@ -110,6 +169,29 @@ const CartPage=()=>{
     // End Pembayaran, dataforedit diambil dari transaksi detail yg ingin di edit
 
     // Random Product
+
+    // const notifyAddProductSatuan = () => toast.info("🦄Wow so easy !")
+    const notifyAddProductSatuan = (namaproduct) => toast.info(<MsgAddSatuan nama={namaproduct}/>)
+    const notifyEditProductSatuan = (namaproduct,qty,indexs) => toast.info(<MsgEditSatuan nama={namaproduct} qty={qty} indexs={indexs}/>)
+
+    const notifyEditProductParcel = (namaproduct,indexs) => toast.info(<MsgEditParcel nama={namaparceltoas} indexs={indexparceltoas}/>)
+    
+
+    const addProductSatuan=async(products_id,namaproduct)=>{
+        try {
+            let addToBE=await Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
+                user_id:Auth.id,
+                products_id:products_id,
+                parcel_id:0,
+                qty:1,
+            })
+            console.log(addToBE)
+            dispatch({type:"CART",cart:addToBE.data})
+            notifyAddProductSatuan(namaproduct)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const renderRandomProduct=()=>{
         console.log(randomProduct)
@@ -146,7 +228,7 @@ const CartPage=()=>{
                             boxShadow:"0px 0px 15px 1px lighgrey",
                             textAlign:"center",
                             color:"white"
-                        }}>
+                        }} onClick={()=>addProductSatuan(val.id,val.nama)}>
                             Add
                         </div>
                     </div>
@@ -422,14 +504,15 @@ const CartPage=()=>{
                     <div style={{
                         display:"flex",
                         justifyContent:"space-between",
-                        flex:4
+                        flex:3
                     }}>
                         <h6>- {val.nama} </h6>
                     </div>
                     <div style={{
                         display:"flex",
                         justifyContent:"space-around",
-                        flex:1
+                        flex:1,
+
                     }}>
                         <h6>: {val.qty}</h6>
                         <div style={{
@@ -437,8 +520,9 @@ const CartPage=()=>{
                             display:status[0].isAtZero?"none":"inline",
                             fontWeight:"700",
                             fontSize:20,
+
                         }} onClick={()=>clickMinus(val.nama)}>
-                            -
+                            <AiFillMinusSquare color={"red"} style={{verticalAlign:"0px"}}/>
                         </div>
                         <div style={{
                             cursor:"pointer",
@@ -446,7 +530,7 @@ const CartPage=()=>{
                             fontWeight:"700",
                             fontSize:20
                         }}onClick={()=>clickPlus(val.nama,val.category,val.products_id)}>
-                            +
+                            <AiFillPlusSquare color={"#318ae7"} style={{verticalAlign:"0px"}}/>
                         </div>
                     </div>
                 </div>
@@ -551,13 +635,13 @@ const CartPage=()=>{
                                     cursor:"pointer",
                                     display:status[0].isAtZero?"none":"inline"
                                 }} onClick={()=>clickMinus(val.nama)}>
-                                    -
+                                    <AiFillMinusSquare color={"red"}/>
                                 </div>
                                 <div style={{
                                     cursor:"pointer",
                                     display:status[0].isAtLimit?"none":"inline"
                                 }}onClick={()=>clickPlus(val.nama,val.categoryproduct,val.products_id)}>
-                                    +
+                                    <AiFillPlusSquare color={"#318ae7"}/>
                                 </div>
                                 
                             </div>
@@ -731,8 +815,10 @@ const CartPage=()=>{
                             {
                                 editSatuan===val.transaksidetail_id?
                                 <>
-                                    <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{
-                                        setEditSatuan();setEditSatuan(!editSatuan);clickSaveSatuan(val.products_id,val.transaksidetail_id)
+                                    <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={(e)=>{
+                                        e.preventDefault()
+                                        setEditSatuan(!editSatuan)
+                                        clickSaveSatuan(val.products_id,val.transaksidetail_id,val.nama,qtySatuan,index)
                                         }}>Save</span>
                                         | 
                                     <span style={{color:"red",cursor:"pointer"}} 
@@ -742,7 +828,7 @@ const CartPage=()=>{
                                 <>
                                     <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{
                                         setItemEdit(val);setQtySatuan(val.qty);setEditSatuan(val.transaksidetail_id)
-                                        }}>Edit</span>
+                                        }}>Edit </span>
                                         | 
                                     <span style={{color:"red",cursor:"pointer"}} 
                                     onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
@@ -794,7 +880,7 @@ const CartPage=()=>{
                         display:"flex",
                         flexDirection:"column"
                     }}>
-                        <h6>{val.nama}</h6>
+                        <h6>{index+1}: {val.nama}</h6>
                         <h6>Isi Parcel</h6>
                         <div style={{
                             marginLeft:10,
@@ -829,7 +915,7 @@ const CartPage=()=>{
                             cursor:"default",
                             marginBottom:10
                         }}> 
-                            <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>onClickOpenEditParcel(dataforedit)}>Edit</span> | 
+                            <h6><span style={{color:"#158ae6",cursor:"pointer"}} onClick={()=>{setnamaparceltoas(val.nama);setindexparceltoas(index+1);onClickOpenEditParcel(dataforedit)}}>Edit</span> | 
                             <span style={{color:"red",cursor:"pointer"}} onClick={()=>onClickRemove(val.transaksi_id,val.transaksidetail_id)}> Remove</span></h6>
                         </div>
                         <h6>Total</h6>
@@ -862,7 +948,7 @@ const CartPage=()=>{
         }
     }
     
-    const clickSaveSatuan=(products_id,transaksidetail_id)=>{
+    const clickSaveSatuan=(products_id,transaksidetail_id,nama,qty,indexs)=>{
         let senttobe={
             user_id:`${Auth.id}`,
             products_id:`${products_id}`,
@@ -874,11 +960,12 @@ const CartPage=()=>{
             .then((res)=>{
                 console.log(res.data)
                 dispatch({type:'CART',cart:res.data})
+                notifyEditProductSatuan(nama,qty,indexs)
             }).catch((err)=>{
                 console.log(err)
             })
     }
-    const onClickSaveParcel=(transaksidetail_id,parcel_id)=>{
+    const onClickSaveParcel=(transaksidetail_id,parcel_id,indexs)=>{
         console.log(komposisiParcel)
 
         if(!isAllLimit){
@@ -914,6 +1001,7 @@ const CartPage=()=>{
                 console.log(res.data)
                 dispatch({type:'CART',cart:res.data})
                 setShowEdit(!showEdit)
+                notifyEditProductParcel()
             }).catch((err)=>{
                 setShowEdit(!showEdit)
                 console.log(err)
@@ -944,6 +1032,17 @@ const CartPage=()=>{
             maxWidth:2000,
             justifyContent:"center",
         }}>
+            <ToastContainer
+                position="bottom-right"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
             {/* MODAL Pembayaran */}
             {
                 showPembayaran?
@@ -1003,7 +1102,7 @@ const CartPage=()=>{
                             display:"flex",
                             width:"100%",
                         }}>
-                            <div style={{
+                            {/* <div style={{
                                 width:"30%",
                                 borderRight:"10px solid #f4f6f8",
                                 padding:20
@@ -1013,7 +1112,7 @@ const CartPage=()=>{
                                 }}>
                                     Transfer
                                 </div>
-                            </div>
+                            </div> */}
                             <div style={{
                                 padding:20,
                                 display:"flex",
@@ -1033,8 +1132,17 @@ const CartPage=()=>{
                                 <div style={{padding:5}}>
                                     <h6>Upload Bukti Pembayaran :</h6>
                                 </div>
-                                <div style={{padding:5}}>   
-                                    <input onChange={(e)=>setImage(e.target.files[0])} type="file"/>
+                                <div style={{padding:5}}>  
+                                    <div {...getRootProps()}>
+                                        <input {...getInputProps()} />
+                                        {
+                                        isDragActive ?
+                                            <p>Drop the files here ...</p> :
+                                            <p>Drag 'n' drop some files here, or click to select files</p>
+                                        }
+                                    </div>
+
+                                    {/* <input onChange={(e)=>{console.log(e.target.files);setImage(e.target.files[0])}} type="file"/> */}
                                     {
                                         image?
                                         <ReactImageMagnify {...{
@@ -1192,8 +1300,6 @@ const CartPage=()=>{
                         </div>
                     </div>
                 </>
-                
-                
                 :
                 null
             }
@@ -1266,18 +1372,23 @@ const CartPage=()=>{
                                     </span>
                                 </div>
                                 <div>
-                                    {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
-                                    renderCart()
-                                    // null
-                                    :
-                                    <div style={{
-                                        display:"flex",
-                                        justifyContent:"center",
-                                        padding:10
-                                    }}>
-                                        <span>Masih Kosong</span>    
-                                    </div>
-                                    }
+                                    <Scrollbars autoHeight autoHeightMin={Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?50:0} 
+                                    autoHide autoHeightMax={400}>
+                                            
+                                        {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
+                                        renderCart()
+                                        // null
+                                        :
+                                        <div style={{
+                                            display:"flex",
+                                            justifyContent:"center",
+                                            padding:10
+                                        }}>
+                                            <span>Masih Kosong</span>    
+                                        </div>
+                                        }
+                                      
+                                    </Scrollbars>
                                 </div>
                             </div>
                         </div>
@@ -1462,7 +1573,7 @@ const CartPage=()=>{
                                             </Link>
                                         </div>
                                     </div>
-                                    <Scrollbars autoHeight autoHide>
+                                    <Scrollbars autoHeight>
                                         <div style={{
                                             display:"flex",
                                             justifyContent:"space-between",

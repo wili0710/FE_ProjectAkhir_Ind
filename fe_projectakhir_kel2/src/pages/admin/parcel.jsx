@@ -16,6 +16,10 @@ export default connect(mapStatetoProps,{loadCategories}) (class Parcel extends R
         this.props.loadCategories();
     };
 
+    componentDidUpdate() {
+        
+    }
+
     render() {
         // console.log(this.props.Parcel)
         return (

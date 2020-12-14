@@ -18,6 +18,7 @@ import {FaUserCog,FaMoneyCheckAlt} from 'react-icons/fa'
 import './user.css'
 import { Pagination,PaginationItem, PaginationLink } from 'reactstrap';
 import { TableFooter } from '@material-ui/core';
+import {Button} from 'reactstrap'
 
 const useStyles = makeStyles({
   root: {
@@ -115,7 +116,7 @@ const AdminPayment=()=>{
             <TableCell style={{width:170}} align="center">{moment(val.tglexp).format('Do MMMM YYYY')}</TableCell>
             <TableCell style={{width:160}} align="center">Rp {numeral(val.totalpayment).format('0,0.0')}</TableCell>
             <TableCell style={{width:110}} align="center">
-              <button onClick={()=>onConfirmClick(val.payment_id,val.transaksi_id)}>Confirm</button>
+              <Button color="primary" onClick={()=>onConfirmClick(val.payment_id,val.transaksi_id)}>Confirm</Button>
             </TableCell>
         </TableRow>
       )
@@ -156,40 +157,55 @@ const AdminPayment=()=>{
   return (
     <>
       <div className="user-container">
-      <HeaderAdmin/>
-        <div className="user-right">
-            <div className="header-user">
-                <div className="icon-group">
-                    <FaMoneyCheckAlt className="icon-user" color="black"/>
-                    <p style={{fontWeight:'600'}}>Payment</p>
-                </div>
+        <HeaderAdmin/>
+        <div style={{marginLeft:100,width:"100%"}}>
+          <div>
+            <div style={{
+                display:"flex",
+                alignItems:"center",
+                color:"#318ae7",
+                padding:20,
+                borderBottom:"5px solid whitesmoke"
+                
+            }}>
+              <div>
+                  <FaMoneyCheckAlt className="icon-user" color={"#318ae7"}/>
+              </div>
+              <div>
+                  <span style={{
+                      fontWeight:'bold',
+                      fontSize:20,
+
+                  }}>Report</span>
+              </div>
             </div>
-            <div className="container-data">
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                        <TableCell align="center">Payment Id</TableCell>
-                        <TableCell align="center">Transaksi Id</TableCell>
-                        <TableCell align="center">Bukti Transfer</TableCell>
-                        <TableCell align="center">Tgl Transaksi</TableCell>
-                        <TableCell align="center">Tgl Expired</TableCell>
-                        <TableCell align="center">Total Harus Dibayar</TableCell>
-                        <TableCell align="center"></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                      {renderTable()}
-                  </TableBody>
-                </Table>
-                <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
-                  {renderpaging()}
-                </Pagination>
-              </TableContainer>
-            </div>
+          </div>
+
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                    <TableCell align="center">Payment Id</TableCell>
+                    <TableCell align="center">Transaksi Id</TableCell>
+                    <TableCell align="center">Bukti Transfer</TableCell>
+                    <TableCell align="center">Tgl Transaksi</TableCell>
+                    <TableCell align="center">Tgl Expired</TableCell>
+                    <TableCell align="center">Total Harus Dibayar</TableCell>
+                    <TableCell align="center"></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                  {renderTable()}
+              </TableBody>
+            </Table>
+            <Pagination style={{display:"flex", justifyContent:"center",width:"100%"}}>
+              {renderpaging()}
+            </Pagination>
+          </TableContainer>
+
         </div>
-      </div>
-      </>
+    </div>
+  </>
     
 
   );
