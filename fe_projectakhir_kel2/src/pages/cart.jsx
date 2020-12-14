@@ -558,27 +558,37 @@ const CartPage=()=>{
         let deletezero=minusInput.filter((filtering)=>{
             return filtering.qty>0
         })
-
+        console.log(deletezero)
         setKomposisiParcel(deletezero)
     }
     const clickPlus=(nama,category,products_id)=>{
 
         let plusInput=komposisiParcel.map((val,index)=>{
-            console.log(val)
+            console.log(listProduct)
             // Jika sesuai maka +1
             if(val.nama==nama){
-                Axios.post(`${API_URL_SQL}/product/getdataproductbyid/`,{id:val.products_id})
-                .then((res)=>{
-                    console.log(val)
-                    if(val.qty+1>res.data[0].stok){
-                        return Swal.fire({
-                            icon: 'error',
-                            title: 'Stok Kurang',
-                            text: `${val.nama} Stok hanya ${res.data[0].stok}`,
-                        })
-                    }    
+                let getstok=listProduct.filter((filtering)=>{
+                    return filtering.nama == nama
                 })
-                return{...val,qty:val.qty+1}
+                console.log(getstok)
+                if(getstok[0].stok<val.qty+1){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Stok Kurang',
+                        text: `${val.nama} Stok hanya ${getstok[0].stok}`,
+                    })
+                    return{...val}
+                }else{
+                    return{...val,qty:val.qty+1}
+
+                }
+                // Axios.post(`${API_URL_SQL}/product/getdataproductbyid/`,{id:val.products_id})
+                // .then((res)=>{
+                //     console.log(val)
+                //     if(val.qty+1>res.data[0].stok){
+                //     }else{
+                    // }
+                // })
             }else{
                 return {...val}
             }
@@ -1619,7 +1629,7 @@ const CartPage=()=>{
                                     justifyContent:"center",
                                     marginTop:20
                                 }}>
-                                    {Auth.cart.transaksiparcel.length || Auth.cart.transaksidetailsatuan.length?
+                                    {Auth.cart.transaksiparcel.length>0 || Auth.cart.transaksidetailsatuan.length>0?
                                         <Button style={{
                                             width:200
                                         }} onClick={()=>setShowPembayaran(!showPembayaran)} color="primary">

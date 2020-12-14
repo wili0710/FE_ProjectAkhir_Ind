@@ -49,7 +49,7 @@ export default () => {
                                     <HiShoppingCart />
                                         {Auth.cart.transaksidetailsatuan.length || Auth.cart.transaksidetailparcel.length?
                                             <div className="notif" style={{position:"absolute",top:-10,right:0,background:"tomato",fontSize:10,padding:"2px 6px",borderRadius:4,color:"white"}}>
-                                                {Auth.cart.transaksidetailsatuan.length + Auth.cart.transaksidetailparcel.length}
+                                                {Auth.cart.transaksidetailsatuan.length + Auth.cart.transaksiparcel.length}
                                             </div>
                                             :
                                             null
