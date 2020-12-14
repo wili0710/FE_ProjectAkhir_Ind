@@ -390,6 +390,10 @@ class dataProduct extends Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
+                            <Dropdown.Item href="/useraccount">
+                                        <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                        My Account
+                                </Dropdown.Item>
                                 <Dropdown.Item href="/" onClick={this.onLogoutClick}>
                                     <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
                                     Logout
