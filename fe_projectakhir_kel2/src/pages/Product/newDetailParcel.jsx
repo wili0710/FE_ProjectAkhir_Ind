@@ -23,12 +23,11 @@ import {connect} from 'react-redux';
 import {LogoutFunc} from './../../redux/Actions'
 import Zoom from 'react-reveal/Zoom';
 import HorizontalScroll from 'react-scroll-horizontal'
-import numeral from 'numeral';
 
 import { Scrollbars } from 'react-custom-scrollbars';
 import { css } from '@emotion/react';
 
-class DetailParcel extends Component {
+class newDetailParcel extends Component {
     state = { 
         dataParcelByIdMakanan:[],
         dataParcelByIdMinuman:[],
@@ -64,7 +63,13 @@ class DetailParcel extends Component {
 
         // 
 
-        categoryProduct:[]
+        categoryProduct:[],
+        limitProduct:[],
+        arrCategoryId:[],
+        arrProductCategory:[],
+        newRenderOpen:0,
+        setStatusPerCategory:[],
+        setIsAllLimit:null
      }
      
 
@@ -131,7 +136,8 @@ class DetailParcel extends Component {
          }).catch((err)=>{
              console.log(err)
          })
-
+         this.getLimitProduct()
+         this.inStatusPerCategory()
          
 
      }
@@ -144,7 +150,249 @@ class DetailParcel extends Component {
          }
      })
 
-     
+     getLimitProduct=async()=>{
+        try{
+            const getLimit = await Axios.get(`${API_URL_SQL}/product/getDataParcelById/${this.props.match.params.id}`)
+            const arrlimit = getLimit.data.map((val,index)=>{
+                return {
+                    categoryproduct_id:val.categoryproduct_id,
+                    category:val.namaProduct,
+                    limitqty:val.qty
+                }
+            })
+
+            const arrCategoryId=arrlimit.map((val,index)=>{
+                return val.categoryproduct_id
+            })
+            
+            this.setState({limitProduct:arrlimit,arrCategoryId:arrCategoryId})
+            const gettobe = await Axios.post(`${API_URL_SQL}/product/getAllProductByCategory/`,{categoryproduct_id:arrCategoryId})
+            this.setState({arrProductCategory:gettobe.data})
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    inStatusPerCategory=async()=>{
+       var  dataArrMakanan= this.state.dataArrMakanan
+        var limitProduct=this.state.limitProduct
+        let saring =limitProduct.map((val)=>{
+            let komposisi = dataArrMakanan.filter((filtering)=>{
+                return filtering.category == val.category
+            })
+
+            if(komposisi.length ==0){
+                return [{
+                    category:val.category,
+                    qty:0
+                }]
+            }else {
+                return komposisi
+            }
+        })
+
+        let qtypercategory=saring.map((val,index)=>{
+            let qty=0
+            val.map((value,index)=>{
+                qty+=value.qty
+            })
+            return  {
+                category:val[0].category,
+                qty:qty
+            }
+        })
+
+        let letstatusperCategory=qtypercategory.map((val,index)=>{
+            if(val.qty >=limitProduct[index].limitqty ){
+                return {
+                    categoryproduct_id:limitProduct[index].categoryproduct_id,
+                    category:val.category,
+                    isAtLimit:true,
+                    isAtZero:false
+                }
+            }else if(val.qty==0){
+                return {
+                    categoryproduct_id:limitProduct[index].categoryproduct_id,
+                    category:val.category,
+                    isAtLimit:false,
+                    isAtZero:true
+                }
+            }else {
+                return {
+                    categoryproduct_id:limitProduct[index].categoryproduct_id,
+                    category:val.category,
+                    isAtLimit:false,
+                    isAtZero:false,
+                }
+            }
+        })
+
+        this.setState({setStatusPerCategory:letstatusperCategory})
+
+        let isAllLimitFind=letstatusperCategory.find((filtering)=>{
+            return filtering.isAtLimit==false
+        })
+        if(isAllLimitFind==undefined){
+            isAllLimitFind={isAtLimit:true}
+        }
+        let isAllLimit = isAllLimitFind.isAtLimit
+        if(isAllLimit !==false){
+            isAllLimit=true
+        }
+
+        this.setState({setIsAllLimit:isAllLimit})
+    }
+
+    clickPlus=(nama,category,products_id,limitqty)=>{
+        console.log('masuk button plus')
+        console.log(nama)
+        console.log(category)
+        console.log(products_id)
+        // console.log(limitqty)
+
+        var dataArrMakanan= this.state.dataArrMakanan
+        let plusInput=dataArrMakanan.map((val,index)=>{
+            if(val.nama== nama){
+                return {...val,qty:val.qty+1}
+            }else {
+                return {...val}
+            }
+        })
+        console.log(plusInput)
+                let isMax = this.state.setStatusPerCategory.filter((filtering)=>{
+                    return filtering.category === category
+                })
+                // let isInKomposisi=dataArrMakanan.filter((filtering)=>{
+                //     return filtering.nama===nama
+                // })
+
+                console.log(isMax)
+                // console.log(isInKomposisi)
+
+
+                // if(!isMax[0].isAtLimit && isInKomposisi.length ===0){
+                //     let newkomposisi={
+                //         products_id:products_id,
+                //         category:category,
+                //         nama:nama,
+                //         qty:1
+                //     }
+                //     plusInput.push(newkomposisi)
+                // }
+
+                this.setState({dataArrMakanan:plusInput})
+
+        // let plusInput=komposisiParcel.map((val,index)=>{
+
+        //     // Jika sesuai maka +1
+        //     if(val.nama==nama){
+        //         return{...val,qty:val.qty+1}
+        //     }else{
+        //         return {...val}
+        //     }
+        // })
+        // let isMax=statusPerCategory.filter((filtering)=>{
+        //     return filtering.category===category
+        // })
+
+        // let isInKomposisi=komposisiParcel.filter((filtering)=>{
+        //     return filtering.nama===nama
+        // })
+
+        // // Jika belum limit di category produk tersebut dan produk itu tidak ada, maka tambah produk tersebut
+        // if(!isMax[0].isAtLimit&&isInKomposisi.length===0){
+        //     let newkomposisi={
+        //         products_id:products_id,
+        //         category:category,
+        //         nama:nama,
+        //         qty:1
+        //     }
+        //     plusInput.push(newkomposisi)
+        // }
+
+    }
+    clickMinus=(nama)=>{
+        console.log(nama)
+        console.log('masuk button minus')
+
+    }
+
+    newRenderCart=()=>{
+        const limitProduct= this.state.limitProduct
+
+         return limitProduct.map((val,index)=>{
+            //  console.log(val.limitqty)
+            let listprod=this.state.arrProductCategory.filter((filtering)=>{
+                return filtering.categoryproduct == val.category
+            })
+
+
+            let maplistprod = listprod.map((val,index)=>{
+                // console.log(val)
+                return (
+                    <div className=" box-3 card product_item" key={val.id} >
+                        <div className="cp_img">
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
+                            <div className="hover"  >
+                            {/* <BiPlus onClick={()=>this.AddDataMakanan(val.id)} className="icondp"/>
+                            <BiMinus onClick={()=>this.hapusDataMakanan(val.id)} className="icondp"/>   */}
+                            <BiPlus onClick={()=>this.clickPlus(val.nama,val.categoryproduct,val.products_id,)} className="icondp"/> 
+                            <BiMinus onClick={()=>this.clickMinus(val.nama)} className="icondp"/>
+                                {/* {
+                                    total==this.state.dataParcelByIdMakanan.qty ?
+                                    null:
+                                    <>
+                                    <BiPlus onClick={()=>this.AddDataMakanan(val.id)} className="icondp"/>
+                                    </>
+                                }
+                                {
+                                    total==0 ?
+                                    null 
+                                    :
+                                } */}
+                            
+                            </div>
+                        </div>
+                        <div className="product_details">
+                            <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
+                            <ul className="product_price list-unstyled">
+                                <li className="old_price">Stock:{val.stok}</li>
+                                <li className="new_price">Rp.{val.harga}</li>
+                            </ul>
+                        </div>
+                    </div>
+                )
+            })
+            
+            
+            
+            // const namaproduct= this.state.limitProduct.map((val,index)=>{
+                
+                return (
+                    // console.log(val)
+                    <>
+
+                    <div style={{display:'flex',flexDirection:'column'}}>
+                        <div style={{display:'flex',justifyContent:'space-between',cursor:'pointer'}} onClick={()=>this.setState({newRenderOpen:index})}>
+                            <p style={{marginLeft:'20px'}}>{index+1}.Pilih {val.category} Yang Kamu Mau</p>
+                        </div>
+                        <div onClick={this.toggleDialog} style={{display:this.state.newRenderOpen===index?"flex":"none",
+                            flexWrap:"wrap",   }}>
+                                {maplistprod}
+                        </div>  
+                        
+                    </div>
+                     
+                </>
+            )
+        // })
+        
+        
+        
+    })
+        // return namaproduct
+    }
+    
 
    
   
@@ -660,7 +908,7 @@ class DetailParcel extends Component {
                             <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
                             <ul className="product_price list-unstyled">
                                 <li className="old_price">Stock:{val.stok}</li>
-                                <li className="new_price">Rp{numeral(val.harga).format('0,0')}</li>
+                                <li className="new_price">Rp.{val.harga}</li>
                             </ul>
                         </div>
                 </div>
@@ -708,7 +956,7 @@ class DetailParcel extends Component {
                             <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
                             <ul className="product_price list-unstyled">
                                 <li className="old_price">Stock:{val.stok}</li>
-                                <li className="new_price">Rp{numeral(val.harga).format('0,0')}</li>
+                                <li className="new_price">Rp.{val.harga}</li>
                             </ul>
                         </div>
                 </div>
@@ -754,7 +1002,7 @@ class DetailParcel extends Component {
                             <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
                             <ul className="product_price list-unstyled">
                                 <li className="old_price">Stock:{val.stok}</li>
-                                <li className="new_price">Rp{numeral(val.harga).format('0,0')}</li>
+                                <li className="new_price">Rp.{val.harga}</li>
                             </ul>
                         </div>
                     </div> 
@@ -1033,12 +1281,11 @@ class DetailParcel extends Component {
          let renderSatuan= this.state.renderRandomProduct.map((val,index)=>{
              return (
                 <>
-                    <div className="card card-css" style={{width:'20rem'}}>
-                        <img className="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap" style={{height:'100px',width:'150px'}}/>
+                    <div className="card " style={{width:'18rem'}}>
+                        <img className="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
                         <div className="card-body">
                             <h5 className="card-title">{val.nama}</h5>
                             <p className="card-text">{val.deskripsi}</p>
-                            <p className="card-text">Rp{numeral(val.harga).format('0,0')}</p>
                             <a href="#" className="btn btn-primary" onClick={()=>this.productRandomSatuan(val.id)}> Beli</a>
                         </div>
                     </div>
@@ -1051,7 +1298,7 @@ class DetailParcel extends Component {
              return (
                  <>
                     <div className="card card-css" style={{width:'18rem'}}>
-                        <img className="card-img-top" src={val.gambar} alt="Card image cap"/>
+                        <img className="card-img-top" src={API_URL_SQL+val.image} alt="Card image cap"/>
                         <div className="card-body">
                             <h5 className="card-title">{val.nama}</h5>
                             <p className="card-text">{val.deskripsi}</p>
@@ -1076,8 +1323,10 @@ class DetailParcel extends Component {
     render() { 
         // console.log(API_URL_SQL)
     //   console.log(this.state.dataArrMakanan)
-        console.log(this.findCategoryProduct)
-            console.log(this.state.categoryProduct)
+            console.log(this.state.dataArrMakanan)
+            console.log(this.state.setStatusPerCategory)
+            // console.log(this.state.limitProduct)
+            // console.log(this.state.arrProductCategory)
             const {classes}= this.props
             
         return ( 
@@ -1157,10 +1406,11 @@ class DetailParcel extends Component {
                     <div className="body-render">
                         <div className="render-parcel" >
 
-                                <div className="k-button" onClick={this.toggleDialog}>
+                                {/* <div className="k-button" onClick={this.toggleDialog}>
                                     <p style={{marginLeft:'20px'}}>1.Pilih Makanan Yang Kamu Mau</p>
                                 </div>
-                                {this.state.visible && <div onClose={this.toggleDialog}>
+                                {
+                                this.state.visible && <div onClose={this.toggleDialog}>
                                     <Zoom>
                                         <div style={{display:'flex',flexWrap:'wrap'
                                                             }}>
@@ -1169,8 +1419,8 @@ class DetailParcel extends Component {
                                     </Zoom>
 
                             </div>
-                            }
-                                <div className="k-button" onClick={this.toggleDialogMinuman}>
+                                } */}
+                                {/* <div className="k-button" onClick={this.toggleDialogMinuman}>
                                     <p style={{marginLeft:'20px'}}>2.Pilih Minuman Yang Kamu Mau</p>
                                 </div>
                                 {this.state.MinumanVisible && <div onClose={this.toggleDialogMinuman}>
@@ -1181,8 +1431,8 @@ class DetailParcel extends Component {
                                         </div>
                                     </Zoom>
                                 </div>
-                                }
-                                <div className="k-button" onClick={this.toggleDialogChocolate}>
+                                } */}
+                                {/* <div className="k-button" onClick={this.toggleDialogChocolate}>
                                     <p style={{marginLeft:'20px'}}>3.Pilih Chocolate Yang Kamu Mau</p>
                                 </div>
                                 {this.state.ChocolateVisible && <div onClose={this.toggleDialogChocolate}>
@@ -1193,8 +1443,8 @@ class DetailParcel extends Component {
                                         </div>
                                     </Zoom>
                                 </div>
-                                }
-                                <div className="k-button" onClick={this.toggleDialogMessage}>
+                                } */}
+                                {/* <div className="k-button" onClick={this.toggleDialogMessage}>
                                     <p style={{marginLeft:'20px'}}>4.Isi Pesan Yang Kamu mau</p>
                                 </div>
                                 {this.state.messageVisible && <div onClose={this.toggleDialogMessage}>
@@ -1206,17 +1456,19 @@ class DetailParcel extends Component {
                                         </div>
                                     </Zoom>
                                 </div>
-                                }
+                                } */}
 
                                 {/* <Scrollbars autoHeight autoHide  >
                                  */}
-                                            <div style={{marginTop:'50px'}} className="random-cart">
-                                                <HorizontalScroll>
-                                                                {this.renderCartRandom()}
-                                                </HorizontalScroll>
-                                            </div>
+                                        <HorizontalScroll>
+                                    <div style={{marginTop:'50px'}} className="random-cart">
+                                                {this.renderCartRandom()}
+                                    </div>
+                                        </HorizontalScroll>
 
                                 {/* </Scrollbars> */}
+
+                                {this.newRenderCart()}
                                 
                         
                         </div>
@@ -1291,4 +1543,4 @@ const MapStatetoprops=({Auth,cart})=>{
     }
 }
 
-export default (connect(MapStatetoprops,{LogoutFunc})(DetailParcel))
+export default (connect(MapStatetoprops,{LogoutFunc})(newDetailParcel))

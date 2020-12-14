@@ -311,12 +311,27 @@
   
    .random-cart{
        display:flex;
-        justify-content: space-between;
+        justify-content: center;
         margin-top:10;
         margin-Bottom:5;
         padding-Bottom:10;
-        height:700px;
+        height:300px;
         
         /* width:400px; */
+    }
+    
+    .card-css{
+        display:flex;
+        justify-content: center;
+        background-color:red;
+        margin-left:20px;
+        align-items: center;
    }
+/* .card-body{
+    background-color: red;
 
+} */
+.card-body p{
+    margin-top:-5px;
+    
+}

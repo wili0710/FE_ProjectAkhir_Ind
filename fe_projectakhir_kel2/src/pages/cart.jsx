@@ -366,6 +366,7 @@ const CartPage=()=>{
                     limitqty:val.qty
                 }
             })
+            console.log(arrlimit)
             setLimitProduct(arrlimit)
             getProductList(arrlimit,dataforedit)
             
@@ -489,6 +490,7 @@ const CartPage=()=>{
     // Render isi parcel di modal edit
     const renderIsiParcel=()=>{
         console.log(statusPerCategory)
+        console.log(komposisiParcel)
         return komposisiParcel.map((val,index)=>{
 
             // Untuk menentukan status limit, 0 atau belum di + -
@@ -556,16 +558,37 @@ const CartPage=()=>{
         let deletezero=minusInput.filter((filtering)=>{
             return filtering.qty>0
         })
-
+        console.log(deletezero)
         setKomposisiParcel(deletezero)
     }
     const clickPlus=(nama,category,products_id)=>{
 
         let plusInput=komposisiParcel.map((val,index)=>{
-
+            console.log(listProduct)
             // Jika sesuai maka +1
             if(val.nama==nama){
-                return{...val,qty:val.qty+1}
+                let getstok=listProduct.filter((filtering)=>{
+                    return filtering.nama == nama
+                })
+                console.log(getstok)
+                if(getstok[0].stok<val.qty+1){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Stok Kurang',
+                        text: `${val.nama} Stok hanya ${getstok[0].stok}`,
+                    })
+                    return{...val}
+                }else{
+                    return{...val,qty:val.qty+1}
+
+                }
+                // Axios.post(`${API_URL_SQL}/product/getdataproductbyid/`,{id:val.products_id})
+                // .then((res)=>{
+                //     console.log(val)
+                //     if(val.qty+1>res.data[0].stok){
+                //     }else{
+                    // }
+                // })
             }else{
                 return {...val}
             }
@@ -949,21 +972,35 @@ const CartPage=()=>{
     }
     
     const clickSaveSatuan=(products_id,transaksidetail_id,nama,qty,indexs)=>{
-        let senttobe={
-            user_id:`${Auth.id}`,
-            products_id:`${products_id}`,
-            parcel_id:`0`,
-            qty:`${qtySatuan}`,
-            transaksidetail_id:`${transaksidetail_id}`
-        }
-        Axios.post(`${API_URL_SQL}/transaksi/addtocart`,senttobe)
-            .then((res)=>{
-                console.log(res.data)
-                dispatch({type:'CART',cart:res.data})
-                notifyEditProductSatuan(nama,qty,indexs)
-            }).catch((err)=>{
-                console.log(err)
-            })
+        Axios.post(`${API_URL_SQL}/product/getdataproductbyid/`,{id:products_id})
+        .then((res)=>{
+            console.log(res.data)
+            if(qtySatuan>res.data[0].stok){
+                setEditSatuan()
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Stok Kurang',
+                    text: `${nama} Stok hanya ${res.data[0].stok}`,
+                    footer: '<a href>Why do I have this issue?</a>'
+                    })
+            }else{
+                let senttobe={
+                    user_id:`${Auth.id}`,
+                    products_id:`${products_id}`,
+                    parcel_id:`0`,
+                    qty:`${qtySatuan}`,
+                    transaksidetail_id:`${transaksidetail_id}`
+                }
+                Axios.post(`${API_URL_SQL}/transaksi/addtocart`,senttobe)
+                .then((res)=>{
+                    console.log(res.data)
+                    dispatch({type:'CART',cart:res.data})
+                    notifyEditProductSatuan(nama,qty,indexs)
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            }
+        })
     }
     const onClickSaveParcel=(transaksidetail_id,parcel_id,indexs)=>{
         console.log(komposisiParcel)
@@ -973,7 +1010,6 @@ const CartPage=()=>{
                 icon: 'error',
                 title: 'Sorry',
                 text: 'Isi Parcel Belum Penuh!',
-                footer: '<a href>Why do I have this issue?</a>'
               })
         }
         else{
@@ -1318,7 +1354,9 @@ const CartPage=()=>{
                 <div style={{
                     marginLeft:20
                 }}>
-                    <img src={Logo} alt="logo" width="145px" color="black"/>
+                    <Link to="/">
+                        <img src={Logo} alt="logo" width="145px" color="black"/>
+                    </Link>
                 </div>
                 <div style={{
                     display:"flex",
@@ -1591,7 +1629,7 @@ const CartPage=()=>{
                                     justifyContent:"center",
                                     marginTop:20
                                 }}>
-                                    {Auth.cart.transaksi.length==1?
+                                    {Auth.cart.transaksiparcel.length>0 || Auth.cart.transaksidetailsatuan.length>0?
                                         <Button style={{
                                             width:200
                                         }} onClick={()=>setShowPembayaran(!showPembayaran)} color="primary">
