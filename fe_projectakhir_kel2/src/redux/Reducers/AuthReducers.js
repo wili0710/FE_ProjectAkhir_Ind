@@ -7,6 +7,7 @@ const INITIAL_STATE = {
     isLoading: false,
     error: '',
     cart:[],
+    isResetPass:false,
     dataProduct:[],
     dataJSON:{}
 
@@ -41,7 +42,8 @@ export default (state=INITIAL_STATE, action)=>{
         
         case 'ADDCART':
             return {...state,cart:action.cart}    
-
+        case 'RESETPASS':
+            return {...state,isResetPass:action.payload}
         default :
         return state
     }

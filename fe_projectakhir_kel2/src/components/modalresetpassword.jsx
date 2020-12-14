@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { API_URL_SQL } from '../helpers/apiUrl';
 import { AiFillEye,AiFillEyeInvisible } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 export const ModalResetPassword=()=>{
     const [validateemail,setValidateEmail]=useState(null)
@@ -19,6 +21,8 @@ export const ModalResetPassword=()=>{
     const [password,setPassword]=useState()
     const [disableAll,setDisableAll]=useState(false)
 
+    const Auth=useSelector(state=>state.Auth) 
+    const dispatch=useDispatch()
 
     const resetPassword=async()=>{
         try {
@@ -29,6 +33,7 @@ export const ModalResetPassword=()=>{
                 'Silakan login dengan password baru!',
                 'success'
               )
+            dispatch({type:'RESETPASS',payload:!Auth.isResetPass})
         } catch (error) {
             Swal.fire({
                 icon: 'error',
@@ -198,6 +203,7 @@ export const ModalResetPassword=()=>{
                     borderBottom:"10px solid whitesmoke"
                 }}>
                     <h3>Reset Password</h3>
+                    <AiOutlineCloseCircle style={{cursor:"pointer"}} size={20} onClick={()=>{console.log(Auth.isResetPass);dispatch({type:'RESETPASS',payload:!Auth.isResetPass})}}/>
                 </div>
                 <div>
                     Masukkan Email:
