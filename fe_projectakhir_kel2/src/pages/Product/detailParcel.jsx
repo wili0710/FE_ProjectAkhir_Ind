@@ -25,6 +25,7 @@ import Zoom from 'react-reveal/Zoom';
 import HorizontalScroll from 'react-scroll-horizontal'
 
 import { Scrollbars } from 'react-custom-scrollbars';
+import { css } from '@emotion/react';
 
 class DetailParcel extends Component {
     state = { 
@@ -274,11 +275,14 @@ class DetailParcel extends Component {
         //  }
      }
      onDeleteProduct=(id,categoryproduct_id)=>{
-        var dataCart = this.state.dataArrMakanan
+         console.log(id)
+         console.log(categoryproduct_id)
+         
+        var dataCart = this.state.dataArrMakanan // data yg dicart
         console.log(dataCart, ' ini dataarrmakanan')
-        console.log(categoryproduct_id)
+
         var find= dataCart.findIndex((val)=>{
-            return val.id == id
+            return val.parcel_id == id
         })
         console.log(dataCart[find])
         
@@ -288,19 +292,39 @@ class DetailParcel extends Component {
 
         if(categoryproduct_id == 1){
             console.log('minuman')
+            var dataMinuman=this.state.dataMinuman
+            var indexMinuman = dataMinuman.findIndex((val)=>{
+                return val.id == id
+            })
+
+            dataMinuman[indexMinuman]= {...dataMinuman[indexMinuman],stok:dataMinuman[indexMinuman].stok + dataCart[find].qty}
+            dataCart.splice(find,1)
+            this.setState({dataMinuman:dataMinuman})
+
         }else if (categoryproduct_id==2){
             console.log('makanan')
-            var dataMakanan= this.state.dataMakanan
+            var dataMakanan= this.state.dataMakanan // data yg di render
             var indexMakanan=dataMakanan.findIndex((val)=>{
                 return val.id == id
             })
+            console.log(id,' id product 298')
+            console.log(indexMakanan, 'index delete makanan')
             console.log(dataMakanan)
+            console.log(dataMakanan[indexMakanan])
             console.log(dataCart[find])
-            // dataMakanan[indexMakanan]= {...dataMakanan[indexMakanan],stok:dataMakanan[indexMakanan].stok + dataCart[find].qty}
-            // this.setState({dataMakanan:dataMakanan})
-            dataCart.splice(id,1)
-        }else {
+            dataMakanan[indexMakanan]= {...dataMakanan[indexMakanan],stok:dataMakanan[indexMakanan].stok + dataCart[find].qty}
+
+            dataCart.splice(find,1)
+            this.setState({dataMakanan:dataMakanan})
+        }else if (categoryproduct_id == 3) {
             console.log('chocolate')
+            var dataChocolate = this.state.dataChocolate
+            var indexChocolate = dataChocolate.findIndex((val)=>{
+                return val.id == id
+            })
+            dataChocolate[indexChocolate]={...dataChocolate[indexChocolate],stok:dataChocolate[indexChocolate].stok + dataCart[find].qty}
+            dataCart.splice(find,1)
+            this.setState({dataChocolate:dataChocolate})
         }
     }
 
@@ -733,7 +757,7 @@ class DetailParcel extends Component {
                    <td>{val.namaProduct}</td>
                     <td></td>
                    <td> {val.qty}</td>
-                   <td onClick={()=>this.onDeleteProduct(val.id,val.categoryproduct_id)}>
+                   <td onClick={()=>this.onDeleteProduct(val.parcel_id,val.categoryproduct_id)}>
                        <AiFillDelete className="delete-icon"/>
                    </td>
                 </tr>
@@ -1024,15 +1048,8 @@ class DetailParcel extends Component {
      
   
     render() { 
-        console.log(API_URL_SQL)
-            // console.log(this.state.dataArrMakanan)
-            // console.log(this.state.dataMakanan)
-            console.log(this.state.dataParcelByIdChocolate)
-            // console.log(this.state.dataParcelByIdMinuman.qty ,' ini maksimal beli minuman')
-            // console.log(this.state.renderCartMakanan,' ini data render cart makanan')
-            console.log(this.state.renderCartMinuman,' ini data render cart minuman')
-            // console.log(this.props.id, 'line 531')
-            console.log(this.state.checklistMinuman)
+        // console.log(API_URL_SQL)
+      console.log(this.state.dataArrMakanan)
             
             const {classes}= this.props
             
