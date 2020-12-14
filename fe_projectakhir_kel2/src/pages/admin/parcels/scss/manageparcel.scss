@@ -4,6 +4,323 @@
 @import "partials/editparcelBx";
 @import "partials/renderparcel";
 
+
+.popup {
+    @include flexin();
+    position        : fixed;
+    width           : 100%;
+    height          : 100%;
+    top             : 0;
+    left            : 0;
+    right           : 0;
+    bottom          : 0;
+    margin          : auto;
+    z-index         : 99999;
+    background-color: rgba(black, .8);
+
+    .inner {
+        position        : relative;
+        margin          : auto;
+        border-radius   : 10px;
+        background-color: $dk_gray;
+        opacity         : 1;
+        padding         : 10px;
+
+        .inner_border {
+            position     : relative;
+            border       : $borderset;
+            border-radius: 5px;
+            padding      : 20px;
+            height       : 100%;
+
+            .head {
+                display        : flex;
+                justify-content: space-between;
+                align-items    : center;
+                padding        : 15px;
+
+                .title {
+                    color : $tertiary;
+                    margin: 0;
+                }
+
+                button {
+                    border          : none;
+                    background-color: transparent;
+                    color           : $lt_gray;
+
+                    &:hover {
+                        color: $tertiary;
+                    }
+
+                    &:focus {
+                        outline: none;
+                    }
+
+                    &:active {
+                        background-color: $tertiary;
+                        color           : $secondarys;
+                        border-radius   : 5px;
+                    }
+                }
+            }
+
+            .content {
+                position: relative;
+                padding : 10px 0;
+                height  : 100%;
+
+                // styling props start here //
+
+                .container {
+                    @include flexin();
+                    position: relative;
+                    height  : 100%;
+
+                    .inputBx {
+                        @include flexin($cl, $sp, $cn);
+                        background-color: $tertiary;
+                        position        : relative;
+                        height          : 100%;
+                        width           : 100%;
+                        padding         : 10px;
+                        flex            : 1;
+
+                        p {
+                            @include flexin($cl);
+                            position  : relative;
+                            color     : $secondarys;
+                            font-size : 13px;
+                            // padding: px;
+                            margin    : 10px 5px;
+                            height    : 100%;
+
+                            span {
+                                position        : relative;
+                                background-color: $primary;
+                                width           : 100%;
+                                padding         : 5px;
+                                margin-bottom   : -15px;
+                            }
+                        }
+
+                        .edit_gambar_parcel_url {
+                            border          : $borderset;
+                            width           : 100%;
+                            transition      : .3s;
+                            background-color: $secondarys;
+                            padding         : 10px;
+                            color           : $tertiary;
+                            font-size       : 13px;
+
+                            &:disabled {
+                                color           : $dk_gray;
+                                border          : 1px dashed $lt_gray;
+                                background-color: $lt_gray;
+
+                                &::placeholder {
+                                    color: $dk_gray;
+                                }
+                            }
+
+                            &::placeholder {
+                                color       : $tertiary;
+                                padding-left: 5px;
+                                font-size   : 14px;
+                                font-family : $cmbr;
+                                transition  : .3s;
+                                text-align  : center;
+                            }
+
+                            &:hover:not(:disabled) {
+                                background-color: $white;
+
+                                &::placeholder {
+                                    letter-spacing: 1px;
+                                }
+                            }
+
+                            &:focus:not(:disabled) {
+                                outline: none;
+                                border : 1px solid $tertiary;
+
+                                &::placeholder {
+                                    letter-spacing: 1px;
+                                }
+                            }
+                        }
+
+                        span {
+                            margin     : 0 10px;
+                            color      : $secondarys;
+                            font-family: $cmbr;
+                            font-size  : 14px;
+                        }
+
+                        .fakeBx {
+                            position        : relative;
+                            background-color: $secondarys;
+                            width           : 100%;
+                            overflow        : hidden;
+                            border          : $borderset;
+                            text-align      : center;
+                            transition      : .3s;
+                            color           : $tertiary;
+                            font-size       : 14px;
+                            padding         : 10px;
+                            font-family     : $cmbr;
+
+                            .edit_gambar_upl {
+                                position: absolute;
+                                top     : 0;
+                                left    : 0;
+                                right   : 0;
+                                opacity : 0;
+                                z-index : 1;
+                                width   : 100%;
+                                height  : 100%;
+
+                                &:hover:not(:disabled) {
+                                    cursor: pointer;
+
+                                    > & > .fakeBx {
+                                        background-color: $dk_tertiary;
+                                        color           : $secondarys;
+                                        cursor          : pointer;
+                                        letter-spacing  : 2px;
+                                    }
+                                }
+
+                                &:disabled > {
+                                    .fakeBx {
+                                        background-color: $lt_gray;
+                                        color           : gray;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .previewBx {
+                        position        : relative;
+                        flex            : 1;
+                        background-color: $white;
+                        width           : 450px;
+                        height          : 400px;
+                        padding         : 10px;
+                        margin-right    : 20px;
+
+                        .delete_preview {
+                            position        : absolute;
+                            top             : 5px;
+                            right           : 5px;
+                            padding         : 5px 15px;
+                            font-weight     : 600;
+                            border-radius   : 5px;
+                            border          : none;
+                            background-color: $lt_gray;
+                            color           : $tertiary;
+
+                            &:focus {
+                                outline: none;
+                            }
+
+                            &:hover {
+                                background-color: $tertiary;
+                                color           : $secondarys;
+                            }
+                        }
+
+                        .imgBx {
+                            position: relative;
+                            height  : 100%;
+                            width   : 100%;
+
+
+
+                            img {
+                                width     : 100%;
+                                height    : 100%;
+                                object-fit: cover;
+                            }
+                        }
+                    }
+                }
+
+                .actionBtn {
+                    @include flexin($r, flex-end, $cn);
+                    position  : relative;
+                    margin-top: 10px;
+                    padding   : 10px;
+
+                    .act_save {
+                        @include bordering(1px dashed transparent, 1px dashed $primary, 1px dashed $primary, 1px dashed transparent);
+                        padding         : 5px 20px;
+                        width           : 190px;
+                        color           : $secondarys;
+                        text-transform  : uppercase;
+                        letter-spacing  : 1px;
+                        background-color: $lt_primary;
+                        margin          : 0 5px;
+                        transition      : .3s;
+                        text-align      : center;
+
+                        &:disabled {
+                            border          : none;
+                            background-color: $lt_gray;
+                            color           : gray;
+                        }
+
+                        &:hover:not(:disabled) {
+                            border          : 1px dashed $primary;
+                            background-color: $lt_primary;
+                            color           : $secondarys;
+                            letter-spacing  : 2px;
+                        }
+
+                        &:focus:not(:disabled) {
+                            outline: none;
+                        }
+
+                        &:active:not(:disabled) {
+                            background-color: $primary;
+                        }
+                    }
+
+                    .act_cancel {
+                        @include bordering(1px dashed transparent, 1px dashed $dk_red, 1px dashed $dk_red, 1px dashed transparent);
+                        padding         : 5px 20px;
+                        width           : 190px;
+                        color           : $red;
+                        text-transform  : uppercase;
+                        letter-spacing  : 1px;
+                        background-color: $secondarys;
+                        margin          : 0 5px;
+                        transition      : .3s;
+                        text-align      : center;
+
+                        &:hover {
+                            border          : 1px dashed $dk_red;
+                            background-color: $red;
+                            color           : $secondarys;
+                            letter-spacing  : 2px;
+                        }
+
+                        &:focus {
+                            outline: none;
+                        }
+
+                        &:active {
+                            background-color: $dk_red;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 .manageparcel {
     margin-left: 65px;
 
@@ -93,11 +410,11 @@
                         }
 
                         .imageBx {
+                            background-color: $lt_gray;
                             position        : relative;
                             margin          : 5px 0 10px 0;
                             width           : 200px;
                             height          : 230px;
-                            background-color: $lt_gray;
 
                             .edit_buttonBx {
                                 @include flexin();
@@ -106,15 +423,25 @@
                                 right   : 0;
                                 z-index : 1;
 
-                                .ganti_gambar,
-                                .hapus_gambar {
-                                    background-color: transparent;
+                                .ganti_gambar {
+                                    color           : $secondarys;
+                                    background-color: $tertiary;
                                     border          : none;
                                     margin          : 5px;
                                     opacity         : .5;
+                                    border-radius   : 5px;
+                                    font-size       : 13px;
 
                                     &:hover {
                                         opacity: 1;
+                                    }
+
+                                    &:focus {
+                                        outline: none;
+                                    }
+
+                                    &:active {
+                                        color: $red;
                                     }
                                 }
                             }
@@ -138,18 +465,18 @@
 
                             &:focus,
                             &:hover {
-                                outline         : none;
-                                color           : $tertiary;
-                                letter-spacing  : 2px;
                                 background-color: $secondarys;
+                                color           : $tertiary;
+                                outline         : none;
+                                letter-spacing  : 2px;
                             }
                         }
 
                         .itemBx {
                             @include flexin($r, $sp, $cn);
+                            color  : $tertiary;
                             width  : 100%;
                             padding: 0 10px;
-                            color  : $tertiary;
 
                             p {
                                 position   : relative;
@@ -166,26 +493,26 @@
                             }
                         }
                     }
-
-
                 }
 
                 .edititemContent {
                     @include flexin($cl);
                     position  : relative;
                     text-align: center;
-                    border    : $borderset;
                     padding   : 40px;
                     height    : 100%;
                     width     : 100%;
 
                     h2 {
-                        color : $lt_gray;
-                        margin: -10px 0 10px 0;
+                        color           : $lt_gray;
+                        padding         : 5px 0;
+                        margin          : 0;
+                        background-color: $tertiary;
+                        width           : 100%;
 
                         span {
-                            color        : $tertiary;
-                            border-bottom: $borderset;
+                            color        : $primary;
+                            border-bottom: 1px dashed $primary;
                             margin       : 0 10px;
                             padding      : 0 5px;
                         }
@@ -243,7 +570,8 @@
                             position        : relative;
                             text-align      : center;
                             font-size       : 14px;
-                            padding         : 90px 0;
+                            margin          : 0;
+                            padding         : 1em 0;
                             height          : 100%;
                             width           : 100%;
                         }
@@ -251,7 +579,7 @@
                         .itemBx_edit {
                             display         : inline-block;
                             vertical-align  : top;
-                            background-color: white;
+                            background-color: $white;
                             margin          : 18px 10px;
                             height          : 150px;
                             width           : 150px;
@@ -264,21 +592,20 @@
                                 margin-right: 10px;
                             }
 
-                            &:hover {
-                                cursor: grabbing;
-                            }
-
                             .content {
-                                // @include flexin(column, center, center);
+                                position  : relative;
+                                height    : 100%;
                                 text-align: center;
                                 overflow  : hidden;
                                 max-width : 150;
 
                                 .itemhead {
                                     @include flexin($r, $sp, $cn);
-                                    width  : 100%;
-                                    z-index: 2;
-                                    padding: 10px;
+                                    position: absolute;
+                                    top     : 0;
+                                    width   : 100%;
+                                    z-index : 2;
+                                    padding : 10px;
 
                                     .id {
                                         font-size     : 12px;
@@ -289,10 +616,11 @@
                                     }
 
                                     button {
-                                        color           : $tertiary;
+                                        color           : $dk_gray;
                                         background-color: transparent;
                                         border          : none;
                                         font-weight     : bolder;
+                                        font-size       : 13px;
                                         transition      : 0.5s;
 
                                         &:hover {
@@ -302,11 +630,15 @@
                                 }
 
                                 .category {
+                                    position   : absolute;
                                     z-index    : 1;
+                                    bottom     : 10px;
+                                    left       : 15px;
+                                    white-space: pre-wrap;
+                                    text-align : left;
                                     font-weight: 800;
                                     font-size  : 25px;
                                     line-height: 32px;
-                                    margin-top : -5px;
                                     font-family: "Lato", sans-serif;
 
                                     span {
@@ -318,13 +650,252 @@
                                 }
 
                                 .imgBx {
-                                    margin-top: -200px;
-                                    width     : 150px;
-                                    height    : 150px;
-                                    opacity   : 0.3;
-                                    z-index   : 0;
+                                    position: absolute;
+                                    top     : 0;
+                                    width   : 150px;
+                                    height  : 150px;
+                                    z-index : 0;
+
+                                    img {
+                                        position  : relative;
+                                        width     : 100%;
+                                        height    : 100%;
+                                        opacity   : .5;
+                                        object-fit: cover;
+                                    }
                                 }
                             }
+                        }
+                    }
+
+                    .selectBx_active {
+                        @include flexin();
+                        position: relative;
+                        width   : 100%;
+                        height  : 30px;
+
+                        .select0 {
+                            border          : 1px dashed $tertiary;
+                            background-color: transparent;
+                            font-size       : 15px;
+                            width           : 30%;
+                            height          : 100%;
+                            font-family     : "Cambria", sans-serif;
+                            transition      : .3s;
+                            color           : $tertiary;
+                            padding-left    : 5px;
+
+                            &:hover {
+                                letter-spacing  : 1px;
+                                background-color: $secondarys;
+                            }
+
+                            &:focus {
+                                outline: none;
+
+                                .hide {
+                                    display: none;
+                                }
+                            }
+
+                            option {
+                                letter-spacing: 1px;
+                                font-size     : 14px;
+                                padding       : 2px;
+                            }
+                        }
+
+                        .input0 {
+                            border          : 1px dashed $lt_gray;
+                            background-color: transparent;
+                            font-size       : 15px;
+                            height          : 100%;
+                            width           : 60%;
+                            color           : $white;
+                            text-align      : center;
+                            transition      : .3s;
+
+                            &::placeholder {
+                                color      : $lt_gray;
+                                font-size  : 14px;
+                                font-family: 'Cambria', sans-serif;
+                                transition : .3s;
+                            }
+
+                            &:focus,
+                            &:hover {
+                                outline         : none;
+                                background-color: $secondarys;
+                                color           : $tertiary;
+                                border          : 1px dashed $tertiary;
+
+                                &::placeholder {
+                                    letter-spacing: 1px;
+                                    color         : $tertiary;
+                                }
+                            }
+                        }
+
+                        .button0 {
+                            @include bordering(none, 4px solid $tertiary, none, none);
+                            height     : 100%;
+                            width      : 10%;
+                            color      : $tertiary;
+                            font-weight: 600;
+                            transition : .3s;
+
+                            &:disabled {
+                                @include bordering(none, 4px solid $lt_gray, none, none);
+                                color           : $dk_gray;
+                                background-color: $lt_gray;
+                                opacity         : .6;
+                            }
+
+                            &:hover:not(:disabled) {
+                                background-color: $lt_gray;
+                                color           : $primary;
+                                border          : 1px dashed $primary;
+                            }
+
+                            &:active:not(:disabled) {
+                                background-color: $primary;
+                                color           : $secondarys;
+                            }
+
+                            &:focus:not(:disabled) {
+                                outline: none;
+                            }
+                        }
+                    }
+
+                    .buttonBx_active {
+                        @include flexin();
+                        width : 100%;
+                        height: 30px;
+
+                        .button2 {
+                            width      : 20%;
+                            border     : none;
+                            color      : $red;
+                            font-size  : 15px;
+                            font-weight: 600;
+                            height     : 100%;
+                            transition : .3s;
+
+                            &:hover {
+                                background-color: $red;
+                                color           : $secondarys;
+                                letter-spacing  : 1px;
+                            }
+
+                            &:active {
+                                background-color: $dk_red;
+                            }
+
+                            &:focus {
+                                outline: none;
+                            }
+                        }
+
+                        .button0 {
+                            @include bordering(none, 1px dashed $lt_primary, 1px dashed $lt_primary, none);
+                            width      : 60%;
+                            color      : $primary;
+                            font-size  : 15px;
+                            font-weight: 600;
+                            height     : 100%;
+                            transition : .3s;
+
+                            &:hover {
+                                background-color: $lt_primary;
+                                color           : $white;
+                                letter-spacing  : 1px;
+                            }
+
+                            &:active {
+                                background-color: $primary;
+                            }
+
+                            &:focus {
+                                outline: none;
+                            }
+                        }
+
+                        .button1 {
+                            @include bordering(none, 1px dashed $dk_gray, 1px dashed $dk_gray, none);
+                            color      : $dk_tertiary;
+                            border     : none;
+                            height     : 100%;
+                            width      : 20%;
+                            font-size  : 15px;
+                            font-weight: 600;
+                            transition : .3s;
+
+                            &:hover {
+                                background-color: $tertiary;
+                                color           : $secondarys;
+                                letter-spacing  : 1px;
+                            }
+
+                            &:active {
+                                background-color: $dk_tertiary;
+                            }
+
+                            &:focus {
+                                outline: none;
+                            }
+                        }
+                    }
+
+                    .selectBx {
+                        @include flexin();
+                        position: relative;
+                        width   : 100%;
+                        height  : 30px;
+
+                        .select0 {
+                            border          : 1px dashed $lt_gray;
+                            background-color: transparent;
+                            font-size       : 15px;
+                            width           : 30%;
+                            height          : 100%;
+                            font-family     : "Cambria", sans-serif;
+                        }
+
+                        .input0 {
+                            border          : 1px dashed $lt_gray;
+                            background-color: transparent;
+                            font-size       : 15px;
+                            opacity         : .7;
+                            height          : 100%;
+                            width           : 60%;
+                        }
+
+                        .button0 {
+                            border: none;
+                            height: 100%;
+                            width : 10%;
+                        }
+                    }
+
+                    .buttonBx {
+                        @include flexin();
+                        width : 100%;
+                        height: 30px;
+
+                        .button2 {
+                            width : 20%;
+                            border: none;
+                        }
+
+                        .button0 {
+                            width : 60%;
+                            border: none;
+                        }
+
+                        .button1 {
+                            width : 20%;
+                            border: none;
                         }
                     }
                 }

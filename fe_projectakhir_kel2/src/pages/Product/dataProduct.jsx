@@ -18,6 +18,7 @@ import {Dropdown} from 'react-bootstrap'
 import {AiOutlineLogout,AiFillHome} from 'react-icons/ai'
 import debounce from 'lodash.debounce';
 import numeral from 'numeral';
+import {LogoutFunc} from './../../redux/Actions'
 class dataProduct extends Component {
     state = {
         activeTab:"1",
@@ -29,7 +30,8 @@ class dataProduct extends Component {
         dataChocolate:[],
         loadingParcel:true,
         showCart:false,
-        showMenuUser:false
+        showMenuUser:false,
+        randomCart:[]
 
 
 
@@ -81,6 +83,24 @@ class dataProduct extends Component {
         }).catch((err)=>{
             console.log(err)
         })
+
+        // Axios.get(`${API_URL_SQL}/product/getRandomProduct/4`)
+        //     .then((res)=>{
+        //         // setRandomProduct(res.data)
+        //         // setLoading(false)
+        //     }).catch((err)=>{
+        //         console.log(err)
+        //     })
+        // } catch (error) {
+        //     console.log(error)
+        // }
+        Axios.get(`${API_URL_SQL}/product/getRandomProduct/4`)
+        .then((res)=>{
+            console.log(res.data)
+            this.setState({dataRandom:res.data})
+        }).catch((err)=>{
+            console.log(err)
+        })
         
         
     }
@@ -90,18 +110,17 @@ class dataProduct extends Component {
 
 
     renderParcel=()=>{
-        console.log(this.state.loading)
         if(this.state.loading){
             return null
         }else{
-            console.log(this.state.allDataParcel)
+            // console.log(this.state.allDataParcel)
             return this.state.dataParcel.map((val,index)=>{
               var render=this.state.allDataParcel.filter(function(parcel){
         
                   return parcel.parcel_id == val.id
               })
             //   console.log(render, ' ini render line 76')
-                console.log('jalam dalem map ' , val.id)
+                // console.log('jalam dalem map ' , val.id)
                 return (
                     <div className="box-3 item " key={val.id} onClick={()=>this.onCheckData(val.id)} >
                         <Link to={'/detailParcel/'+val.id}>
@@ -177,11 +196,11 @@ class dataProduct extends Component {
    
     renderMinuman=()=>{
         return this.state.dataMinuman.map((val,index)=>{
-            console.log(val.image,' ini val image 181')
-            console.log(index,' 182')
+            // console.log(val.image,' ini val image 181')
+            // console.log(index,' 182')
             return(
                 <>
-                <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMakanan(val.id)}>
+                <div className=" box-3 card product_item" key={val.index} onClick={()=>this.onCheckDataMinuman(val.id)}>
                     <div className="body">
                         <div className="cp_img">
                             <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel"/>
@@ -209,23 +228,39 @@ class dataProduct extends Component {
         let productid=id
         let userid=this.props.id
         console.log(userid)
-        
-        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
-            user_id:userid,
-            products_id:productid,
-            parcel_id:0,
-            qty:1
-        }).then((res)=>{
-            console.log(this.state.dataMinuman.id)
-            console.log('data berhasil ditambah')
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil Menambahkan Product',
-                text: 'Berhasil Menambahkan Product'                    
-            })
-        }).catch((err)=>{
-            console.log(err)
+        var dataMinuman = this.state.dataMinuman
+        var find = dataMinuman.findIndex((val)=>{
+            return val.id == id
         })
+        console.log(dataMinuman[find],' 236 dataproduct')
+
+        if(dataMinuman[find].stok -1 == -1){
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menambahkan Product',
+                text: 'Stock Habis'                    
+            })
+        }else {
+            Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
+                user_id:userid,
+                products_id:productid,
+                parcel_id:0,
+                qty:1
+            }).then((res)=>{
+                dataMinuman[find]= {...dataMinuman[find],stok:dataMinuman[find].stok-1}
+                console.log('data berhasil ditambah')
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Menambahkan Product',
+                    text: 'Berhasil Menambahkan Product'                    
+                })
+                this.setState({dataMinuman:dataMinuman})
+            }).catch((err)=>{
+                console.log(err)
+            })
+
+        }
+        
 
     }
 
@@ -234,71 +269,109 @@ class dataProduct extends Component {
         let productid=id
         let userid=this.props.id
         console.log(userid)
-        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
-            user_id:userid,
-            products_id:productid,
-            parcel_id:0,
-            qty:1
-        }).then((res)=>{
-            console.log(res.data)
-            console.log('data berhasil ditambah')
-            Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
-                id:productid
+        var dataMakanan=this.state.dataMakanan
+        var find = dataMakanan.findIndex((val)=>{
+            return val.id == id
+        })
+
+        if(dataMakanan[find].stok -1 == -1){
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menambahkan Product',
+                text: 'Stock Habis'                    
+            })
+        }else {
+            Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
+                user_id:userid,
+                products_id:productid,
+                parcel_id:0,
+                qty:1
             }).then((res)=>{
                 console.log(res.data)
-                Swal.fire({
-                    title: 'Sweet!',
-                    text: 'Berhasil Menambahkan Data',
-                    imageUrl: `${API_URL_SQL+res.data.image}`,
-                    imageWidth: 400,
-                    imageHeight: 200,
-                    imageAlt: '',
-                  })
-
+                console.log('data berhasil ditambah')
+                Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
+                    id:productid
+                }).then((res)=>{
+                    console.log(res.data)
+                    dataMakanan[find]={...dataMakanan[find],stok:dataMakanan[find].stok-1}
+                    Swal.fire({
+                        title: 'Sweet!',
+                        text: 'Berhasil Menambahkan Data',
+                        imageUrl: `${API_URL_SQL+res.data.image}`,
+                        imageWidth: 400,
+                        imageHeight: 200,
+                        imageAlt: '',
+                      })
+                      this.setState({dataMakanan:dataMakanan})
+    
+                }).catch((err)=>{
+                    console.log(err)
+                })
+              
             }).catch((err)=>{
                 console.log(err)
             })
-          
-        }).catch((err)=>{
-            console.log(err)
-        })
+
+        }
+        
     }
 
     onCheckDataChocolate=(id)=>{
         console.log(id)
         let productid=id
         let userid=this.props.id
-        console.log(userid)
-        Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
-            user_id:userid,
-            products_id:productid,
-            parcel_id:0,
-            qty:1
-        }).then((res)=>{
-            console.log(res.data)
-            console.log('berhasil masuk ke cart')
-            Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
-                id:productid
+
+        var dataChocolate=this.state.dataChocolate
+        var find= dataChocolate.findIndex((val)=>{
+            return val.id == id
+        })
+
+        if(dataChocolate[find].stok -1 == -1){
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menambahkan Product',
+                text: 'Stock Habis'                    
+            })
+        }else {
+            console.log(userid)
+            Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
+                user_id:userid,
+                products_id:productid,
+                parcel_id:0,
+                qty:1
             }).then((res)=>{
-                Swal.fire({
-                    title: 'Sweet!',
-                    text: 'Berhasil Menambahkan Data',
-                    src: `${API_URL_SQL+res.data.image}`,
-                    imageWidth: 400,
-                    imageHeight: 200,
-                    imageAlt: '',
-                  })
+                console.log(res.data)
+                console.log('berhasil masuk ke cart')
+                Axios.post(`${API_URL_SQL}/product/getdataproductbyid`,{
+                    id:productid
+                }).then((res)=>{
+                    dataChocolate[find]= {...dataChocolate[find],stok:dataChocolate[find].stok-1}
+                    Swal.fire({
+                        title: 'Sweet!',
+                        text: 'Berhasil Menambahkan Data',
+                        src: `${API_URL_SQL+res.data.image}`,
+                        imageWidth: 400,
+                        imageHeight: 200,
+                        imageAlt: '',
+                      })
+                      this.setState({dataChocolate:dataChocolate})
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }).catch((err)=>{
                 console.log(err)
             })
-        }).catch((err)=>{
-            console.log(err)
-        })
+
+        }
     
     }
 
     onLogoutClick=()=>{
         console.log('logout jalan')
+        localStorage.removeItem('id')
+        Swal.fire('Logout Berhasil')
+        this.props.LogoutFunc()
+        window.location.assign(`http://localhost:3000`)
     }
 
     onChangeSearch=debounce(function(e){
@@ -327,10 +400,10 @@ class dataProduct extends Component {
         
     }
     render() { 
-        console.log(this.props.name)
-        console.log(this.props.cart)
-        console.log(this.state.dataParcel)
-        console.log(this.props.isLogin)
+        // console.log(this.props.name)
+        // console.log(this.props.cart)
+        // console.log(this.state.dataParcel)
+        // console.log(this.props.isLogin)
 
         if(this.state.loadingParcel){
             return (
@@ -366,7 +439,11 @@ class dataProduct extends Component {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1" onClick={this.onLogoutClick}>
+                            <Dropdown.Item href="/useraccount">
+                                        <BiCart color="#0984e3" size="20" style={{cursor:"pointer",marginRight:'10px'}}/>
+                                        My Account
+                                </Dropdown.Item>
+                                <Dropdown.Item href="/" onClick={this.onLogoutClick}>
                                     <AiOutlineLogout color="#0984e3" size="20" style={{cursor:"pointer", marginRight:'10px'}}/>
                                     Logout
                                     </Dropdown.Item>
@@ -525,4 +602,4 @@ const MapStatetoprops=({Auth})=>{
     }
 }
  
-export default (connect(MapStatetoprops,{})(dataProduct));
+export default (connect(MapStatetoprops,{LogoutFunc})(dataProduct));

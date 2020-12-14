@@ -1,6 +1,6 @@
 const INITIAL_STATE = {
     id: 0,
-    nama: '',
+    name: '',
     email: '',
     role:'',
     isLogin: false,

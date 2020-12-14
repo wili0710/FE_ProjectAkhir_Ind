@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './packageCarousel.scss';
-import { priceFormatter } from '../../helpers';
+import { Link } from 'react-router-dom'
+import { priceFormatter, draggableCard } from '../../helpers';
 import { IconContext } from 'react-icons';
 import { HiStar } from 'react-icons/hi';
 import { 
@@ -9,42 +10,44 @@ import {
 } from '../../assets'
 
 export default (props) => {
-    console.log(props.obj)
+
     return (   
         <div className="cardBx">
-            {props.obj.map((val)=>{
-                console.log()
+            {
+            props.obj.map((val)=>{
                 return (
                     <div className="card" key={val.id}>
                         <div className="Bx">
-                            <div className="content">
-                                <div className="tag">
-                                    Oncoming Event
-                                </div>
-                                <div className="imageBx">
-                                    {
-                                        val.gambar!=="null"?
-                                        <img src={val.gambar}/>
-                                        :
-                                        <img src={d_parcel}/>
-                                    }
-                                </div>
-                                <h2>
-                                    {val.nama}
-                                </h2>
-                                <p>
-                                    {props.rest.Parcel_Category[props.rest.Parcel_Category.findIndex(vals=>vals.id===val.categoryparcel_id)].nama} 
-                                </p>
-                                <IconContext.Provider value={{style:{fontSize:"15px", color:"lightgray"}}}>
-                                    <div>
-                                        <HiStar/>
-                                        <HiStar/>
-                                        <HiStar/>
-                                        <HiStar/>
-                                        <HiStar/>
+                            <Link to={'/detailparcel/'+val.id} style={{textDecoration:"none"}}>
+                                <div className="content">
+                                    <div className="tag">
+                                        Oncoming Event
                                     </div>
-                                </IconContext.Provider>
-                            </div>
+                                    <div className="imageBx">
+                                        {
+                                            val.gambar!=="null"?
+                                            <img src={val.gambar}/>
+                                            :
+                                            <img src={d_parcel}/>
+                                        }
+                                    </div>
+                                    <h2>
+                                        {val.nama}
+                                    </h2>
+                                    <p>
+                                        {props.rest.Parcel_Category[props.rest.Parcel_Category.findIndex(vals=>vals.id===val.categoryparcel_id)].nama} 
+                                    </p>
+                                    <IconContext.Provider value={{style:{fontSize:"15px", color:"lightgray"}}}>
+                                        <div>
+                                            <HiStar/>
+                                            <HiStar/>
+                                            <HiStar/>
+                                            <HiStar/>
+                                            <HiStar/>
+                                        </div>
+                                    </IconContext.Provider>
+                                </div>
+                            </Link>
                             <div className="detail">
                                 <div className="upper">
                                     <div className="hargaBx">
@@ -70,9 +73,9 @@ export default (props) => {
                                         </div>
                                         <div className="cards">
                                             {
-                                                val.items.map((item,index)=>{
+                                                val.item.map((item,index)=>{
                                                     return (
-                                                    <div className="cardo">
+                                                    <div className="cardo" kay={index}>
                                                         <div className="qty">
                                                             {item.qty}
                                                         </div>
