@@ -52,6 +52,7 @@ export default () => {
                 <div className="imgBx">
                     {
                         profilePic?
+                        
                         <img src={profilePic} />
                         :
                         <img src={d_user} />

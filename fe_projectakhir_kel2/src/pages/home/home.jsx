@@ -1,11 +1,12 @@
 import React from "react";
 import "./home.scss";
-import { debounce, draggableCard } from "../../helpers";
+import { debounce, draggableCard, API_URL_SQL } from "../../helpers";
 import { icon, illustration_1 } from "../../assets";
 import { Header, packageCarousel } from "../../components";
 import { connect } from "react-redux";
-import { loadCategories, addtoTransaction } from "../../redux/Actions";
+import { loadCategories, addtoTransaction, AddcartAction } from "../../redux/Actions";
 import { priceFormatter } from "../../helpers/apiUrl";
+import Axios from 'axios';
 
 const mapStatetoProps = (state) => {
   return {
@@ -14,20 +15,25 @@ const mapStatetoProps = (state) => {
   };
 };
 
-export default connect(mapStatetoProps, { loadCategories, addtoTransaction })(class Home extends React.Component {
+export default connect(mapStatetoProps, { loadCategories, addtoTransaction, AddcartAction })(class Home extends React.Component {
   state = {
     inputSearch: "",
     filteredPackage: [],
     product_categories: [],
+    temp_cart:[]
   };
 
   componentDidMount() {
     this.props.loadCategories();
-    this.setState({ product_categories: this.props.Parcel.Product_Category });
+    this.setState({ 
+      product_categories: this.props.Parcel.Product_Category,
+      temp_cart : this.props.Auth.cart
+    });
     draggableCard(".cardBx", "left", 2);
   };
+
   componentDidUpdate() {
-    console.log(this.props.Auth)
+    // console.log(this.props.Auth)
   }
 
   onSearchInputChange(e, prop) {
@@ -52,18 +58,57 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction })(cl
   };
   
   addprodtocart = id => {
-    let data = {
-      user_id     : this.props.Auth.id,
-      products_id : id,
-      parcel_id   : 0,
-      qty         : 1,
+    console.log(id)
+    const obj=this.state.temp_cart;
+    if(this.state.temp_cart.transaksidetailsatuan[this.state.temp_cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)]===undefined){
+      console.log('oke baru nih '+id)
+      let data = {
+        user_id     : this.props.Auth.id,
+        products_id : id,
+        parcel_id   : 0,
+        qty         : 1
+      }
+      console.log(obj)
+      obj.transaksidetailsatuan.push(data);
+      console.log(obj)
+    }else{
+      console.log('udah ada nih item '+id)
+      let data = {
+        user_id     : this.props.Auth.id,
+        products_id : id,
+        parcel_id   : 0,
+        qty         : this.state.temp_cart.transaksidetailsatuan[this.state.temp_cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty+1
+      }
+      console.log(obj)
+      obj.transaksidetailsatuan.push(data);
+      console.log(obj)
     }
-    console.log(this.props.addtoTransaction(data))
-  
   };
 
+  decprodincart = id => {
+    if(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty-1===0){
+      let cart = this.props.Auth.cart;
+      cart.transaksidetailsatuan.splice(cart.transaksidetailsatuan[cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)],1)
+      this.props.AddcartAction(cart);
+    }else{
+      let data = {
+        user_id     : this.props.Auth.id,
+        products_id : id,
+        parcel_id   : 0,
+        qty         : this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)].qty-1
+      };
+      Axios.post(`${API_URL_SQL}/transaksi/addtocart`,data)
+      .then((res)=>{
+        this.props.AddcartAction(res.data);
+      }).catch((error)=>{
+        console.log(error)
+      });
+    };
+  };
+
+
   render() {
-    console.log(this.props.Parcel);
+    console.log("cart", this.state.temp_cart);
     return (
       <>
         <Header />
@@ -174,12 +219,18 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction })(cl
                                     {priceFormatter(item.harga)}
                                   </div>
                                   <div className="additem">
-                                    <button className="crement"
-                                            onClick={()=>this.addprodtocart(item.id)}
+                                    <button className = "crement"
+                                            onClick   = {()=>this.decprodincart(item.id)}
+                                            disabled  = {this.state.temp_cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)] === undefined? true:false }
                                     >
                                       -
                                     </button>
-                                    <div className="amount">2</div>
+                                    <div className="amount">
+                                      {
+                                      this.state.temp_cart.transaksidetailsatuan[this.state.temp_cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)] === undefined?
+                                      0 : this.state.temp_cart.transaksidetailsatuan[this.state.temp_cart.transaksidetailsatuan.findIndex(val=>val.products_id===item.id)].qty
+                                      }
+                                    </div>
                                     <button className="crement"
                                             onClick={()=>this.addprodtocart(item.id)}
                                     >

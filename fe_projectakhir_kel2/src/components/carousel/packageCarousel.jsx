@@ -1,5 +1,6 @@
 import React from 'react';
 import './packageCarousel.scss';
+import { Link } from 'react-router-dom'
 import { priceFormatter } from '../../helpers';
 import { IconContext } from 'react-icons';
 import { HiStar } from 'react-icons/hi';
@@ -9,7 +10,7 @@ import {
 } from '../../assets'
 
 export default (props) => {
-    console.log(props.obj)
+    // console.log(props.obj)
     return (   
         <div className="cardBx">
             {
@@ -17,34 +18,36 @@ export default (props) => {
                 return (
                     <div className="card" key={val.id}>
                         <div className="Bx">
-                            <div className="content">
-                                <div className="tag">
-                                    Oncoming Event
-                                </div>
-                                <div className="imageBx">
-                                    {
-                                        val.gambar!=="null"?
-                                        <img src={val.gambar}/>
-                                        :
-                                        <img src={d_parcel}/>
-                                    }
-                                </div>
-                                <h2>
-                                    {val.nama}
-                                </h2>
-                                <p>
-                                    {props.rest.Parcel_Category[props.rest.Parcel_Category.findIndex(vals=>vals.id===val.categoryparcel_id)].nama} 
-                                </p>
-                                <IconContext.Provider value={{style:{fontSize:"15px", color:"lightgray"}}}>
-                                    <div>
-                                        <HiStar/>
-                                        <HiStar/>
-                                        <HiStar/>
-                                        <HiStar/>
-                                        <HiStar/>
+                            <Link to={'/detailparcel/'+val.id} style={{textDecoration:"none"}}>
+                                <div className="content">
+                                    <div className="tag">
+                                        Oncoming Event
                                     </div>
-                                </IconContext.Provider>
-                            </div>
+                                    <div className="imageBx">
+                                        {
+                                            val.gambar!=="null"?
+                                            <img src={val.gambar}/>
+                                            :
+                                            <img src={d_parcel}/>
+                                        }
+                                    </div>
+                                    <h2>
+                                        {val.nama}
+                                    </h2>
+                                    <p>
+                                        {props.rest.Parcel_Category[props.rest.Parcel_Category.findIndex(vals=>vals.id===val.categoryparcel_id)].nama} 
+                                    </p>
+                                    <IconContext.Provider value={{style:{fontSize:"15px", color:"lightgray"}}}>
+                                        <div>
+                                            <HiStar/>
+                                            <HiStar/>
+                                            <HiStar/>
+                                            <HiStar/>
+                                            <HiStar/>
+                                        </div>
+                                    </IconContext.Provider>
+                                </div>
+                            </Link>
                             <div className="detail">
                                 <div className="upper">
                                     <div className="hargaBx">
