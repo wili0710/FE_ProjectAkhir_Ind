@@ -106,7 +106,7 @@ const AdminReport=()=>{
                     <TableRow key={val.products_id}>
                         <TableCell align="center"><span style={{fontSize:18}}>{val.transaksi_id}</span></TableCell>
                         <TableCell align="center"><span style={{fontSize:18}}>{val.nama}</span></TableCell>
-                        <TableCell align="center"><span style={{fontSize:18,color:"tomato",fontWeight:"bold"}}>Rp {numeral(val.totaltransaksi-val.totalmodal).format('0,0')}</span></TableCell>
+                        <TableCell align="center"><span style={{fontSize:18,color:"tomato",fontWeight:"bold"}}>Rp {numeral(val.hargatotal-val.modal).format('0,0')}</span></TableCell>
                     </TableRow>
                 )
             })
@@ -334,7 +334,7 @@ const AdminReport=()=>{
                                 marginRight:5,
                                 cursor:"pointer"
                             }} onClick={()=>setDisplayTab(3)}>
-                                Report Transaksi Detail
+                                Report Parcel
                             </div>
                         </div>
                     </div>
