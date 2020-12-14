@@ -531,6 +531,7 @@ class DetailParcel extends Component {
         
 
         var dataArrMakanan = this.state.dataArrMakanan // data array chocolate 
+        var dataChocolate= this.state.dataChocolate
         var indexChocolate = dataArrMakanan.findIndex((val)=>{
 
             return val.parcel_id==id
