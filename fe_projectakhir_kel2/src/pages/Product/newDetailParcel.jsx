@@ -59,11 +59,10 @@ class DetailParcel extends Component {
         deleteUndefinedChocolate:false,
         indexCartChocolate:0,
         RandomParcel:false,
-        allowedBeli:false,
 
         // 
 
-        categoryProduct:[]
+        limitProduct:[]
      }
      
 
@@ -135,16 +134,28 @@ class DetailParcel extends Component {
 
      }
 
-     findCategoryProduct=this.state.categoryProduct.map((val,index)=>{
-         return {
-             categoryproduct_id:val.categoryproduct_id,
-             category:val.namaProduct,
-             limitqty:val.qty
-         }
-     })
+    getLimitProduct=async()=>{
+        try{
+            const getLimit = await Axios.get(`${API_URL_SQL}/product/getDataParcelById/${this.props.match.params.id}`)
+            const arrlimit = getLimit.data.map((val,index)=>{
+                return {
+                    categoryproduct_id:val.categoryproduct_id,
+                    category:val.namaProduct,
+                    limitqty:val.qty
+                }
+            })
+            this.setState({limitProduct:arrlimit})
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+     newRenderCart=()=>{
+
+     }
 
      
-
+     
    
   
      hapusDataMinuman=(id)=>{
@@ -532,7 +543,6 @@ class DetailParcel extends Component {
         
 
         var dataArrMakanan = this.state.dataArrMakanan // data array chocolate 
-        var dataChocolate= this.state.dataChocolate
         var indexChocolate = dataArrMakanan.findIndex((val)=>{
 
             return val.parcel_id==id
@@ -843,7 +853,6 @@ class DetailParcel extends Component {
 
 
             if(totalQtyMinuman == limitMinuman && totalQtyMakanan == limitMakanan && totalQtyChocolate == limitChocolate){
-                this.setState({allowedBeli:true})
                 console.log('true')
                 var obj = {
                     user_id:userid,
@@ -863,21 +872,18 @@ class DetailParcel extends Component {
                  })
 
             }else if(totalQtyMinuman < limitMinuman) {
-                this.setState({allwoedBeli:false})
                 Swal.fire({
                     icon: 'error',
                     title: `Ada Barang Yang Kurang`,
                     text: `Anda Harus Memilih ${limitMinuman} Minuman`                   
                 })
             }else if (totalQtyMakanan < limitMakanan){
-                this.setState({allwoedBeli:false})
                 Swal.fire({
                     icon: 'error',
                     title: `Ada Barang Yang Kurang`,
                     text: `Anda Harus Memilih ${limitMakanan} Makanan`                  
                 })
             }else if(totalQtyChocolate <limitChocolate){
-                this.setState({allwoedBeli:false})
                 Swal.fire({
                     icon: 'error',
                     title: `Ada Barang Yang Kurang`,
@@ -1074,8 +1080,7 @@ class DetailParcel extends Component {
     render() { 
         // console.log(API_URL_SQL)
     //   console.log(this.state.dataArrMakanan)
-        console.log(this.findCategoryProduct)
-            console.log(this.state.categoryProduct)
+        console.log(this.state.limitProduct)
             const {classes}= this.props
             
         return ( 
@@ -1257,21 +1262,11 @@ class DetailParcel extends Component {
                                             </table>
                                         
                                     </div>
-                                    {
-                                        this.state.allowedBeli ?
                                         <a href="/cart">
                                             <div className="button-add" onClick={this.saveMessage}>
                                                 <p>Beli</p>
                                             </div>
                                         </a>
-                                        :
-                                        <a href="#">
-                                        <div className="button-add" onClick={this.saveMessage}>
-                                            <p>Beli</p>
-                                        </div>
-                                    </a>
-
-                                    }
 
                             </div>
 

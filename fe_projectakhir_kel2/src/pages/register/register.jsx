@@ -317,7 +317,7 @@ const Register=(props)=>{
 
             {/* Modal Reset Password */}
             {
-                showResetPassword?
+                Auth.isResetPass?
                 <div style={{
                     height:"100%",
                     width:"100%",
@@ -326,7 +326,7 @@ const Register=(props)=>{
                     zIndex:2,
                     top:0
                 }}>
-                    <div style={{
+                    {/* <div style={{
                         backgroundColor:"white",
                         width:"fit-content",
                         height:"fit-content",
@@ -335,7 +335,7 @@ const Register=(props)=>{
                         borderRadius:100,
                         position:"fixed",
                         zIndex:5,
-                        margin: "auto", /* Will not center vertically and won't work in IE6/7. */
+                        margin: "auto", 
                         left: 0,
                         right: -550,
                         top:-150,
@@ -343,9 +343,9 @@ const Register=(props)=>{
                         animation: "rotateY 500ms ease-in-out forwards",
                         transformOrigin: "top center",
                         cursor:"pointer"
-                    }} onClick={()=>setShowResetPassword(!showResetPassword)}>
+                    }} onClick={()=>dispatch({type:'RESETPASS',payload:!Auth.isResetPass})}>
                         <AiOutlineCloseCircle size={40}/>
-                    </div>
+                    </div> */}
                     <ModalResetPassword/>
                 </div>
                 :
@@ -378,37 +378,7 @@ const Register=(props)=>{
                                     <span>Nama :</span>
                                     <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,nama:e.target.value})}/>
                                     {renderInputPassword()}
-                                    {/* {seePassword?
-                                        <>
-                                            <span>Password : </span> <AiFillEye size={20} style={{color:"#0095DA",cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(false)}/>
-                                            <input className='form-control' style={{
-                                                transition:'500ms',
-                                                border:!isPasswordPass?'1px solid red':null,
-                                                boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
-                                            }}  type='text' onChange={(e)=>passwordCheck(e)}/>
-                                            {
-                                                !isPasswordPass?
-                                                    <span>Password harus ada angka, minimal 6, huruf besar dan kecil</span>
-                                                    :
-                                                    null
-                                            }
-                                        </>
-                                        :
-                                        <>
-                                            <span>Password :</span> <AiFillEyeInvisible size={20} style={{cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(true)}/>
-                                            <input className='form-control' style={{
-                                                transition:'500ms',
-                                                border:!isPasswordPass?'1px solid red':null,
-                                                boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
-                                            }} type='password' onChange={(e)=>passwordCheck(e)}/>
-                                            {
-                                                !isPasswordPass?
-                                                    <span>Password harus ada angka, minimal 6, huruf besar dan kecil</span>
-                                                    :
-                                                    null
-                                            }
-                                        </>
-                                    }  */}
+                                    
                                     <span>Nomor Handphone :</span>
                                     <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,nomorhandphone:e.target.value})}/>
                                     <span>Alamat Lengkap :</span>
@@ -442,7 +412,7 @@ const Register=(props)=>{
                                     <form className='pt-3' style={{width:'80%', borderTop:'2px solid #E5E7E7'}}>
                                         {rendercekemail()}
                                     </form>
-                                    <span className='mt-3' style={{fontSize:'14px', fontWeight:'bold', cursor:"pointer",color:"#30a9e1"}} onClick={()=>{setShowResetPassword(!showResetPassword)}}>Reset Password</span>
+                                    <span className='mt-3' style={{fontSize:'14px', fontWeight:'bold', cursor:"pointer",color:"#30a9e1"}} onClick={()=>{dispatch({type:'RESETPASS',payload:!Auth.isResetPass})}}>Reset Password</span>
                                     <span className='mt-3' style={{fontSize:'14px', fontWeight:'lighter'}}>Dengan mendaftar, saya menyetujui</span>
                                     <span className='mb-4' style={{fontSize:'14px', fontWeight:'lighter'}}><span style={{color:"#0095DA",fontWeight:'500',cursor:'pointer'}}>Syarat dan Ketentuan</span> serta <span style={{color:"#0095DA",fontWeight:'500',cursor:'pointer'}}>Kebijakan Privasi</span></span>
                                 </div>

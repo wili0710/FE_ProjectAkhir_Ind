@@ -13,9 +13,12 @@ import Axios from 'axios'
 import {API_URL_SQL} from '../../helpers/apiUrl'
 import Courier from './../../assets/Courier.png'
 import {Redirect, Link} from 'react-router-dom'
-import {LoginThunk} from './../../redux/Actions'
+import {LoginThunk,ShowResetPass} from './../../redux/Actions'
 import {connect} from 'react-redux';
 import GoogleLogin from 'react-google-login';
+
+import { ModalResetPassword } from '../../components/modalresetpassword';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 
 const Styles={
@@ -55,7 +58,8 @@ class Login extends Component {
         password:createRef(),
         showPassword:false,
         testemail:'',
-        testpassword:''
+        testpassword:'',
+        // showResetPassword:false
 
       }
 
@@ -111,6 +115,25 @@ class Login extends Component {
         return ( 
             <>
                 <div className="outerdiv">
+
+                    {/* Modal Reset Password */}
+            {
+                this.props.Auth.isResetPass?
+                <div style={{
+                    height:"100%",
+                    width:"100%",
+                    backgroundColor:"rgba(0, 0, 0, 0.5)",
+                    position:"fixed",
+                    zIndex:2,
+                    top:0
+                }}>
+                    <ModalResetPassword/>
+                </div>
+                :
+                null
+            }
+            {/* End Modal Reset password */}
+
                         <div className="left-box">
                             <img  src={Courier}   className="img-left"/>
                         </div>
@@ -162,7 +185,7 @@ class Login extends Component {
                                     'none'}}>
                                      <p style={{marginRight:'10px'}}>Register </p>
                                     </Link>
-                                    <p style={{marginRight:'10px'}}>Forgot Password ? </p>
+                                    <p style={{marginRight:'10px'}} onClick={()=>this.props.ShowResetPass(!this.props.Auth.isResetPass)} >Forgot Password ? </p>
                                 </div>
 
 
@@ -187,4 +210,4 @@ const Mapstatetoprops=(state)=>{
         Auth:state.Auth
     }
 }
-export default withStyles(Styles)(connect(Mapstatetoprops,{LoginThunk})(Login));
+export default withStyles(Styles)(connect(Mapstatetoprops,{LoginThunk,ShowResetPass})(Login));

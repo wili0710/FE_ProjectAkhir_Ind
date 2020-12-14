@@ -39,3 +39,10 @@ export const LoginThunk=(email,password)=>{
             })
     }
 }
+
+export const ShowResetPass=(condition)=>{
+    return{
+        type:"RESETPASS",
+        payload:condition
+    }
+}
