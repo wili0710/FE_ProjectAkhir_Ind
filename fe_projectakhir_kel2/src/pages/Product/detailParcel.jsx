@@ -129,17 +129,6 @@ class DetailParcel extends Component {
   
      hapusDataMinuman=(id)=>{
          console.log(id,' line 101')
-        //  var prodid= this.state.dataParcelByIdMinuman.categoryproduct_id
-        //  var filterprod=this.state.dataArrMakanan.filter((val)=>{
-        //      return val.categoryproduct_id === prodid
-        //  })
-        //  var total =0
-        //  for(var i=0; i<filterprod.length; i++){
-        //      total += filterprod[i].qty
-        //  }
-     
-    
-        //   if(total <= this.state.dataParcelByIdMinuman.qty){
              var dataArrMakanan = this.state.dataArrMakanan
              var dataMinuman = this.state.dataMinuman
              var find = dataMinuman.findIndex((val)=>{
@@ -185,16 +174,7 @@ class DetailParcel extends Component {
      }
  
      hapusDataMakanan=(id)=>{
-        //  console.log(id,'delete id ')
-     
-        //  var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id
-        //  var filterprod=this.state.dataArrMakanan.filter((val)=>{
-        //      return val.categoryproduct_id === prodid
-        //  })
-        //  var total =0
-        //  for(var i=0; i<filterprod.length; i++){
-        //      total += filterprod[i].qty
-        //  }
+    
          Swal.fire({
             icon: 'success',
             title: 'Berhasil Menghapus Product',
@@ -243,18 +223,7 @@ class DetailParcel extends Component {
      }
 
      hapusDataChocolate=(id)=>{
-        //  console.log(id)
-        //  var prodid= this.state.dataParcelByIdChocolate.categoryproduct_id
-        //  var filterprod=this.state.dataArrMakanan.filter((val)=>{
-        //      return val.categoryproduct_id === prodid
-        //  })
-        //  var total =0
-        //  for(var i=0; i<filterprod.length; i++){
-        //      total += filterprod[i].qty
-        //  }
-       
-    
-        //   if(total <= this.state.dataParcelByIdChocolate.qty){
+ 
              var dataArrMakanan = this.state.dataArrMakanan
              var dataChocolate= this.state.dataChocolate
              var dataCartChocolate= this.state.renderCartChocolate
@@ -304,10 +273,35 @@ class DetailParcel extends Component {
 
         //  }
      }
-     onDeleteProduct=(id)=>{
+     onDeleteProduct=(id,categoryproduct_id)=>{
         var dataCart = this.state.dataArrMakanan
-        dataCart.splice(id,1)
+        console.log(dataCart, ' ini dataarrmakanan')
+        console.log(categoryproduct_id)
+        var find= dataCart.findIndex((val)=>{
+            return val.id == id
+        })
+        console.log(dataCart[find])
+        
+        
+
         this.setState({dataArrMakanan:dataCart})
+
+        if(categoryproduct_id == 1){
+            console.log('minuman')
+        }else if (categoryproduct_id==2){
+            console.log('makanan')
+            var dataMakanan= this.state.dataMakanan
+            var indexMakanan=dataMakanan.findIndex((val)=>{
+                return val.id == id
+            })
+            console.log(dataMakanan)
+            console.log(dataCart[find])
+            // dataMakanan[indexMakanan]= {...dataMakanan[indexMakanan],stok:dataMakanan[indexMakanan].stok + dataCart[find].qty}
+            // this.setState({dataMakanan:dataMakanan})
+            dataCart.splice(id,1)
+        }else {
+            console.log('chocolate')
+        }
     }
 
      
@@ -722,112 +716,7 @@ class DetailParcel extends Component {
                  </>
              )
          })
-     }
-
-     renderCartMinuman=()=>{
-        var checkMinuman= this.state.checklistMinuman
-        return this.state.renderCartMinuman.map((val,index)=>{
-            if(checkMinuman){
-                return (
-                    <>
-                    <tr>
-                       <td>{val.namaProduct}</td>
-                           <td><FcCheckmark/></td>
-                       <td> {val.qty}</td>
-                       <td onClick={()=>this.onDeleteProduct(index)}>
-                           <AiFillDelete className="delete-icon"/>
-                       </td>
-                    </tr>
-                    </>
-                )
-            }else {
-                return (
-                    <>
-                    <tr>
-                       <td>{val.namaProduct}</td>
-                        <td></td>
-                       <td> {val.qty}</td>
-                       <td onClick={()=>this.onDeleteProduct(index)}>
-                           <AiFillDelete className="delete-icon"/>
-                       </td>
-                    </tr>
-                    </>
-                )
-            }
-        })
-     }
-     
-     renderCartMakanan=()=>{
-        var checkMakanan= this.state.checklistMakanan
-        console.log(checkMakanan)
-        return this.state.renderCartMakanan.map((val,index)=>{
-            console.log(index)
-            if(checkMakanan){
-                console.log('masuk ke line 583 render makanan checklist')
-                return (
-                    <>
-                    <tr>
-                       <td>{val.namaProduct}</td>
-                           <td><FcCheckmark/></td>
-                       <td> {val.qty}</td>
-                       <td onClick={()=>this.onDeleteProduct(index)}>
-                           <AiFillDelete className="delete-icon"/>
-                       </td>
-                    </tr>
-                    </>
-                )
-            }else {
-                console.log('masuk ke line 594 render makanan else')
-                return (
-                    <>
-                    <tr>
-                       <td>{val.namaProduct}</td>
-                        <td></td>
-                       <td> {val.qty}</td>
-                       <td onClick={()=>this.onDeleteProduct(index)}>
-                           <AiFillDelete className="delete-icon"/>
-                       </td>
-                    </tr>
-                    </>
-                )
-            }
-        })
-         
-     }
-
-     renderCartChocolate=()=>{
-        var checkChocolate= this.state.checklistChocolate
-        return this.state.renderCartChocolate.map((val,index)=>{
-            console.log(index)
-            if(checkChocolate){
-                return (
-                    <>
-                    <tr>
-                       <td>{val.namaProduct}</td>
-                           <td><FcCheckmark/></td>
-                       <td> {val.qty}</td>
-                       <td onClick={()=>this.onDeleteProduct(index)}>
-                           <AiFillDelete className="delete-icon"/>
-                       </td>
-                    </tr>
-                    </>
-                )
-            }else {
-                return (
-                    <>
-                    <tr>
-                       <td>{val.namaProduct}</td>
-                        <td></td>
-                       <td> {val.qty}</td>
-                       <td onClick={()=>this.onDeleteProduct(index)}>
-                           <AiFillDelete className="delete-icon"/>
-                       </td>
-                    </tr>
-                    </>
-                )
-            }
-        })
-     }
+     }   
 
     renderDataCartProduct=()=>{
         var limitQtyMakanan= this.state.dataParcelByIdMakanan.qty // product_id
@@ -844,7 +733,7 @@ class DetailParcel extends Component {
                    <td>{val.namaProduct}</td>
                     <td></td>
                    <td> {val.qty}</td>
-                   <td onClick={()=>this.onDeleteProduct(val.id)}>
+                   <td onClick={()=>this.onDeleteProduct(val.id,val.categoryproduct_id)}>
                        <AiFillDelete className="delete-icon"/>
                    </td>
                 </tr>
@@ -1319,11 +1208,9 @@ class DetailParcel extends Component {
                                                     <th>Qty</th>
                                                     <th>Action</th>
                                                 </tr>
-                                                {/* render product all */}
+                                                
                                                 {this.renderDataCartProduct()} 
-                                                {/* {this.renderCartMakanan()}
-                                                {this.renderCartMinuman()}
-                                                {this.renderCartChocolate()} */}
+                                              
                                                 
                                             </table>
                                         

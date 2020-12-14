@@ -30,6 +30,7 @@ class Product extends Component {
             nama:createRef(),
             image:createRef(),
             harga:createRef(),
+            hargapokok:createRef(),
             stok:createRef(),
             deskripsi:createRef(),
             catProduct:createRef(),
@@ -137,14 +138,15 @@ class Product extends Component {
      }
 
      onSave=()=>{
-         var{nama,harga,stok,deskripsi,catProduct}=this.state.dataForm
+         var{nama,harga,stok,deskripsi,catProduct,hargapokok}=this.state.dataForm
          var nama=nama.current.value
          var harga=harga.current.value
+         var hargapokok=hargapokok.current.value
          var stok=stok.current.value
          var deskripsi=deskripsi.current.value
          var image = this.state.fileImage
          var categoryproduct_id = catProduct.current.value
-         var data = {nama,harga,stok,deskripsi,image,categoryproduct_id}
+         var data = {nama,harga,stok,deskripsi,image,categoryproduct_id,hargapokok}
          console.log(data , ' ini data 111')
          if(image){
              console.log('masuk ke dalam if image data ada')
@@ -264,6 +266,7 @@ class Product extends Component {
                         <input type='text' ref={this.state.dataForm.nama} placeholder='Masukan Nama Barang' className="form-control mb-2"/>
                         <input type='file' onChange={this.onInputPhoto} placeholder='Masukan Gambar' style={{marginBottom:'5px'}}  />
                         <input type='text' ref={this.state.dataForm.harga} placeholder='Masukan Harga Barang' className="form-control mb-2"/>
+                        <input type='text' ref={this.state.dataForm.hargapokok} placeholder='Masukan Harga Pokok Barang' className="form-control mb-2"/>
                         <input type='text' ref={this.state.dataForm.stok} placeholder='Masukan Stock Barang' className="form-control mb-2"/>
                         <input type='text' ref={this.state.dataForm.deskripsi} placeholder='Masukan Deskripsi Barang' className="form-control mb-2"/>
                         <select ref={this.state.dataForm.catProduct} defaultValue={0}>
