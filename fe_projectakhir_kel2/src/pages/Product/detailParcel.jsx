@@ -383,6 +383,7 @@ class DetailParcel extends Component {
                 console.log(dataMakanan)
                 dataSama[indexDataMakanan]= {...dataSama[indexDataMakanan],qty:dataSama[indexDataMakanan].qty+1}
                 dataMakanan[find]={...dataMakanan[find],stok:dataMakanan[find].stok-1}
+                console.log(dataMakanan)
                 this.setState({dataArrMakanan:dataSama,dataMakanan:dataMakanan})
                 Swal.fire({
                     icon: 'success',
@@ -470,6 +471,7 @@ class DetailParcel extends Component {
                  dataSama[indexMinuman]= {...dataSama[indexMinuman],qty:dataSama[indexMinuman].qty+1}
                  dataMinuman[find]= {...dataMinuman[find],stok:dataMinuman[find].stok-1}
                 //  dataMinuman[find]= {...dataMinuman[find],stok:dataMinuman[find].stok-1}
+                console.log(dataMinuman)
                  this.setState({dataArrMakanan:dataSama})
                  Swal.fire({
                     icon: 'success',
