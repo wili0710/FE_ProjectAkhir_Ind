@@ -146,6 +146,16 @@ const CartPage=()=>{
 
     const clickSendBukti=(transaksi_id,users_id)=>{
         console.log(transaksi_id,users_id)
+        console.log(image)
+
+        if(!image){
+            return Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Bukti transfer belum ada!'
+              })
+        }
+
 
         let formData=new FormData()
         let options={
