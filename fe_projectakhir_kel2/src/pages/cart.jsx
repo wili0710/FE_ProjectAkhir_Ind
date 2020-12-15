@@ -84,7 +84,8 @@ const CartPage=()=>{
     const [statusPerCategory,setStatusPerCategory]=useState([]) 
     const [isAllLimit,setIsAllLimit]=useState()    // Status per category apakah sudah kena limit, 0 atau belum.
     
-    const [qtyParcel,setQtyParcel]=useState()                       // qty Parcelnya
+    const [qtyParcel,setQtyParcel]=useState()         
+    const [qtyParcelBefore,setQtyParcelBefore]=useState()             // qty Parcelnya
     
     // Untuk edit item satuan, bukan yg parcel
     const [editSatuan,setEditSatuan]=useState()             
@@ -111,6 +112,39 @@ const CartPage=()=>{
         inStatusPerCategory()
     },[komposisiParcel])
 
+    useEffect(()=>{
+        cekQtyInParcel()
+    },[qtyParcel])
+
+    const cekQtyInParcel=()=>{
+        // console.log(komposisiParcel)
+        // console.log(listProduct)
+        let productStokTidakCukup=komposisiParcel.filter((val,index)=>{
+            let findproduct=listProduct.find((finding)=>{
+                return finding.id==val.products_id
+            })
+            if (val.qty*qtyParcel>findproduct.stok){
+                return val
+            }
+        })
+        console.log(productStokTidakCukup)
+        let namaproduct=[]
+        productStokTidakCukup.map((val,index)=>{
+            namaproduct.push(" "+val.nama)
+        })
+        console.log(namaproduct.join(","))
+        if(productStokTidakCukup.length){
+            console.log("tidak cukup")
+            setQtyParcel(qtyParcelBefore)
+            return Swal.fire({
+                icon: 'error',
+                title: 'Stok Kurang',
+                text: `${namaproduct} Stok tidak`,
+            })
+        }else{
+            console.log("cukup")
+        }
+    }
     
     const fetchdata=async()=>{
         try {
@@ -589,7 +623,7 @@ const CartPage=()=>{
                     return filtering.nama == nama
                 })
                 console.log(getstok)
-                if(getstok[0].stok<val.qty+1){
+                if(getstok[0].stok<((val.qty*qtyParcel)+(1*qtyParcel))){
                     Swal.fire({
                         icon: 'error',
                         title: 'Stok Kurang',
@@ -1285,6 +1319,7 @@ const CartPage=()=>{
                                         if(e.target.value<=0){
                                             setQtyParcel(1)
                                         }else{
+                                            setQtyParcelBefore(qtyParcel)
                                             setQtyParcel(e.target.value)
                                         }
                                     }} value={qtyParcel} type="number" defaultValue={itemEdit[0].qty} style={{width:50, border:"none",outline:"none"}}/>
