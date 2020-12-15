@@ -14,13 +14,13 @@ import {BiPlus,BiMinus,BiCart,BiUser} from 'react-icons/bi'
 import {FcCheckmark} from 'react-icons/fc'
 import TextField from '@material-ui/core/TextField';
 import { CgInsertBefore } from 'react-icons/cg';
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import Swal from 'sweetalert2';
 import {Dropdown} from 'react-bootstrap'
 import Logo from './../../assets/logo.png'
 import {AiOutlineLogout,AiFillHome,AiFillDelete} from 'react-icons/ai'
 import {connect} from 'react-redux';
-import {LogoutFunc} from './../../redux/Actions'
+import {LogoutFunc,AddcartAction} from './../../redux/Actions'
 import Zoom from 'react-reveal/Zoom';
 import HorizontalScroll from 'react-scroll-horizontal'
 import numeral from 'numeral';
@@ -61,6 +61,7 @@ class DetailParcel extends Component {
         indexCartChocolate:0,
         RandomParcel:false,
         allowedBeli:false,
+        tocart:false,
 
         // 
 
@@ -859,6 +860,8 @@ class DetailParcel extends Component {
                  Axios.post(`${API_URL_SQL}/transaksi/addtocart`,obj).then((res)=>{
                      console.log('nberhasil')
                     console.log(res.data)
+                    this.props.AddcartAction(res.data)
+                    this.setState({tocart:true})
                  }).catch((err)=>{
                      console.log(err)
                  })
@@ -1079,7 +1082,9 @@ class DetailParcel extends Component {
         console.log(this.findCategoryProduct)
             console.log(this.state.categoryProduct)
             const {classes}= this.props
-            
+        if(this.state.tocart){
+            return <Redirect to='/cart'/>
+        }
         return ( 
             <>
                 <div className="outer-detail">
@@ -1261,7 +1266,7 @@ class DetailParcel extends Component {
                                     </div>
                                     {
                                         this.state.allowedBeli ?
-                                        <a href="/cart">
+                                        <a href="#">
                                             <div className="button-add" onClick={this.saveMessage}>
                                                 <p>Beli</p>
                                             </div>
@@ -1291,4 +1296,4 @@ const MapStatetoprops=({Auth,cart})=>{
     }
 }
 
-export default (connect(MapStatetoprops,{LogoutFunc})(DetailParcel))
+export default (connect(MapStatetoprops,{LogoutFunc,AddcartAction})(DetailParcel))
