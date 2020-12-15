@@ -113,7 +113,7 @@ const AdminPayment=()=>{
               </div>
             </TableCell>
             <TableCell style={{width:170}} align="center">{moment(val.tanggaltransaksi).format('Do MMMM YYYY')}</TableCell>
-            <TableCell style={{width:170}} align="center">{moment(val.tglexp).format('Do MMMM YYYY')}</TableCell>
+
             <TableCell style={{width:160}} align="center">Rp {numeral(val.totalpayment).format('0,0.0')}</TableCell>
             <TableCell style={{width:110}} align="center">
               <Button color="primary" onClick={()=>onConfirmClick(val.payment_id,val.transaksi_id)}>Confirm</Button>
@@ -189,7 +189,7 @@ const AdminPayment=()=>{
                     <TableCell align="center">Transaksi Id</TableCell>
                     <TableCell align="center">Bukti Transfer</TableCell>
                     <TableCell align="center">Tgl Transaksi</TableCell>
-                    <TableCell align="center">Tgl Expired</TableCell>
+
                     <TableCell align="center">Total Harus Dibayar</TableCell>
                     <TableCell align="center"></TableCell>
                 </TableRow>
