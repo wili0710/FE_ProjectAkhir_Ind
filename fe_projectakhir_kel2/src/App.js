@@ -63,6 +63,7 @@ function App(props) {
         </div>
     )
   }
+
   const renderProtectedAdminRoutes=()=>{
     // if(1===1){
     if(Auth.role==="admin"){
