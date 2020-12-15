@@ -159,7 +159,7 @@ const CartPage=()=>{
 
         let formData=new FormData()
         let options={
-            header:{
+            headers:{
                 'Content-type':'multipart/form-data'
             }
         }
