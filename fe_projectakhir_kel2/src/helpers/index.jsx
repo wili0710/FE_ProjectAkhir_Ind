@@ -67,15 +67,15 @@ export function priceFormatter(num) {
 };
 
 export function renderOption(props) {
-    console.log(props)
+    // console.log(props)
     if(props.text !== "pilih kategori product") {
         return (
             <> 
                 <option className="hide" value={0} disabled defaultValue>{props.text}</option>  
                 { 
-                    props.state.map((val)=>{
+                    props.state.map((val,index)=>{
                         return (
-                            <option key={val.id} value={val.id}>
+                            <option key={index} value={val.id}>
                                 {val.id} | {val.nama}
                             </option>
                         )
@@ -95,14 +95,14 @@ export function renderOption(props) {
         arr.push(...a)
         
     };
-    console.log(arr)
+    // console.log(arr)
     return (
         <> 
             <option className="hide" value={0} disabled defaultValue>{props.text}</option>  
             { 
-                arr.map((val)=>{
+                arr.map((val,index)=>{
                     return (
-                        <option key={val.id} value={val.id}>
+                        <option key={index} value={val.id}>
                             {val.id} | {val.nama}
                         </option>
                     )

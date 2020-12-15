@@ -26,6 +26,8 @@ import Example from './pages/hapusaja';
 import {LoginFunc,AddcartAction} from './redux/Actions'
 import notfound from './pages/notfound';
 import bayuTest from './../src/pages/Product/newDetailParcel'
+import Test from './components/test'
+
 function App(props) {
   
   const Auth=useSelector(state=>state.Auth)
@@ -34,9 +36,9 @@ function App(props) {
   const [loading,setLoading]=useState(true)
 
   useEffect(()=>{
-  console.log(Auth.id)
+  // console.log(Auth.id)
   var id = localStorage.getItem('id')
-  console.log(id)
+  // console.log(id)
   if(id){
     Axios.post(`${API_URL_SQL}/auth/newkeeplogin`,{
       id
@@ -97,6 +99,7 @@ function App(props) {
         <Route exact path ='/cart' component={CartPage}/>
         <Route exact path ='/hapusaja' component={Example}/>
         <Route exact path ='/bayutest/:id' component={bayuTest}/>
+        <Route exact path ='/test' component={Test}/>
         {renderProtectedAdminRoutes()}
         <Route path='*' component={notfound}/>
 

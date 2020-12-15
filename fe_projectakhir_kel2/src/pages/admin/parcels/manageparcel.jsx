@@ -1,13 +1,28 @@
 import React from 'react'
 import './scss/manageparcel.scss'
+import Axios from 'axios';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { priceFormatter, renderOption, API_URL_SQL } from '../../../helpers';
-import { cat_2, d_parcel, icon } from '../../../assets';
-import { Popup } from '../../../components';
 import { IconContext } from 'react-icons';
+import { Link } from 'react-router-dom';
+import { Popup } from '../../../components';
 import { HiStar } from 'react-icons/hi';
-import { deleteParcel } from '../../../redux/Actions'
+import {
+    deleteParcel,
+    updateParcel
+} from '../../../redux/Actions';
+import {
+    cat_2,
+    d_parcel,
+    icon
+} from '../../../assets';
+import {
+    priceFormatter,
+    renderOption,
+    API_URL_SQL,
+    debounce
+} from '../../../helpers';
+
+
 
 const mapStatetoProps = (state) => {
     return {
@@ -18,7 +33,7 @@ const mapStatetoProps = (state) => {
     };
 };
 
-export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel extends React.Component {
+export default connect(mapStatetoProps,{ deleteParcel, updateParcel }) (class ManageParcel extends React.Component {
     state = {
         index_edit              : -1,
 
@@ -37,7 +52,8 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
         item_qty                : "",
 
         // rest state
-        filteredparcel          : [],
+        filteredparcel          : null,
+        item_filter             : 0,
         currentpage             : 1,
         itemperpage             : 3,
 
@@ -48,17 +64,25 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
     };
     
     componentDidMount() {
-        // console.log(this.props.Parcel)
+        console.log(this.props.Parcel)
     }
     componentDidUpdate() {
-        console.log(this.props.Parcel)
+        // if(this.state.index_edit>=0){
+        //     console.log(this.props.Parcel[this.state.index_edit].item)
+        // }
+        if(this.state.item_filter){
+            let a = this.props.Parcel.filter(val=>{return val.categoryparcel_id === Number(this.state.item_filter)})
+            console.log(a)
+        }
+        console.log(this.state.edit_item_parcel)
+        console.log(this.state.item_filter)
         // console.log(this.state.edit_gambar_parcel_url)
     }
 
     onResetEditParcel = () => {
         if(this.props.Parcel[this.state.index_edit].gambar && this.props.Parcel[this.state.index_edit].gambar.includes(API_URL_SQL)){
-            console.log('a')
-            console.log(this.props.Parcel[this.state.index_edit].item)
+            // console.log('a')
+            // console.log(this.props.Parcel[this.state.index_edit].item)
             this.setState({
                 edit_category_parcel    : this.props.Parcel[this.state.index_edit].categoryparcel_id,
                 edit_nama_parcel        : this.props.Parcel[this.state.index_edit].nama,
@@ -68,8 +92,8 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                 temp_gambar_parcel_upl  : null
             });
         }else{
-            console.log('b')
-            console.log(this.props.Parcel[this.state.index_edit].item)
+            // console.log('b')
+            // console.log(this.props.Parcel[this.state.index_edit].item)
             this.setState({
                 edit_category_parcel    : this.props.Parcel[this.state.index_edit].categoryparcel_id,
                 edit_nama_parcel        : this.props.Parcel[this.state.index_edit].nama,
@@ -81,39 +105,40 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
         };
     };
 
-    onEditParcelCLick = index => {
-        console.log(this.props.Parcel[index].item)
-        if(this.props.Parcel[index].gambar && this.props.Parcel[index].gambar.includes(API_URL_SQL)){
-            this.setState({
-                edit_category_parcel    : this.props.Parcel[index].categoryparcel_id,
-                edit_nama_parcel        : this.props.Parcel[index].nama,
-                edit_harga_parcel       : this.props.Parcel[index].harga,
-                edit_gambar_parcel_upl  : this.props.Parcel[index].gambar,
-                edit_item_parcel        : this.props.Parcel[index].item,
-                index_edit              : index,
-            });
-        }else if(this.props.Parcel[index].gambar==="null"){
-            this.setState({
-                edit_category_parcel    : this.props.Parcel[index].categoryparcel_id,
-                edit_nama_parcel        : this.props.Parcel[index].nama,
-                edit_harga_parcel       : this.props.Parcel[index].harga,
-                edit_item_parcel        : this.props.Parcel[index].item,
-                index_edit              : index,
-            });
-        }else{
-            this.setState({
-                edit_category_parcel    : this.props.Parcel[index].categoryparcel_id,
-                edit_nama_parcel        : this.props.Parcel[index].nama,
-                edit_harga_parcel       : this.props.Parcel[index].harga,
-                edit_gambar_parcel_url  : this.props.Parcel[index].gambar,
-                edit_item_parcel        : this.props.Parcel[index].item,
-                index_edit              : index,
-            });
-        }
+    onEditParcelCLick = id => {
+        // console.log(this.props.Parcel[index].item)
+        console.log(id)
+        // if(this.props.Parcel[index].gambar && this.props.Parcel[index].gambar.includes(API_URL_SQL)){
+        //     this.setState({
+        //         edit_category_parcel    : this.props.Parcel[index].categoryparcel_id,
+        //         edit_nama_parcel        : this.props.Parcel[index].nama,
+        //         edit_harga_parcel       : this.props.Parcel[index].harga,
+        //         edit_gambar_parcel_upl  : this.props.Parcel[index].gambar,
+        //         edit_item_parcel        : this.props.Parcel[index].item,
+        //         index_edit              : index,
+        //     });
+        // }else if(this.props.Parcel[index].gambar==="null"){
+        //     this.setState({
+        //         edit_category_parcel    : this.props.Parcel[index].categoryparcel_id,
+        //         edit_nama_parcel        : this.props.Parcel[index].nama,
+        //         edit_harga_parcel       : this.props.Parcel[index].harga,
+        //         edit_item_parcel        : this.props.Parcel[index].item,
+        //         index_edit              : index,
+        //     });
+        // }else{
+        //     this.setState({
+        //         edit_category_parcel    : this.props.Parcel[index].categoryparcel_id,
+        //         edit_nama_parcel        : this.props.Parcel[index].nama,
+        //         edit_harga_parcel       : this.props.Parcel[index].harga,
+        //         edit_gambar_parcel_url  : this.props.Parcel[index].gambar,
+        //         edit_item_parcel        : this.props.Parcel[index].item,
+        //         index_edit              : index,
+        //     });
+        // }
     };
 
     onChangeInput = (e) =>{
-        console.log(e.target.name,e.target.value)
+        // console.log(e.target.name,e.target.value)
         if(e.target.name === ("edit_harga_parcel")) {
             if(e.target.value > 0) {
                 this.setState({[e.target.name]:e.target.value})
@@ -136,30 +161,25 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
     };
     
     onCancelEditGambar = () => {
+        if(!(this.props.Parcel[this.state.index_edit].gambar.includes(API_URL_SQL))){
+            this.setState({
+                edit_gambar_parcel_url:this.props.Parcel[this.state.index_edit].gambar,
+                temp_gambar_parcel_upl:null,
+                showPopup:!(this.state.showPopup)
+            });
+        }
         this.setState({
-            edit_gambar_parcel_url:"",
             temp_gambar_parcel_upl:null,
             showPopup:!(this.state.showPopup)
         });
     };
 
     onSaveGambarClick = () => {
-        console.log('a')
+        // console.log('a')
         this.setState({
             edit_gambar_parcel_upl:this.state.temp_gambar_parcel_upl,
             showPopup:!(this.state.showPopup)
         });
-    };
-
-    onDeleteEditItem = (index) => {
-        console.log(this.state.edit_item_parcel)
-        const obj = this.state.edit_item_parcel;
-        console.log(obj)
-        console.log(this.props.Parcel[this.state.index_edit].item)
-        obj.splice(index,1)
-        console.log(obj)
-        console.log(this.props.Parcel[this.state.index_edit].item)
-        this.setState({edit_item_parcel:obj})
     };
 
     onAddItem = () => {
@@ -191,15 +211,154 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
         };
     };
 
+    onFinishEdit = async () =>  {
+        const {
+            edit_category_parcel,
+            edit_nama_parcel,
+            edit_harga_parcel,
+            edit_gambar_parcel_url,
+            edit_gambar_parcel_upl, 
+            edit_item_parcel,
+            temp_gambar_parcel_upl       
+        } = this.state;
+        const id = this.props.Parcel[this.state.index_edit].id;
+        console.log('masuk upload foto');
+        if(temp_gambar_parcel_upl){
+            try {
+                console.log(this.state.edit_gambar_parcel_url)
+                if(this.state.edit_gambar_parcel_url){
+                    Axios.post(`${API_URL_SQL}/parcel/deleteimage`,{
+                        filePath : this.props.Parcel[this.state.index_edit].gambar.split(API_URL_SQL)[1]
+                    }).then((result) => {
+                        console.log(result);
+                    }).catch((error)=>{
+                        console.log(error);
+                    });
+                };
+                let options = {
+                    headers: {
+                        'Content-type':'multipart/formdata'
+                    }
+                };
+                let formData = new FormData();
+                console.log(this.state.temp_gambar_parcel_upl)
+                formData.append('image', this.state.temp_gambar_parcel_upl);
+                ////////////////////////////////////////////////////////////
+                await Axios.post(`${API_URL_SQL}/parcel/uploadimage`, formData, options)
+                .then((result)=>{ 
+                    let img = result.data;
+                    const data = {
+                        id,
+                        nama                : edit_nama_parcel,
+                        harga               : edit_harga_parcel,
+                        categoryparcel_id   : edit_category_parcel,
+                        item                : edit_item_parcel,
+                        gambar              : img
+                    };
+                    this.props.updateParcel(data);
+                    this.setState({
+                        edit_category_parcel    : 0,
+                        edit_nama_parcel        : "",
+                        edit_harga_parcel       : "",
+                        edit_gambar_parcel_url  : "",
+                        edit_gambar_parcel_upl  : null,
+                        edit_item_parcel        : [],
+                        cat_product_edit        : [],
+                        cat_parcel_edit         : [],
+                        item_category           : 0,
+                        item_qty                : "",  
+                        index_edit              : -1, 
+                    });
+                }).catch((error)=>{
+                    console.log(error);
+                });
+            }catch(error){
+                console.log(error);
+            };
+        }else{
+            console.log('tanpa upload foto');
+            const data = {
+                id,
+                nama                : edit_nama_parcel,
+                harga               : edit_harga_parcel,
+                categoryparcel_id   : edit_category_parcel,
+                item                : edit_item_parcel,
+                gambar              : edit_gambar_parcel_url? edit_gambar_parcel_url:edit_gambar_parcel_upl,
+            };
+            try {
+                await this.props.updateParcel(data);
+                console.log('jalan udah jalan lagi')
+                this.setState({
+                    edit_category_parcel    : 0,
+                    edit_nama_parcel        : "",
+                    edit_harga_parcel       : "",
+                    edit_gambar_parcel_url  : "",
+                    edit_gambar_parcel_upl  : null,
+                    edit_item_parcel        : [],
+                    cat_product_edit        : [],
+                    cat_parcel_edit         : [],
+                    item_category           : 0,
+                    item_qty                : "",  
+                    index_edit              : -1
+                });
+            }catch(error){
+                console.log(error);
+            };
+        };
+    };
+    
     onDeleteParcel = (id) => {
         this.props.deleteParcel(id);
+        this.setState({currentpage:1})
+    };
+
+    onChangeItem = e => {
+        if ("qty".includes(e.target.className)) {
+            // console.log(e.target.dataset.id, e.target.className)
+            let item = [...this.state.edit_item_parcel]
+            // console.log(item)
+            // console.log(item[e.target.dataset.id][e.target.className])
+            item[e.target.dataset.id][e.target.className] = parseInt(e.target.value)
+            this.setState({item}, ()=>console.log(this.state.item))
+        } else {
+        //--> generate new state
+            this.setState({[e.target.name]:e.target.value})
+        }
+    };
+    
+    onSearchInputChange(e, prop) {
+        console.log(prop.array);
+        let newArr = [];
+        ///////////////////////////
+        if(this.state.item_filter){
+           let newfilter = prop.array.filter(val=>{return val.categoryparcel_id === Number(this.state.item_filter)})
+           for (let i = 0; i < newfilter.length; i++) {
+             if (newfilter[i].nama.toLowerCase().includes(e.target.value)) {
+               newArr.push(newfilter[i]);
+             };
+           };
+           this.setState({
+               filteredparcel   : newArr,
+               currentpage      : 1
+            });
+        };
+        ////////////////////////////////////////////
+        for (let i = 0; i < prop.array.length; i++) {
+          if (prop.array[i].nama.toLowerCase().includes(e.target.value)) {
+            newArr.push(prop.array[i]);
+          };
+        };
+        this.setState({
+            filteredparcel  : newArr,
+            currentpage     : 1
+         });
     };
 
     renderParcel(props) {
         var begin = ((Number(this.state.currentpage) - 1) * Number(this.state.itemperpage));
         var end = begin + Number(this.state.itemperpage);
         let items = props.obj.slice(begin,end)
-        console.log(props)
+        // console.log(props)
         return (
         <div className="cardBox">
         { 
@@ -211,7 +370,7 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                             <div className="imageBx">
                             {
                                 val.gambar!=="null"?
-                                <img src={val.gambar} alt="gambar parcel"/>
+                                <img src={val.gambar.includes('/parcel')? API_URL_SQL+val.gambar:val.gambar} alt="gambar parcel"/>
                                 :
                                 <img src={d_parcel} alt="gambar parcel"/>
                             }
@@ -258,7 +417,7 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                     {
                                         val.item.map((item,index)=>{
                                             return (
-                                            <div className="cardo">
+                                            <div className="cardo" key={index}>
                                                 <div className="qty">
                                                     {item.qty}
                                                 </div>
@@ -277,14 +436,13 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                     <div className="setting">
                         <button className  = "parcel-edit" 
                              disabled   = {this.state.index_edit!==-1? true:false}
-                             onClick    = {()=>this.onEditParcelCLick(index)}
+                             onClick    = {()=>this.onEditParcelCLick(val.id)}
                         >
                             edit
                         </button>
                         <button className  = "parcel-delete" 
                              onClick    = {()=>this.onDeleteParcel(val.id)}
                              disabled   = {this.state.index_edit!==-1? true:false}
-                             
                         >
                             delete
                         </button>
@@ -299,24 +457,22 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
 
     rendpage() {
         let arr=[]
-        for(let i=1;i<=(this.props.Parcel.length/this.state.itemperpage);i++){
+        let state = this.state.filteredparcel!==null? this.state.filteredparcel:this.props.Parcel;
+        for(let i=1;i<=(Math.ceil(state.length/this.state.itemperpage));i++){
             arr.push(
                 <button onClick = {()=>this.setState({currentpage:i})}
                         disabled= {this.state.currentpage===i?true:false}
+                        key     = {i}
                 >
                     {i}
                 </button>
             )
         }
         return arr;
-    }
+    };
 
     render() {
-        // console.log(this.state.edit_gambar_parcel_url)
-        // console.log(this.state.edit_gambar_parcel_upl)
-        // console.log(this.state.temp_gambar_parcel_upl)
-        console.log(this.state.edit_item_parcel)
-        
+        // console.log(this.state.edit_item_parcel)
         return (
             <>
             {
@@ -504,19 +660,25 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                     {
                                     this.state.index_edit >= 0?
                                     this.state.edit_item_parcel.map((val,index)=>{
+                                    // console.log(this.state.edit_item_parcel)
+                                    let qtyId       = `qty-${index}`;
                                     return (
-                                    <div className="itemBx_edit" key={val.id}>
+                                    <div className="itemBx_edit" key={index}>
                                         <div className="content">
                                             <div className="itemhead">
                                                 <div className="id"> SET {index+1}</div>
-                                                <button onClick={()=>this.onDeleteEditItem(index)}>X</button>
                                             </div>
                                             <div className="category"> 
-                                                Any
-                                                <br/>
                                                 {this.props.Product_Category[this.props.Product_Category.findIndex(vals=>vals.id===val.categoryproduct_id)].nama}
                                                 <br/>
-                                                <span> Qty : {val.qty} </span>
+                                                <input type      = "number"
+                                                       className = "qty"
+                                                       name      = {qtyId}
+                                                       id        = {qtyId}
+                                                       data-id   = {index}
+                                                       value     = {this.state.edit_item_parcel[index].qty}
+                                                       onChange  = {this.onChangeItem}
+                                                />
                                             </div> 
                                             <div className="imgBx">
                                                 <img src={cat_2} alt="illustrasi category"/>
@@ -553,7 +715,7 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                         />
                                         <button className   = "button0"
                                                 onClick     = {this.onAddItem}
-                                                disabled    = {this.state.item_qty && this.state.item_category? false:true}
+                                                disabled    = {this.state.item_category || this.state.item_qty? false:true}
                                         >
                                             Add
                                         </button>
@@ -565,8 +727,8 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                                             Reset
                                         </button>
                                         <button className   = "button0" 
-                                                // onClick     = {this.onFinishAddItem}
-                                                // disabled    = {this.props.Parcel.Parcel[this.state.index_edit].item.length? false:true}
+                                                onClick     = {this.onFinishEdit}
+                                                disabled    = {this.state.edit_item_parcel.length? false:true}
                                         >
                                             Finish
                                         </button>
@@ -600,37 +762,48 @@ export default connect(mapStatetoProps,{deleteParcel}) (class ManageParcel exten
                 <section className="parcellist">
                     <div className="subborder">
                         <div style={{display:"flex",justifyContent:"space-between", background:"tomato", padding:10}}>
-                            <select>
+                            <select style={{width:"30%"}}
+                                    name        = "item_filter"
+                                    onChange    = {this.onChangeInput}
+                                    value       = {this.state.item_filter}
+                            >
                                 {renderOption({state:this.props.Parcel_Category,text:"pilih kategori parcel"})}
                             </select>
                             <input  type="text"
-                                    name="itemperpage"
-                                    onChange={this.onChangeInput}
-
+                                    name="filter"
+                                    onChange={debounce((e) =>this.onSearchInputChange(
+                                        e, 
+                                        {array: this.props.Parcel}),
+                                        700
+                                    )}
+                                    style={{width:"70%"}}
                             />
-                            <div>
-                                <input type="number"/>
-                                -
-                                <input type="number"/>
-                            </div>
                         </div>
                         <div style={{display:"flex",justifyContent:"space-between", background:"tomato", padding:10}}>
                             <div style={{background:"gray"}}>
-                                {this.props.Parcel.length} Parcels | Page {this.state.currentpage} / {Math.floor(this.props.Parcel.length/this.state.itemperpage)}
+                                {this.state.filteredparcel!==null?
+                                `${this.state.filteredparcel.length} Parcels | Page ${this.state.currentpage} / ${Math.ceil(this.state.filteredparcel.length/this.state.itemperpage)}`
+                                :
+                                `${this.props.Parcel.length} Parcels | Page ${this.state.currentpage} / ${Math.ceil(this.props.Parcel.length/this.state.itemperpage)}`
+                                }
                             </div>
                             <div style={{display:"flex"}}>
                                 {this.rendpage()}
+                                <label>
+                                    parcel per page
+                                </label>
                                 <input type     = "number"
                                        name     = "itemperpage"
-                                       max      = {this.props.Parcel.length}
+                                       max      = {this.state.filteredparcel!==null? this.state.filteredparcel.length : this.props.Parcel.length}
                                        min      = {3}
                                        value    = {this.state.itemperpage}
                                        onChange = {this.onChangeInput}
+                                    //    disabled = {}
                                 /> 
                             </div>
                         </div>
                         {   
-                        this.state.filteredparcel.length?
+                        this.state.filteredparcel!==null?
                         this.renderParcel({
                             obj : this.state.filteredparcel,
                             rest: this.props.AllData,

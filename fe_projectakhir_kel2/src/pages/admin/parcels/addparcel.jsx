@@ -100,7 +100,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
             };
             let formData = new FormData();
             formData.append('image', this.state.upl_files);
-            //* *** *//
+            //////////////////////////////////////////////////////////
             Axios.post(`${API_URL_SQL}/parcel/uploadimage`, formData, options)
             .then((result)=>{ 
                 let img = result.data;
@@ -111,7 +111,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                         category: id_category_parcel,
                         name    : nama_parcel,
                         price   : harga,
-                        gambar  : `${API_URL_SQL}${img}`,
+                        gambar  : img,
                         item    : []
                     };
                     obj.push(newObj)
@@ -128,7 +128,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                         category: id_category_parcel,
                         name    : nama_parcel,
                         price   : harga,
-                        gambar  : `${API_URL_SQL}${img}`,
+                        gambar  : img,
                         item    : []
                     };
                     this.props.setTempParcel([obj])
@@ -188,7 +188,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
     
     onDeleteTempParcel = (index) => {
         const temp_parcel = this.props.Parcel.init_Parcel;
-        if(this.props.Parcel.init_Parcel[index].gambar && this.props.Parcel.init_Parcel[index].gambar.includes(API_URL_SQL)){
+        if(this.props.Parcel.init_Parcel[index].gambar && this.props.Parcel.init_Parcel[index].gambar.includes('/parcel')){
             Axios.post(`${API_URL_SQL}/parcel/deleteimage`,{
                 filePath : this.props.Parcel[index].gambar.split(API_URL_SQL)[1]
             }).then(() => {
@@ -218,8 +218,8 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
         if(this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item.length) {
             const obj = this.props.Parcel.init_Parcel[this.state.index_add_cat_product].item;
             const newObj = {
-                categoryproduct_id   : parseInt(this.state.item_category),
-                qty_item        : parseInt(this.state.item_qty)
+                categoryproduct_id  : parseInt(this.state.item_category),
+                qty_item            : parseInt(this.state.item_qty)
             };
             obj.push(newObj);
             this.props.setTempParcel(temp_parcel)
@@ -230,7 +230,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
         }else{
             const obj = {
                 categoryproduct_id   : parseInt(this.state.item_category),
-                qty_item        : parseInt(this.state.item_qty)
+                qty_item             : parseInt(this.state.item_qty)
             };
             temp_parcel[this.state.index_add_cat_product].item.push(obj)
             this.props.setTempParcel(temp_parcel)
@@ -307,7 +307,7 @@ export default connect(mapStatetoProps,{setTempParcel,setReadyParcel,uploadParce
                     <div className="cardname">{val.name}</div>
                     <div className="cardcategory">{this.props.Parcel.Parcel_Category[this.props.Parcel.Parcel_Category.findIndex(vals=>vals.id===Number(val.category))].nama}</div>
                     <div className="imgBx">
-                        <img src={val.gambar? val.gambar:Courier} alt="Foto Package"/>
+                        <img src={val.gambar? `${API_URL_SQL}${val.gambar}`:Courier} alt="Foto Package"/>
                     </div>
                     <div className="cardharga">{priceFormatter(val.price)}</div>
                     <div className="carditem">

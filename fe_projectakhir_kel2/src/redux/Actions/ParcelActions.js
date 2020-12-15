@@ -144,7 +144,6 @@ export const addtoTransaction = data => {
         dispatch({type:'LOADING'});
         try {
             Axios.get(`${API_URL_SQL}/transaksi/getcart?user_id=${data.user_id}`)
-            
             .then((result)=>{
                 // console.log(result.data)
                 Axios.post(`${API_URL_SQL}/transaksi/addtocart`,data)
@@ -159,6 +158,41 @@ export const addtoTransaction = data => {
             })
         } catch (error) {
             dispatch({type:'ERROR',payload:"delete parcel error on main"});
+        };
+    };
+};
+
+export const updateParcel = data => {
+    return (dispatch) => {
+        console.log('jalan nij')
+        const {
+            id,
+            nama,
+            harga,
+            categoryparcel_id,
+            gambar,
+            item
+        }=data;
+        dispatch({type:'LOADING'});
+        try {
+            Axios.post(`${API_URL_SQL}/parcel/updateparcel`,{
+                id,
+                nama,
+                harga,
+                categoryparcel_id,
+                gambar,
+                item
+            }).then((result)=>{
+                const data = {
+                    Parcel : pushitem(result.data.allparcel,result.data.item)
+                };
+                dispatch({type:'LOAD',payload:data});
+                console.log('udah diload')
+            }).catch((error)=>{
+                console.log(error)
+            })
+        } catch (error) {
+            console.log(error)
         };
     };
 };
