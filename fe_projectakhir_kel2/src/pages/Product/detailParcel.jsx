@@ -28,6 +28,7 @@ import {HOME_URL} from './../../helpers/apiUrl'
 
 import { Scrollbars } from 'react-custom-scrollbars';
 import { css } from '@emotion/react';
+import debounce from 'lodash.debounce';
 
 class DetailParcel extends Component {
     state = { 
@@ -62,10 +63,20 @@ class DetailParcel extends Component {
         indexCartChocolate:0,
         RandomParcel:false,
         allowedBeli:false,
+        searchMakanan:'',
+        searchMinuman:'',
+        searchChocolate:'',
+        makananSearching:[],
+        minumanSearching:[],
+        chocolateSearching:[],
 
         // 
 
-        categoryProduct:[]
+        categoryProduct:[],
+        limitProduct:[],
+        arrCategoryId:[],
+        dataArrPerCat:[],
+        isRenderNew:false
      }
      
 
@@ -92,6 +103,9 @@ class DetailParcel extends Component {
             dataParcelByIdChocolate:res.data[2],
             categoryProduct:res.data
         })
+        this.testingGetAllProduct()
+        
+   
             
          }).catch((err)=>{
              console.log(err)
@@ -99,7 +113,7 @@ class DetailParcel extends Component {
 
          Axios.post(`${API_URL_SQL}/product/getDataProductMinuman`)
          .then((res)=>{
-             console.log(res.data,'line 65')
+            //  console.log(res.data,'line 65')
              this.setState({dataMinuman:res.data})
          }).catch((err)=>{
              console.log(err)
@@ -107,7 +121,7 @@ class DetailParcel extends Component {
 
          Axios.post(`${API_URL_SQL}/product/getDataProductMakanan`)
          .then((res)=>{
-             console.log(res.data,'line75')
+            //  console.log(res.data,'line75')
              this.setState({dataMakanan:res.data})
          }).catch((err)=>{
              console.log(err)
@@ -115,7 +129,7 @@ class DetailParcel extends Component {
 
          Axios.post(`${API_URL_SQL}/product/getDataProductChocolate`)
          .then((res)=>{
-             console.log(res.data,'line 83')
+            //  console.log(res.data,'line 83')
              this.setState({dataChocolate:res.data})
          }).catch((err)=>{
              console.log(err)
@@ -133,19 +147,242 @@ class DetailParcel extends Component {
              console.log(err)
          })
 
+       
          
 
      }
 
-     findCategoryProduct=this.state.categoryProduct.map((val,index)=>{
-         return {
-             categoryproduct_id:val.categoryproduct_id,
-             category:val.namaProduct,
-             limitqty:val.qty
-         }
-     })
+     testingGetAllProduct=async()=>{
+         try{
+             console.log(this.state.categoryProduct)
+            const arrLimit = this.state.categoryProduct.map((val,index)=>{
+                return {
+                    categoryproduct_id:val.categoryproduct_id,
+                    category:val.namaProduct,
+                    limitqty:val.qty
+                }
+            })
+            const arrCategoryId = arrLimit.map((val,index)=>{
+                return val.categoryproduct_id
+            })
+            // console.log(arrLimit)
+            // console.log(arrCategoryId)
+            this.setState({limitProduct:arrLimit, arrCategoryId:arrCategoryId})
+            
+            const getdatabyCat = await Axios.post(`${API_URL_SQL}/product/getAllProductByCategory/`,{
+                categoryproduct_id:arrCategoryId
+            })
+            this.setState({dataArrPerCat:getdatabyCat,isRenderNew:true})
 
-     
+            this.newRenderMakanan()
+         }catch(error){
+             console.log(error)
+         }
+     }
+
+
+
+     newRenderMakanan=()=>{
+        
+        var productMakanan=this.state.dataArrPerCat
+        console.log(productMakanan.data)
+        var filterprod = productMakanan.data.filter((val)=>{ // pecah product per category
+            console.log(val)
+            return val.categoryproduct === 'Makanan'
+        })
+        console.log(filterprod)
+
+        var filtercatprod = filterprod.map((val)=>{ // nyari category product id
+            return val.categoryproduct_id
+        })
+
+        var checkData=this.state.dataArrMakanan.filter((val)=>{
+            return val.categoryproduct_id === filtercatprod[0]
+        })
+        var total =0
+        for(var i=0; i<checkData.length; i++){
+            total += checkData[i].qty
+        }
+
+        var limitProduct = this.state.limitProduct
+            var findLimit = limitProduct.filter((val)=>{
+                return val.categoryproduct_id === filtercatprod[0]
+            })
+        //     // console.log(findLimit,' ini limit makanan')
+        //     console.log(findLimit[0].limitqty)
+
+        // console.log(checkData)
+
+        // console.log(filtercatprod)
+        // console.log(filterprod)
+        // // return filterprod
+        return filterprod.map((val,index)=>{
+            return (
+                <>
+                <div className=" box-3 card product_item" key={val.id} >
+                        <div className="cp_img">
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
+                            <div className="hover"  >
+                                {
+                                    total==findLimit[0].limitqty ?
+                                    null:
+                                    <>
+                                    <BiPlus onClick={()=>this.AddDataMakanan(val.id)} className="icondp"/>
+                                    </>
+                                }
+                                {
+                                    total==0 ?
+                                    null 
+                                    :
+                                    <BiMinus onClick={()=>this.hapusDataMakanan(val.id)} className="icondp"/>  
+                                }
+                             
+                            </div>
+                        </div>
+                        <div className="product_details">
+                            <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
+                            <ul className="product_price list-unstyled">
+                                <li className="old_price">Stock:{val.stok}</li>
+                                <li className="new_price">Rp{numeral(val.harga).format('0,0')}</li>
+                            </ul>
+                        </div>
+                </div>
+
+                 </>
+            )
+        })
+
+}
+
+newRenderMinuman=()=>{
+    var productMinuman = this.state.dataArrPerCat // isinya seluruh product
+    var filterprod = productMinuman.data.filter((val)=>{ // pecah per category
+        return val.categoryproduct === 'Minuman'
+    })
+
+    var filtercatprod = filterprod.map((val)=>{ // nyari id product category
+        return val.categoryproduct_id
+    })
+
+    var checkData= this.state.dataArrMakanan.filter((val)=>{ // ngecheck data cart yg buat dikirim ke BE
+        return val.categoryproduct_id === filtercatprod[0]
+    })
+    var total =0;
+    for(var i=0; i<checkData.length; i++){
+        total += checkData[i].qty
+    }
+
+    var limitProduct = this.state.limitProduct
+            var findLimit = limitProduct.filter((val)=>{
+                return val.categoryproduct_id === filtercatprod[0]
+            })
+
+    return filterprod.map((val,index)=>{
+        return (
+            <>
+            <div className=" box-3 card product_item" key={val.id} >
+                <div className="cp_img">
+                    <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
+                    <div className="hover"  >      
+                    {
+
+                        total==findLimit[0].limitqty?
+                        null:
+                        <>
+                        <BiPlus onClick={()=>this.AddDataMinuman(val.id)} className="icondp"/>
+                        </>
+
+                    }
+                    {
+                        total==0 ?
+                        null 
+                        :
+                        <BiMinus onClick={()=>this.hapusDataMinuman(val.id)} className="icondp"/>  
+                    }
+                    </div>
+                </div>
+                <div className="product_details">
+                    <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
+                    <ul className="product_price list-unstyled">
+                        <li className="old_price">Stock:{val.stok}</li>
+                        <li className="new_price">Rp{numeral(val.harga).format('0,0')}</li>
+                    </ul>
+                </div>
+        </div>
+         </>
+        )
+    })
+}
+
+newRenderChocolate=()=>{
+    var productChocolate=this.state.dataArrPerCat // isinya seluruh product
+    var limitProduct=this.state.limitProduct // isinya limit product semua category
+
+    var filterprod = productChocolate.data.filter((val)=>{ // nyari id product category
+        return val.categoryproduct ==='Cokelat'
+    })
+    var filtercatprod = filterprod.map((val)=>{
+        return val.categoryproduct_id
+    })
+    var checkData= this.state.dataArrMakanan.filter((val)=>{
+        return val.categoryproduct_id === filtercatprod[0]
+    })
+
+    var total =0;
+    for(var i=0; i<checkData.length; i++){
+        total+=checkData[i].qty
+    }
+    var findLimit=limitProduct.filter((val)=>{
+        return val.categoryproduct_id === filtercatprod[0]
+    })
+
+            console.log(findLimit,' ini limit chocolate')
+            // console.log(findLimit[0].limitqty)
+
+        console.log(checkData)
+
+        console.log(filtercatprod)
+        console.log(filterprod)
+        // return filterprod
+    
+    return filterprod.map((val,index)=>{
+        return (
+            <>
+                   <div className=" box-3 card product_item" key={val.id} >
+                        <div className="cp_img">
+                            <img src={API_URL_SQL+val.image} alt="logo" className="img-parcel" />
+                            <div className="hover"  >
+                            {
+    
+                                total==findLimit[0].limitqty ?
+                                null:
+                                <>
+                                <BiPlus onClick={()=>this.AddDataChocolate(val.id)} className="icondp"/>
+                                </>
+
+                            }
+                            {
+                                total==0 ?  
+                                null 
+                                :
+                                <BiMinus onClick={()=>this.hapusDataChocolate(val.id)} className="icondp"/>  
+                            } 
+                            </div>
+                        </div>
+                        <div className="product_details">
+                            <h5><a href="ec-product-detail.html">{val.nama}</a></h5>
+                            <ul className="product_price list-unstyled">
+                                <li className="old_price">Stock:{val.stok}</li>
+                                <li className="new_price">Rp{numeral(val.harga).format('0,0')}</li>
+                            </ul>
+                        </div>
+                    </div> 
+                 </>
+        )
+    })
+}
+
+
 
    
   
@@ -620,12 +857,16 @@ class DetailParcel extends Component {
          console.log(e.target.value)
          this.setState({arrMessage:e.target.value})
      }
+
+
+
+
      renderMakanan=()=>{
         var prodid= this.state.dataParcelByIdMakanan.categoryproduct_id // product_id
         var filterprod=this.state.dataArrMakanan.filter((val)=>{
             return val.categoryproduct_id === prodid
         })
-        // console.log(filterprod, '333')
+        console.log(filterprod, '333')
         var total =0
         for(var i=0; i<filterprod.length; i++){
             total += filterprod[i].qty
@@ -1072,12 +1313,50 @@ class DetailParcel extends Component {
          return final
 
      }
+
+
+    //  search
+        onChangeSearchMakanan=debounce(function(e){
+            console.log(e.target.value)
+            if(e.target.value){
+                this.setState({searchMakanan:e.target.value})
+                this.filterSearch(e.target.value)
+            }else if(e.target.value == ''){
+                // console.log(res.data)
+                console.log('back to nomrla')
+                Axios.post(`${API_URL_SQL}/product/getDataProductMakanan`)
+                .then((res)=>{
+                   //  console.log(res.data,'line75')
+                    this.setState({dataMakanan:res.data})
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            }
+        },1000)
+        
+        // onChangeSearchMinuman=debounce(function(e){
+        //     if(e.target.value){
+        //         this.setState({serach})
+        //     }
+        // },1000)
+
+        filterSearch=(input)=>{
+            var filterdata = this.state.dataMakanan.filter((val)=>{
+                return val.nama.toLowerCase().includes(input.toLowerCase())
+            })
+            
+            this.setState({makananSearching:filterdata,dataMakanan:filterdata})
+
+        }
+
+
+
+
+    // endsearch
      
   
     render() { 
-        // console.log(API_URL_SQL)
-    //   console.log(this.state.dataArrMakanan)
-        console.log(this.findCategoryProduct)
+            console.log(this.state.dataArrPerCat)
             console.log(this.state.categoryProduct)
             const {classes}= this.props
 
@@ -1162,12 +1441,28 @@ class DetailParcel extends Component {
 
                                 <div className="k-button" onClick={this.toggleDialog}>
                                     <p style={{marginLeft:'20px'}}>1.Pilih Makanan Yang Kamu Mau</p>
+                                    <div className="searching">
+                                        <input type="text"
+                                        defaultValue={this.props.value}
+                                        onChange={(e)=>this.onChangeSearchMakanan(e)}
+                                        placeHolder='Search' style={{marginBottom:'5px'}}
+                                        className="input-search"
+                                        />
+                                    </div>
                                 </div>
                                 {this.state.visible && <div onClose={this.toggleDialog}>
                                     <Zoom>
                                         <div style={{display:'flex',flexWrap:'wrap'
                                                             }}>
                                             {this.renderMakanan()}
+                                            {/* {
+                                                this.state.isRenderNew?
+                                                <>
+                                                    {this.newRenderMakanan()}
+                                                </>
+                                                :
+                                                null
+                                            } */}
                                         </div>
                                     </Zoom>
 
@@ -1175,11 +1470,27 @@ class DetailParcel extends Component {
                             }
                                 <div className="k-button" onClick={this.toggleDialogMinuman}>
                                     <p style={{marginLeft:'20px'}}>2.Pilih Minuman Yang Kamu Mau</p>
+                                    <div className="searching">
+                                        <input type="text"
+                                        defaultValue={this.props.value}
+                                        onChange={(e)=>this.onChangeSearchMinuman(e)}
+                                        placeHolder='Search' style={{marginBottom:'5px'}}
+                                        className="input-search"
+                                        />
+                                    </div>
                                 </div>
                                 {this.state.MinumanVisible && <div onClose={this.toggleDialogMinuman}>
                                     <Zoom>
                                         <div style={{display:'flex',flexWrap:'wrap'
                                                             }}>
+                                            {/* {
+                                                this.state.isRenderNew?
+                                                <>
+                                                {this.newRenderMinuman()}
+                                                </>
+                                                :
+                                                null
+                                            } */}
                                             {this.renderMinuman()}
                                         </div>
                                     </Zoom>
@@ -1187,11 +1498,28 @@ class DetailParcel extends Component {
                                 }
                                 <div className="k-button" onClick={this.toggleDialogChocolate}>
                                     <p style={{marginLeft:'20px'}}>3.Pilih Chocolate Yang Kamu Mau</p>
+                                    <div className="searching">
+                                        <input type="text"
+                                        defaultValue={this.props.value}
+                                        onChange={(e)=>this.onChangeSearchChocolate(e)}
+                                        placeHolder='Search' style={{marginBottom:'5px'}}
+                                        className="input-search"
+                                        />
+                                    </div>
                                 </div>
                                 {this.state.ChocolateVisible && <div onClose={this.toggleDialogChocolate}>
                                     <Zoom>
                                         <div style={{display:'flex',flexWrap:'wrap'
                                                             }}>
+{/* 
+                                            {
+                                                this.state.isRenderNew?
+                                                <>
+                                                {this.newRenderChocolate()}
+                                                </>
+                                                :
+                                                null
+                                            } */}
                                             {this.renderChocolate()}
                                         </div>
                                     </Zoom>
@@ -1257,6 +1585,16 @@ class DetailParcel extends Component {
                                                 </tr>
                                                 
                                                 {this.renderDataCartProduct()} 
+                                                {/* {
+                                                    this.state.isRenderNew ?
+                                                    <>
+                                                        {this.newRenderMakanan()}
+                                                    </>
+                                                    :
+                                                    null
+
+                                                } */}
+
                                               
                                                 
                                             </table>

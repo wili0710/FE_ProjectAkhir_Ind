@@ -16,7 +16,7 @@ import {Redirect, Link} from 'react-router-dom'
 import {LoginThunk,ShowResetPass} from './../../redux/Actions'
 import {connect} from 'react-redux';
 import GoogleLogin from 'react-google-login';
-
+import { AiFillEye,AiFillEyeInvisible } from 'react-icons/ai';
 import { ModalResetPassword } from '../../components/modalresetpassword';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 
@@ -59,6 +59,7 @@ class Login extends Component {
         showPassword:false,
         testemail:'',
         testpassword:'',
+        liatpassword:'false'
         // showResetPassword:false
 
       }
@@ -75,23 +76,12 @@ class Login extends Component {
       }
 
       onLoginClick=()=>{
-       
-            // let email1= this.state.email.current.value
-            // let password1= this.state.password.current.value
+
             let email1= this.state.testemail
             let password1=this.state.testpassword
             this.props.LoginThunk(email1,password1)
             console.log(this.state.testemail,'ini test email')
             console.log(this.state.testpassword,'ini test pasword')
-            // Axios.post(`${API_URL_SQL}/auth/login`,{
-            //     email:email1,
-            //     password:password1
-            // }).then((res)=>{
-            //         console.log(res.data)
-            // }).catch((err)=>{
-            //     console.log('masuk ke error')
-            //     console.log(err)
-            // })
             console.log(email1,' ini username')
             console.log(password1, ' ini password')
             console.log('button jalan')
@@ -101,9 +91,15 @@ class Login extends Component {
             this.setState({showPassword:true})
           };
         
-        //    handleClickShowPassword = () => {
-        //     setValues({ ...values, showPassword: !values.showPassword });
-        //   };
+    
+        onCheckPassword=()=>{
+            this.setState({liatPassword:false})
+        }
+
+        onCheckPassword2=()=>{
+            this.setState({liatPassword:true})
+        }
+
     render() { 
         console.log(this.state.testemail)
         console.log(this.state.testpassword)
@@ -157,7 +153,7 @@ class Login extends Component {
                                     value={this.state.testemail}
                                     variant="outlined" size='small' ></TextField>
                                     {
-                                        this.state.testemail.length>4 ?
+                                        this.state.testemail.length>5 ?
                                         <CheckCircle style={{color:'#55efc4'}}/>
                                         :
                                         null
@@ -166,13 +162,33 @@ class Login extends Component {
                                 </div>
                                 <div className="div-password">
                                     <div className="password-input">
-                                    <TextField className={classes.root}
-                                    //  inputRef={this.state.password} 
-                                    onChange={this.onChangePassword}
-                                    value={this.state.testpassword}
-                                    label="password" type="password" fullWidth="true" variant="outlined" size='small' ></TextField>
+            
+                                        {
+                                            this.state.liatPassword ?
+                                            <>
+                                                <TextField className={classes.root}
+                                                //  inputRef={this.state.password} 
+                                                onChange={this.onChangePassword}
+                                                value={this.state.testpassword}
+                                                label="password" type="text" fullWidth="true" variant="outlined" size='small' >
+            
+                                                </TextField>
+                                                <AiFillEye size={25} style={{color:"#0095DA",cursor:"pointer",position:"relative",right:10}} onClick={()=>this.onCheckPassword()}/>
+                                                
+                                            </>
+                                            :
+                                            <>
+                                            <TextField className={classes.root}
+                                            //  inputRef={this.state.password} 
+                                            onChange={this.onChangePassword}
+                                            value={this.state.testpassword}
+                                            label="password" type="password" fullWidth="true" variant="outlined" size='small' ></TextField>
+                                            <AiFillEyeInvisible size={25} style={{cursor:"pointer",position:"relative",right:10}} onClick={this.onCheckPassword2}/>
+                                            
+                                            </>
+                                        }
                                        {
-                                        this.state.testpassword.length>4 ?
+                                        this.state.testpassword.length>5 ?
                                         <CheckCircle style={{color:'#55efc4'}}/>
                                         :
                                         null

@@ -84,16 +84,7 @@ class dataProduct extends Component {
             console.log(err)
         })
 
-        // Axios.get(`${API_URL_SQL}/product/getRandomProduct/4`)
-        //     .then((res)=>{
-        //         // setRandomProduct(res.data)
-        //         // setLoading(false)
-        //     }).catch((err)=>{
-        //         console.log(err)
-        //     })
-        // } catch (error) {
-        //     console.log(error)
-        // }
+    
         Axios.get(`${API_URL_SQL}/product/getRandomProduct/4`)
         .then((res)=>{
             console.log(res.data)

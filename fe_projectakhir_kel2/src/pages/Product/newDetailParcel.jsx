@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './detailParcel.css'
 import Header from './../../components/header/header'
 import Axios from 'axios'
-import { API_URL_SQL } from '../../helpers/apiUrl';
+import { API_URL_SQL, HOME_URL } from '../../helpers/apiUrl';
 import {BsFillCaretLeftFill} from 'react-icons/bs'
 import { Window } from '@progress/kendo-react-dialogs';
  // ES2015 module syntax
@@ -282,33 +282,7 @@ class newDetailParcel extends Component {
 
                 this.setState({dataArrMakanan:plusInput})
 
-        // let plusInput=komposisiParcel.map((val,index)=>{
-
-        //     // Jika sesuai maka +1
-        //     if(val.nama==nama){
-        //         return{...val,qty:val.qty+1}
-        //     }else{
-        //         return {...val}
-        //     }
-        // })
-        // let isMax=statusPerCategory.filter((filtering)=>{
-        //     return filtering.category===category
-        // })
-
-        // let isInKomposisi=komposisiParcel.filter((filtering)=>{
-        //     return filtering.nama===nama
-        // })
-
-        // // Jika belum limit di category produk tersebut dan produk itu tidak ada, maka tambah produk tersebut
-        // if(!isMax[0].isAtLimit&&isInKomposisi.length===0){
-        //     let newkomposisi={
-        //         products_id:products_id,
-        //         category:category,
-        //         nama:nama,
-        //         qty:1
-        //     }
-        //     plusInput.push(newkomposisi)
-        // }
+        
 
     }
     clickMinus=(nama)=>{
@@ -373,8 +347,8 @@ class newDetailParcel extends Component {
                     <>
 
                     <div style={{display:'flex',flexDirection:'column'}}>
-                        <div style={{display:'flex',justifyContent:'space-between',cursor:'pointer'}} onClick={()=>this.setState({newRenderOpen:index})}>
-                            <p style={{marginLeft:'20px'}}>{index+1}.Pilih {val.category} Yang Kamu Mau</p>
+                        <div style={{display:'flex',justifyContent:'space-between',cursor:'pointer',height:'60px',backgroundColor:'#0984e3',borderRadius:'10px',marginBottom:'10px'}} onClick={()=>this.setState({newRenderOpen:index})}>
+                            <p style={{marginLeft:'20px', fontSize:'30px',color:'white'}}>{index+1}.Pilih {val.category} Yang Kamu Mau</p>
                         </div>
                         <div onClick={this.toggleDialog} style={{display:this.state.newRenderOpen===index?"flex":"none",
                             flexWrap:"wrap",   }}>
@@ -1151,7 +1125,7 @@ class newDetailParcel extends Component {
         localStorage.removeItem('id')
         Swal.fire('Logout Berhasil')
         this.props.LogoutFunc()
-        window.location.assign(`http://localhost:3000`)
+        window.location.assign(`${HOME_URL}`)
 
      }
 
@@ -1460,6 +1434,9 @@ class newDetailParcel extends Component {
 
                                 {/* <Scrollbars autoHeight autoHide  >
                                  */}
+                                {this.newRenderCart()}
+
+
                                         <HorizontalScroll>
                                     <div style={{marginTop:'50px'}} className="random-cart">
                                                 {this.renderCartRandom()}
@@ -1468,7 +1445,6 @@ class newDetailParcel extends Component {
 
                                 {/* </Scrollbars> */}
 
-                                {this.newRenderCart()}
                                 
                         
                         </div>
