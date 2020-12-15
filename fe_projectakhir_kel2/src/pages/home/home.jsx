@@ -12,6 +12,7 @@ import { loadCategories, addtoTransaction, AddcartAction } from "../../redux/Act
 const mapStatetoProps = (state) => {
   return {
     Parcel: state.Parcel,
+    Product: state.Parcel.Product,
     Auth  : state.Auth
   };
 };
@@ -21,18 +22,26 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
     inputSearch: "",
     filteredPackage: [],
     product_categories: [],
-    isLoading:true
+    isLoading:true,
+    product:[],
+    cart:[],
+    
   };
 
   componentDidMount() {
     this.props.loadCategories();
-    // console.log(this.props.Parcel.Product_Category)
-    this.setState({product_categories : this.props.Parcel.Product_Category});
+    console.log(this.props.Product)
+    this.setState({
+      product_categories : this.props.Parcel.Product_Category,
+      product : this.props.Parcel.Product,
+      cart  : this.props.Auth.cart.transaksidetailsatuan
+    });
     // draggableCard(".cardBx", "left", 2);
   };
 
   componentDidUpdate() {
     draggableCard(".cardBx", "left", 2);
+    console.log(this.state.product, this.state.cart)
   }
 
   onSearchInputChange(e, prop) {
@@ -57,8 +66,9 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
   };
   
   addprodtocart = id => {
-    console.log(id)
+    
     if(this.props.Auth.cart.transaksidetailsatuan[this.props.Auth.cart.transaksidetailsatuan.findIndex(val=>val.products_id===id)]===undefined){
+      
       console.log('oke baru nih '+id)
       let data = {
         user_id     : this.props.Auth.id,
@@ -70,6 +80,7 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
       .then((result)=>{
         console.log(result.data)
         this.props.AddcartAction(result.data)
+        this.setState({cart:data})
       }).catch((error)=>{
         console.log(error)
       })
@@ -82,6 +93,8 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
         parcel_id   : 0,
         qty         : 1
       }
+
+      
       Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,data)
       .then((result)=>{
         console.log(result.data)
@@ -130,8 +143,7 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
   };
 
   render() {
-    // console.log("cart", this.props.Auth.cart);
-    // console.log(this.state.product_categories);
+    console.log(this.props.Parcel)
     return (
       <>
       {
@@ -237,7 +249,7 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
                       </div>
                       <div className="list">
                         <div className="cardlist">
-                          {this.props.Parcel.Product.map((item) => {
+                          {this.props.Parcel.Product.map((item,index) => {
                             if (item.categoryproduct_id === val.id) {
                               return (
                                 <div className="card" key={item.id}>
@@ -266,6 +278,7 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
                                     </div>
                                     <button className="crement"
                                             onClick={()=>this.addprodtocart(item.id)}
+                                            // disabled={}
                                     >
                                       +
                                     </button>

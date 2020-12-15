@@ -715,7 +715,7 @@
                             text-align      : center;
                             transition      : .3s;
 
-                            &::placeholder {
+                            &::placeholder-shown {
                                 color      : $lt_gray;
                                 font-size  : 14px;
                                 font-family: 'Cambria', sans-serif;
