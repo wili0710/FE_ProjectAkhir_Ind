@@ -104,6 +104,9 @@ function App(props) {
         <Route path='*' component={notfound}/>
 
       </Switch>
+      {/* <div>
+        Dipakai nanti untuk munculkan notif floating / sticky di kanan untuk memberitahukan transaksi yg perlu di bayar
+      </div> */}
     </>
   );
 }

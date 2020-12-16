@@ -97,6 +97,11 @@ const CartPage=()=>{
     const [indexparceltoas,setindexparceltoas]=useState()
     const [namaparceltoas,setnamaparceltoas]=useState()
 
+    const [alamat,setAlamat]=useState()
+    const [catatanTambahan,setCatatanTambahan]=useState()
+    const [namaPengirim,setNamaPengirim]=useState()
+    const [namaPenerima,setNamaPenerima]=useState()
+
     // const [listProduk_ID,setListProduk_ID]=useState()
     // const [listProduk_Qty,setListProduk_Qty]=useState()
 
@@ -116,21 +121,55 @@ const CartPage=()=>{
         cekQtyInParcel()
     },[qtyParcel])
 
+    const checkout=(transaksi_id,users_id)=>{
+        if (alamat==="" || namaPenerima==="" || namaPengirim===""){
+            Swal.fire({
+                icon: 'error',
+                title: 'Tidak Lengkap',
+                text: 'Nama Penerima dan Pengirim serta Alamat perlu diisi'
+            })
+        }else{
+            Axios.post(`${API_URL_SQL}/transaksi/checkout`,{transaksi_id,users_id,alamatPengiriman:alamat,catatanTambahan,namaPenerima,namaPengirim})
+            .then((res)=>{
+                dispatch({type:'CART',cart:res.data})
+                Swal.fire(
+                    'Berhasil Checkout!',
+                    'Silakan melakukan pembayaran!',
+                    'success'
+                  )
+                  setCatatanTambahan("")
+                  setAlamat("")
+                  setNamaPengirim("")
+                  setNamaPenerima("")
+            }).catch((err)=>{
+                console.log(err)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tidak Berhasil',
+                    text: 'Silakan diulang kembali'
+                  })
+            })
+        }
+        setShowPembayaran(!showPembayaran)
+    }
+
     const cekQtyInParcel=()=>{
-        // console.log(komposisiParcel)
-        // console.log(listProduct)
+        let stokTersisa=[]
         let productStokTidakCukup=komposisiParcel.filter((val,index)=>{
             let findproduct=listProduct.find((finding)=>{
                 return finding.id==val.products_id
             })
             if (val.qty*qtyParcel>findproduct.stok){
+                stokTersisa.push(findproduct.stok)
                 return val
             }
         })
         console.log(productStokTidakCukup)
+        console.log(stokTersisa)
         let namaproduct=[]
         productStokTidakCukup.map((val,index)=>{
-            namaproduct.push(" "+val.nama)
+            // namaproduct.push(" "+val.nama)
+            namaproduct.push(" "+val.nama+" hanya ada "+stokTersisa[index])
         })
         console.log(namaproduct.join(","))
         if(productStokTidakCukup.length){
@@ -139,7 +178,7 @@ const CartPage=()=>{
             return Swal.fire({
                 icon: 'error',
                 title: 'Stok Kurang',
-                text: `${namaproduct} Stok tidak`,
+                text: `Stok ${namaproduct}.`,
             })
         }else{
             console.log("cukup")
@@ -178,45 +217,7 @@ const CartPage=()=>{
     const [showPembayaran,setShowPembayaran]=useState(false)        // Show PopUp / Modal Pembayaran
     const [image,setImage]=useState()                               // Set Image
 
-    const clickSendBukti=(transaksi_id,users_id)=>{
-        console.log(transaksi_id,users_id)
-        console.log(image)
-
-        if(!image){
-            return Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Bukti transfer belum ada!'
-              })
-        }
-
-
-        if(!image){
-            return Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Bukti transfer belum ada!'
-              })
-        }
-        
-        let formData=new FormData()
-        let options={
-            headers:{
-                'Content-type':'multipart/form-data'
-            }
-        }
-        formData.append('bukti',image)
-        console.log(formData,image)
-        formData.append('data',JSON.stringify({transaksi_id:transaksi_id,users_id:users_id}))
-
-        Axios.post(`${API_URL_SQL}/payment/uploadpaymenttransfer`,formData,options)
-        .then((res)=>{
-            fetchdata()
-        }).catch((err)=>{
-            console.log(err)
-        })
-        setShowPembayaran(!showPembayaran)
-    }
+    
 
     // End Pembayaran, dataforedit diambil dari transaksi detail yg ingin di edit
 
@@ -1170,7 +1171,7 @@ const CartPage=()=>{
                                 display:"flex",
                                 justifyContent:"space-between"
                             }}>
-                                <h3>Pembayaran</h3>
+                                <h3>Checkout</h3>
                                 <span style={{
                                     color:"#fa5a1e",
                                     fontWeight:"700",
@@ -1190,17 +1191,6 @@ const CartPage=()=>{
                             display:"flex",
                             width:"100%",
                         }}>
-                            {/* <div style={{
-                                width:"30%",
-                                borderRight:"10px solid #f4f6f8",
-                                padding:20
-                            }}>
-                                <div style={{
-                                    padding:10
-                                }}>
-                                    Transfer
-                                </div>
-                            </div> */}
                             <div style={{
                                 padding:20,
                                 display:"flex",
@@ -1208,55 +1198,64 @@ const CartPage=()=>{
                                 // justifyContent:"center",
                                 // alignItems:"center",
                                 height:"100%",
-                                width:"70%"
+                                width:"100%"
                             }}>
                                 <div style={{padding:5}}>
                                     <h4>Pembayaran Dengan Transfer</h4>
                                 </div>
                                 <div style={{padding:5}}> 
-                                    <h6>Silakan transfer ke Rekening</h6>
+                                    <h6>Silakan transfer sebesar Rp {numeral(Auth.cart.transaksi[0].totaltransaksi).format('0,0')} ke Rekening</h6>
                                     <span>- Bank ABCD No.Rekening: 1310025105 A/n hearttoheart</span>
                                 </div>
                                 <div style={{padding:5}}>
-                                    <h6>Upload Bukti Pembayaran :</h6>
-                                </div>
-                                <div style={{padding:5}}>  
-                                    <div {...getRootProps()}>
-                                        <input {...getInputProps()} />
-                                        {
-                                        isDragActive ?
-                                            <p>Drop the files here ...</p> :
-                                            <p>Drag 'n' drop some files here, or click to select files</p>
-                                        }
-                                    </div>
-
-                                    {/* <input onChange={(e)=>{console.log(e.target.files);setImage(e.target.files[0])}} type="file"/> */}
-                                    {
-                                        image?
-                                        <ReactImageMagnify {...{
-                                            smallImage: {
-                                                alt: 'Payment',
-                                                // isFluidWidth: true,
-                                                width:50,
-                                                height:100,
-                                                src: URL.createObjectURL(image)
-                                            },
-                                            largeImage: {
-                                                src: URL.createObjectURL(image) ,
-                                                width:800,
-                                                height: 800
-                                            },
-                                            enlargedImageContainerDimensions:{
-                                                width:"1600%",
-                                                height:"300%"
-                                            }
-                                        }} />
-                                        :
-                                        null
-                                    }
+                                    <h6>Nama Pengirim :</h6>
+                                    <input defaultValue={namaPengirim} onChange={(e)=>setNamaPengirim(e.target.value)} type="text" style={{
+                                        width:"100%", 
+                                        minHeight:50,
+                                        maxHeight:200,
+                                        border:"1px solid lightgrey"
+                                    }}/>
                                 </div>
                                 <div style={{padding:5}}>
-                                    <Button color="primary" onClick={()=>clickSendBukti(Auth.cart.transaksi[0].id,Auth.id)}>Upload Bukti Pembayaran</Button>
+                                    <h6>Nama Penerima :</h6>
+                                    <input defaultValue={namaPenerima} onChange={(e)=>setNamaPenerima(e.target.value)} type="text" style={{
+                                        width:"100%", 
+                                        minHeight:50,
+                                        maxHeight:200,
+                                        border:"1px solid lightgrey"
+                                    }}/>
+                                </div>
+                                <div style={{padding:5}}>
+                                    <h6>Dikirim ke alamat :</h6>
+                                    <textarea defaultValue={alamat} onChange={(e)=>setAlamat(e.target.value)} 
+                                    maxLength={500} type="text" 
+                                    style={{
+                                        width:"100%", 
+                                        minHeight:50,
+                                        maxHeight:200,
+                                        border:"1px solid lightgrey"
+                                    }}/>
+                                </div>
+                                <div style={{padding:5}}>
+                                    <h6>Catatan tambahan :</h6>
+                                    <textarea defaultValue={catatanTambahan} onChange={(e)=>setCatatanTambahan(e.target.value)} 
+                                    maxLength={500} type="text" 
+                                    style={{
+                                        width:"100%", 
+                                        minHeight:50,
+                                        maxHeight:200,
+                                        border:"1px solid lightgrey"
+                                    }}/>
+                                </div>
+                                <div style={{padding:5}}>
+                                    <Button color="primary" 
+                                    style={{
+                                        width:100
+                                    }} 
+                                    onClick={()=>checkout(Auth.cart.transaksi[0].id,Auth.id)}
+                                    >
+                                        Beli
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -1378,7 +1377,9 @@ const CartPage=()=>{
                                             <div>
                                                 Message Custom:
                                             </div>
-                                            <textarea onChange={(e)=>setMessage(e.target.value)} maxLength={500} type="text" defaultValue={itemEdit[0].message} style={{width:"100%", minHeight:200,maxHeight:400}}/>
+                                            <textarea onChange={(e)=>setMessage(e.target.value)} 
+                                            maxLength={500} type="text" defaultValue={itemEdit[0].message} 
+                                            style={{width:"100%", minHeight:200,maxHeight:400}}/>
                                         </>
                                     }
                                     <div>
@@ -1709,3 +1710,103 @@ const CartPage=()=>{
 }
 
 export default CartPage
+
+// Dipakai untuk Modal pembayraan saat di halaman list transaksi menunggu pembayaran
+
+// const clickSendBukti=(transaksi_id,users_id)=>{
+//     console.log(transaksi_id,users_id)
+//     console.log(image)
+
+//     if(!image){
+//         return Swal.fire({
+//             icon: 'error',
+//             title: 'Oops...',
+//             text: 'Bukti transfer belum ada!'
+//           })
+//     }
+
+
+//     if(!image){
+//         return Swal.fire({
+//             icon: 'error',
+//             title: 'Oops...',
+//             text: 'Bukti transfer belum ada!'
+//           })
+//     }
+    
+//     let formData=new FormData()
+//     let options={
+//         headers:{
+//             'Content-type':'multipart/form-data'
+//         }
+//     }
+//     formData.append('bukti',image)
+//     console.log(formData,image)
+//     formData.append('data',JSON.stringify({transaksi_id:transaksi_id,users_id:users_id}))
+
+//     Axios.post(`${API_URL_SQL}/payment/uploadpaymenttransfer`,formData,options)
+//     .then((res)=>{
+//         fetchdata()
+//     }).catch((err)=>{
+//         console.log(err)
+//     })
+//     setShowPembayaran(!showPembayaran)
+// }
+
+{/* <div style={{
+    padding:20,
+    display:"flex",
+    flexDirection:"column",
+    // justifyContent:"center",
+    // alignItems:"center",
+    height:"100%",
+    width:"70%"
+}}>
+    <div style={{padding:5}}>
+        <h4>Pembayaran Dengan Transfer</h4>
+    </div>
+    <div style={{padding:5}}> 
+        <h6>Silakan transfer ke Rekening</h6>
+        <span>- Bank ABCD No.Rekening: 1310025105 A/n hearttoheart</span>
+    </div>
+    <div style={{padding:5}}>
+        <h6>Upload Bukti Pembayaran :</h6>
+    </div>
+    <div style={{padding:5}}>  
+        <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            {
+            isDragActive ?
+                <p>Drop the files here ...</p> :
+                <p>Drag 'n' drop some files here, or click to select files</p>
+            }
+        </div>
+
+        {
+            image?
+            <ReactImageMagnify {...{
+                smallImage: {
+                    alt: 'Payment',
+                    // isFluidWidth: true,
+                    width:50,
+                    height:100,
+                    src: URL.createObjectURL(image)
+                },
+                largeImage: {
+                    src: URL.createObjectURL(image) ,
+                    width:800,
+                    height: 800
+                },
+                enlargedImageContainerDimensions:{
+                    width:"1600%",
+                    height:"300%"
+                }
+            }} />
+            :
+            null
+        }
+    </div>
+    <div style={{padding:5}}>
+        <Button color="primary" onClick={()=>clickSendBukti(Auth.cart.transaksi[0].id,Auth.id)}>Upload Bukti Pembayaran</Button>
+    </div>
+</div> */}
