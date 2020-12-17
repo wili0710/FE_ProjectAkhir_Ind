@@ -28,6 +28,7 @@ import notfound from './pages/notfound';
 import bayuTest from './../src/pages/Product/newDetailParcel'
 import Test from './components/test'
 import { NotifTransaksi } from './components/notiftransaksi';
+import ListBelanja from './pages/ListBelanja';
 
 function App(props) {
   
@@ -101,6 +102,8 @@ function App(props) {
         <Route exact path ='/hapusaja' component={Example}/>
         <Route exact path ='/bayutest/:id' component={bayuTest}/>
         <Route exact path ='/test' component={Test}/>
+        <Route exact path ='/listbelanja/' component={ListBelanja}/>
+        <Route exact path ='/listbelanja/:tabs' component={ListBelanja}/>
         {renderProtectedAdminRoutes()}
         <Route path='*' component={notfound}/>
 
