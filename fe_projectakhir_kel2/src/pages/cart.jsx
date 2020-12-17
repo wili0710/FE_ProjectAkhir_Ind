@@ -20,6 +20,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FcApprove } from 'react-icons/fc'
 import { AiFillMinusSquare,AiFillPlusSquare } from 'react-icons/ai'
 import Dropzone, {useDropzone} from 'react-dropzone'
+import HeaderWili from '../components/header/headerwili';
 
 
 
@@ -1394,7 +1395,10 @@ const CartPage=()=>{
                 null
             }
             {/* End Modal Edit */}
-            <div style={{
+            
+            <HeaderWili/>
+
+            {/* <div style={{
                 display:"flex",
                 justifyContent:"space-between",
                 backgroundColor:"#158ae6",
@@ -1538,7 +1542,7 @@ const CartPage=()=>{
                         </div>
                     </div>
                 </div>
-            </div>  
+            </div>   */}
 
             <div style={{
                 display:"flex",
