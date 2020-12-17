@@ -27,6 +27,7 @@ import {LoginFunc,AddcartAction} from './redux/Actions'
 import notfound from './pages/notfound';
 import bayuTest from './../src/pages/Product/newDetailParcel'
 import Test from './components/test'
+import { NotifTransaksi } from './components/notiftransaksi';
 
 function App(props) {
   
@@ -104,9 +105,9 @@ function App(props) {
         <Route path='*' component={notfound}/>
 
       </Switch>
-      {/* <div>
-        Dipakai nanti untuk munculkan notif floating / sticky di kanan untuk memberitahukan transaksi yg perlu di bayar
-      </div> */}
+      <div>
+        <NotifTransaksi/>
+      </div>
     </>
   );
 }
