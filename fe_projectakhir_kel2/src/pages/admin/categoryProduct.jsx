@@ -47,7 +47,6 @@ class CategoryProduct extends Component {
             id:id2
          })
          .then((res)=>{
-             console.log(res.data)
              this.setState({categoryProduct:res.data})
              this.pagination()
          }).catch((err)=>{
@@ -65,6 +64,7 @@ class CategoryProduct extends Component {
          .then((res)=>{
             console.log(res.data)
             this.setState({categoryProduct:res.data})
+            this.pagination()
             this.setState({setModalProduct:false})
          }).catch((err)=>{
              console.log(err)

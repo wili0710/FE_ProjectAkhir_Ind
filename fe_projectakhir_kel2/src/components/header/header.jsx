@@ -42,14 +42,18 @@ export default () => {
                             :
                             <Link to='/cart'>
                                 {
-                                Auth.cart===undefined?
+                                !Auth.isLogin?
                                 <HiShoppingCart/>
                                 :
                                 <div style={{position:"relative"}}>
                                     <HiShoppingCart />
-                                    <div className="notif" style={{position:"absolute",top:-10,right:0,background:"tomato",fontSize:10,padding:"2px 6px",borderRadius:4,color:"white"}}>
-                                        {Auth.cart.transaksidetailsatuan.length + Auth.cart.transaksidetailparcel.length}
-                                    </div>
+                                        {Auth.cart.transaksidetailsatuan.length || Auth.cart.transaksidetailparcel.length?
+                                            <div className="notif" style={{position:"absolute",top:-10,right:0,background:"tomato",fontSize:10,padding:"2px 6px",borderRadius:4,color:"white"}}>
+                                                {Auth.cart.transaksidetailsatuan.length + Auth.cart.transaksiparcel.length}
+                                            </div>
+                                            :
+                                            null
+                                        }
                                 </div>
                                 }
                             </Link>
@@ -74,7 +78,7 @@ export default () => {
                     Auth.nama?
                     <div className="username">
                         Hi!
-                        <span onClick={()=>dispatch({type:'LOGOUT'})}>{Auth.nama}</span>
+                        <span style={{cursor:"pointer"}} onClick={()=>{localStorage.removeItem("id");dispatch({type:'LOGOUT'})}}>{Auth.nama}</span>
                     </div>
                     :
                     <Link to='/login'>

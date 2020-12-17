@@ -7,6 +7,9 @@ import './register.css'
 import { AiFillEye,AiFillEyeInvisible } from 'react-icons/ai';
 import {useSelector,useDispatch} from 'react-redux'
 import {Redirect, Link} from 'react-router-dom'
+import { ModalResetPassword } from '../../components/modalresetpassword';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
+
 
 
 const Register=(props)=>{
@@ -28,6 +31,7 @@ const Register=(props)=>{
     const [otp,setOtp]=useState('')
     const [seePassword,setSeePassword]=useState(false)
     const [isPasswordPass, setIsPasswordPass]=useState(true)
+    const [showResetPassword,setShowResetPassword]=useState(false)
     
     useEffect(()=>{
         if(localStorage.getItem('registrasi')){
@@ -195,7 +199,7 @@ const Register=(props)=>{
                 'Ingin mengirimkan Parcel Custom? Serahkan pada kami!',
                 'success'
             )
-            dispatch({type:'LOGIN',payload:res.data,cart:''})
+            dispatch({type:'LOGIN',payload:res.data,cart:{transaksi:[],transaksidetailsatuan:[],transaksidetailparcel:[]}})
             localStorage.setItem('id',res.data.id)
             localStorage.removeItem("registrasi")
             localStorage.removeItem("verified")
@@ -310,6 +314,44 @@ const Register=(props)=>{
     }
     return(
         <div className='d-flex justify-content-center'>
+
+            {/* Modal Reset Password */}
+            {
+                Auth.isResetPass?
+                <div style={{
+                    height:"100%",
+                    width:"100%",
+                    backgroundColor:"rgba(0, 0, 0, 0.5)",
+                    position:"fixed",
+                    zIndex:2,
+                    top:0
+                }}>
+                    {/* <div style={{
+                        backgroundColor:"white",
+                        width:"fit-content",
+                        height:"fit-content",
+                        display:"flex",
+                        flexDirection:"column",
+                        borderRadius:100,
+                        position:"fixed",
+                        zIndex:5,
+                        margin: "auto", 
+                        left: 0,
+                        right: -550,
+                        top:-150,
+                        bottom:0,
+                        animation: "rotateY 500ms ease-in-out forwards",
+                        transformOrigin: "top center",
+                        cursor:"pointer"
+                    }} onClick={()=>dispatch({type:'RESETPASS',payload:!Auth.isResetPass})}>
+                        <AiOutlineCloseCircle size={40}/>
+                    </div> */}
+                    <ModalResetPassword/>
+                </div>
+                :
+                null
+            }
+            {/* End Modal Reset password */}
                 {email && isverified?
                     <div style={{position:'fixed',zIndex:-1,width:'100vw',height:'100vh'}} className='d-flex justify-content-end align-items-end'>
                         <img src={`${API_URL_SQL}/frontend/img2png.png`} height='70%'/>
@@ -336,37 +378,7 @@ const Register=(props)=>{
                                     <span>Nama :</span>
                                     <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,nama:e.target.value})}/>
                                     {renderInputPassword()}
-                                    {/* {seePassword?
-                                        <>
-                                            <span>Password : </span> <AiFillEye size={20} style={{color:"#0095DA",cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(false)}/>
-                                            <input className='form-control' style={{
-                                                transition:'500ms',
-                                                border:!isPasswordPass?'1px solid red':null,
-                                                boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
-                                            }}  type='text' onChange={(e)=>passwordCheck(e)}/>
-                                            {
-                                                !isPasswordPass?
-                                                    <span>Password harus ada angka, minimal 6, huruf besar dan kecil</span>
-                                                    :
-                                                    null
-                                            }
-                                        </>
-                                        :
-                                        <>
-                                            <span>Password :</span> <AiFillEyeInvisible size={20} style={{cursor:"pointer",position:"relative", top:30,left:290}} onClick={()=>setSeePassword(true)}/>
-                                            <input className='form-control' style={{
-                                                transition:'500ms',
-                                                border:!isPasswordPass?'1px solid red':null,
-                                                boxShadow:!isPasswordPass?'0 0 2px 2px #FF5567':null
-                                            }} type='password' onChange={(e)=>passwordCheck(e)}/>
-                                            {
-                                                !isPasswordPass?
-                                                    <span>Password harus ada angka, minimal 6, huruf besar dan kecil</span>
-                                                    :
-                                                    null
-                                            }
-                                        </>
-                                    }  */}
+                                    
                                     <span>Nomor Handphone :</span>
                                     <input className='form-control' type='text' onChange={(e)=>setNewuser({...newuser,nomorhandphone:e.target.value})}/>
                                     <span>Alamat Lengkap :</span>
@@ -396,10 +408,11 @@ const Register=(props)=>{
                                 }}>
                                 <div className='d-flex flex-column align-items-center mx-5 py-3' style={{border:'1px solid #E5E7E7',borderRadius:"5px",boxShadow:"0 0 10px 1px #E5E7E7"}}>
                                     <h4 className='mt-3'>Daftar Sekarang</h4>
-                                    <span className='mb-3' style={{fontWeight:'lighter'}}>Sudah punya akun? <span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}}>Masuk</span></span>
+                                    <span className='mb-3' style={{fontWeight:'lighter'}}>Sudah punya akun? <Link to="/login"><span style={{color:"#0095DA",fontWeight:'bold',cursor:'pointer'}}>Masuk</span></Link></span>
                                     <form className='pt-3' style={{width:'80%', borderTop:'2px solid #E5E7E7'}}>
                                         {rendercekemail()}
                                     </form>
+                                    <span className='mt-3' style={{fontSize:'14px', fontWeight:'bold', cursor:"pointer",color:"#30a9e1"}} onClick={()=>{dispatch({type:'RESETPASS',payload:!Auth.isResetPass})}}>Reset Password</span>
                                     <span className='mt-3' style={{fontSize:'14px', fontWeight:'lighter'}}>Dengan mendaftar, saya menyetujui</span>
                                     <span className='mb-4' style={{fontSize:'14px', fontWeight:'lighter'}}><span style={{color:"#0095DA",fontWeight:'500',cursor:'pointer'}}>Syarat dan Ketentuan</span> serta <span style={{color:"#0095DA",fontWeight:'500',cursor:'pointer'}}>Kebijakan Privasi</span></span>
                                 </div>

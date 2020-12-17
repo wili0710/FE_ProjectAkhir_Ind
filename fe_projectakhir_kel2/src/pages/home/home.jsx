@@ -254,7 +254,7 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
                               return (
                                 <div className="card" key={item.id}>
                                   <div className="imgBx">
-                                    <img src={item.image} alt={"gambar"+item.nama} />
+                                    <img src={API_URL_SQL+item.image} alt={"gambar"+item.nama} />
                                   </div>
                                   <div className="namaitem">{item.nama}</div>
                                   <div className="hargaitem">
