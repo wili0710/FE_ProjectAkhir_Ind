@@ -132,16 +132,29 @@ const CartPage=()=>{
         }else{
             Axios.post(`${API_URL_SQL}/transaksi/checkout`,{transaksi_id,users_id,alamatPengiriman:alamat,catatanTambahan,namaPenerima,namaPengirim})
             .then((res)=>{
-                dispatch({type:'CART',cart:res.data})
+                dispatch({type:'CART',cart:res.data})                
                 Swal.fire(
                     'Berhasil Checkout!',
                     'Silakan melakukan pembayaran!',
                     'success'
                   )
-                  setCatatanTambahan("")
-                  setAlamat("")
-                  setNamaPengirim("")
-                  setNamaPenerima("")
+                setCatatanTambahan("")
+                setAlamat("")
+                setNamaPengirim("")
+                setNamaPenerima("")
+                Axios.post(`${API_URL_SQL}/transaksi/gettransaksilist`,{user_id:Auth.id})
+                .then((res)=>{
+                    const simpanredux={
+                        transaksi:res.data.transaksi,
+                        transaksidetailsatuan:res.data.transaksidetailsatuan,
+                        transaksiparcel:res.data.transaksiparcel,
+                        transaksidetailparcel:res.data.transaksidetailparcel
+                    }
+                    dispatch({type:"LOADTRANSAKSILIST",payload:simpanredux})
+
+                }).catch((err)=>{
+                    console.log(err)
+                })
             }).catch((err)=>{
                 console.log(err)
                 Swal.fire({
@@ -760,84 +773,6 @@ const CartPage=()=>{
         }
     }
 
-    // Render isi cart dropdown
-    const renderCart=()=>{
-        let arr1= Auth.cart.transaksidetailsatuan.map((val,index)=>{
-            return (
-                <div style={{
-                    display:"flex",
-                    // justifyContent:"space-between",
-                    borderBottom:"1px solid #f3f4f5",
-                    paddingTop:10,
-                    paddingBottom:10
-                }}>
-                    <div style={{
-                        marginRight:10
-                    }}>
-                        <img src={API_URL_SQL+val.image} width="50" height="50"/>
-                    </div>
-                    <div>
-                        <h6>{val.nama}</h6>
-                        <h6>Jumlah: {val.qty}</h6>
-                    </div>
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"column",
-                        alignItems:"flex-end",
-                        position:"absolute",
-                        right:30
-                    }}>
-                        <h6>Total</h6>
-
-                        <span style={{
-                            color:"#fa5a1e",
-                            fontWeight:"700"
-                        }}>
-                            Rp {numeral(val.hargatotal).format('0,0')}
-                        </span>
-                    </div>
-                </div>
-            )
-        })
-        let arr2= Auth.cart.transaksiparcel.map((val,index)=>{
-            return (
-                <div style={{
-                    display:"flex",
-                    // justifyContent:"space-between",
-                    borderBottom:"1px solid #f3f4f5",
-                    paddingTop:10,
-                    paddingBottom:10
-                }}>
-                    <div style={{
-                        marginRight:10
-                    }}>
-                        <img src={val.gambar} width="50" height="50"/>
-                    </div>
-                    <div>
-                        <h6>{val.nama}</h6>
-                        <h6>Jumlah: {val.qty}</h6>
-                    </div>
-                    <div style={{
-                        display:"flex",
-                        flexDirection:"column",
-                        alignItems:"flex-end",
-                        position:"absolute",
-                        right:30
-                    }}>
-                        <h6>Total</h6>
-                        <span style={{
-                            color:"#fa5a1e",
-                            fontWeight:"700"
-                        }}>
-                            Rp {numeral(val.hargatotal).format('0,0')}
-                        </span>
-                    </div>
-                </div>
-            )
-        })
-        let final=[arr2,arr1]
-        return final
-    }
 
     // Render isi cart di cartPage
     const renderCartDetail=()=>{
@@ -1111,7 +1046,12 @@ const CartPage=()=>{
     }
 
     if(!Auth.isLogin){
-        return <Redirect to='/' />
+        Swal.fire(
+            'Sudahkah Login?',
+            'Login Terlebih Dahulu',
+            'question'
+          )
+        return <Redirect to='/login'/>
     }
 
     return(
