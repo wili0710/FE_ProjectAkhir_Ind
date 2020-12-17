@@ -36,6 +36,9 @@ export const NotifTransaksi=()=>{
     useEffect(()=>{
         onClickOpen()
     },[TransaksiList.transaksi])
+    useEffect(()=>{
+        onClickOpen()
+    },[Auth.id])
 
     const ambilDataTransaksiList=()=>{
         Axios.post(`${API_URL_SQL}/transaksi/gettransaksilist`,{user_id:Auth.id})
@@ -58,7 +61,9 @@ export const NotifTransaksi=()=>{
 
     const onClickOpen=()=>{
         let renderlist=[]
-
+        if(TransaksiList.transaksi==undefined){
+            return null
+        }
         const belumDibayar=TransaksiList.transaksi.filter((filtering)=>{
             return filtering.status==="Belum dibayar"
         })
@@ -144,7 +149,7 @@ export const NotifTransaksi=()=>{
     }
     
     console.log(TransaksiList)
-    if(Auth.isLogin==false){
+    if(Auth.isLogin==false || Auth.role=="admin"){
         return null
     }
     return (

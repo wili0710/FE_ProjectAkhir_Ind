@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import {useSelector,useDispatch} from 'react-redux'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import {BiCart,BiUser} from 'react-icons/bi'
 import { Badge } from '@material-ui/core';
 import numeral from 'numeral';
-import { API_URL_SQL } from '../../helpers/apiUrl';
+import { API_URL_SQL, HOME_URL } from '../../helpers/apiUrl';
 import Logo from './../../assets/logo.png'
 import Scrollbars from 'react-custom-scrollbars';
 import { namaPertama } from '../../helpers/namapertama';
@@ -233,6 +233,7 @@ const HeaderWili=()=>{
                             }}onClick={()=>{
                                 localStorage.removeItem("id")
                                 dispatch({type:'LOGOUT'})
+                                window.location.assign(`${HOME_URL}`)
                             }}>
                                 <div>Logout</div>
                             </div>

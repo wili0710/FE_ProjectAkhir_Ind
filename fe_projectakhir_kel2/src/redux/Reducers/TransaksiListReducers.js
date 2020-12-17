@@ -20,6 +20,8 @@ export default (state=INITIAL_STATE, action)=>{
             return {...state,isLoading:true};
         case 'FILTERTRANSAKSI':
             return {...state,...action.payload}
+        case 'LOGOUT':
+            return {INITIAL_STATE}
         default         :
             return state;
     };

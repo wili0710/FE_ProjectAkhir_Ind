@@ -31,6 +31,7 @@ export default connect(mapStatetoProps, { loadCategories, addtoTransaction, Addc
   componentDidMount() {
     this.props.loadCategories();
     console.log(this.props.Product)
+    console.log(this.props.Auth.cart)
     this.setState({
       product_categories : this.props.Parcel.Product_Category,
       product : this.props.Parcel.Product,

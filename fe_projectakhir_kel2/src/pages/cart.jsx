@@ -1051,7 +1051,7 @@ const CartPage=()=>{
             'Login Terlebih Dahulu',
             'question'
           )
-        return <Redirect to='/login'/>
+        return <Redirect to='/'/>
     }
 
     return(
