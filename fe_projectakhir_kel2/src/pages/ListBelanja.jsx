@@ -42,50 +42,59 @@ const ListBelanja=(props)=>{
     }, [])
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
     
-    const clickSendBukti=(transaksi_id,users_id)=>{
-
-    if(!image){
-        return Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Bukti transfer belum ada!'
-          })
-    }
-    
-    let formData=new FormData()
-    let options={
-        headers:{
-            'Content-type':'multipart/form-data'
-        }
-    }
-    formData.append('bukti',image)
-    console.log(formData,image)
-    formData.append('data',JSON.stringify({transaksi_id:transaksi_id,users_id:users_id}))
-
-    Axios.post(`${API_URL_SQL}/payment/uploadpaymenttransfer`,formData,options)
-    .then((res)=>{
-        Axios.post(`${API_URL_SQL}/transaksi/gettransaksilist`,{user_id:Auth.id})
+    const confirmBarangDiterima=(transaksi_id)=>{
+        Axios.post(`${API_URL_SQL}/transaksi/confirmbarangsampai`,{users_id:Auth.id,transaksi_id})
         .then((res)=>{
-            const simpanredux={
-                transaksi:res.data.transaksi,
-                transaksidetailsatuan:res.data.transaksidetailsatuan,
-                transaksiparcel:res.data.transaksiparcel,
-                transaksidetailparcel:res.data.transaksidetailparcel
-            }
-            dispatch({type:"LOADTRANSAKSILIST",payload:simpanredux})
-            return Swal.fire(
-                'Berhasil!',
-                'Akan segera kami proses!',
-                'success'
-              )
+            dispatch({type:"LOADTRANSAKSILIST",payload:res.data})
         }).catch((err)=>{
             console.log(err)
         })
-    }).catch((err)=>{
-        console.log(err)
-    })
-    setShowPembayaran(!showPembayaran)
-}
+    }
+
+    const clickSendBukti=(transaksi_id,users_id)=>{
+
+        if(!image){
+            return Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Bukti transfer belum ada!'
+            })
+        }
+        
+        let formData=new FormData()
+        let options={
+            headers:{
+                'Content-type':'multipart/form-data'
+            }
+        }
+        formData.append('bukti',image)
+        console.log(formData,image)
+        formData.append('data',JSON.stringify({transaksi_id:transaksi_id,users_id:users_id}))
+
+        Axios.post(`${API_URL_SQL}/payment/uploadpaymenttransfer`,formData,options)
+        .then((res)=>{
+            Axios.post(`${API_URL_SQL}/transaksi/gettransaksilist`,{user_id:Auth.id})
+            .then((res)=>{
+                const simpanredux={
+                    transaksi:res.data.transaksi,
+                    transaksidetailsatuan:res.data.transaksidetailsatuan,
+                    transaksiparcel:res.data.transaksiparcel,
+                    transaksidetailparcel:res.data.transaksidetailparcel
+                }
+                dispatch({type:"LOADTRANSAKSILIST",payload:simpanredux})
+                return Swal.fire(
+                    'Berhasil!',
+                    'Akan segera kami proses!',
+                    'success'
+                )
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }).catch((err)=>{
+            console.log(err)
+        })
+        setShowPembayaran(!showPembayaran)
+    }
 
     const rendertransaksi=(status)=>{
         console.log("rendertransaksi jalan")
@@ -122,6 +131,7 @@ const ListBelanja=(props)=>{
                             </div>
                         </div>
                         <div style={{flexBasis:"46.4%",textAlign:"right",display:"flex",justifyContent:"flex-end",alignItems:"center"}}>
+                            {tabopen==1?
                             <div style={{
                                 backgroundColor:"#30a9e1",
                                 padding:5,
@@ -134,6 +144,26 @@ const ListBelanja=(props)=>{
                             }} onClick={()=>{settransaksi_id(val.id);setShowPembayaran(!showPembayaran)}}>
                                 Kirim Bukti pembayaran
                             </div>
+                            :
+                            null
+                            }
+                            {tabopen==4?
+                            <div style={{
+                                backgroundColor:"#30a9e1",
+                                padding:5,
+                                paddingRight:10,
+                                paddingLeft:10,
+                                height:"fit-content",
+                                color:"white",
+                                borderRadius:5,
+                                cursor:"pointer"
+                            }} onClick={()=>confirmBarangDiterima(val.id)}>
+                                Konfirmasi Barang Diterima
+                            </div>
+                            :
+                            null
+
+                            }
                         </div>
                     </div>
                     <div style={{
@@ -204,7 +234,7 @@ const ListBelanja=(props)=>{
             'Login Terlebih Dahulu',
             'question'
           )
-        return <Redirect to='/login'/>
+        return <Redirect to='/'/>
     }
 
     return (
