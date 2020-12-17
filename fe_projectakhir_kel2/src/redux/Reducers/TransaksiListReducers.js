@@ -3,6 +3,12 @@ const INITIAL_STATE = {
     transaksidetailsatuan: [],
     transaksiparcel: [],
     transaksidetailparcel: [],
+    belumDibayar:[],
+    menungguKonfirmasi:[],
+    pesananDiproses:[],
+    pesananDikirim:[],
+    pesananSelesai:[],
+    menungguKomentar:[],
     isLoading: false
 };
 
@@ -12,6 +18,8 @@ export default (state=INITIAL_STATE, action)=>{
             return {...state,...action.payload,isLoading:false};
         case 'LOADINGTRANSAKSILIST'  :
             return {...state,isLoading:true};
+        case 'FILTERTRANSAKSI':
+            return {...state,...action.payload}
         default         :
             return state;
     };
