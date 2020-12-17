@@ -8,6 +8,8 @@ import { Badge } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { IconContext } from 'react-icons/lib';
 import './notiftransaksi.css'
+import Skeleton from '@material-ui/lab/Skeleton';
+import { Link } from 'react-router-dom';
 
 const StyledBadge = withStyles((theme) => ({
     badge: {
@@ -25,10 +27,15 @@ export const NotifTransaksi=()=>{
 
     const [jumlah,setJumlah]=useState(0)
     const [close,setClose]=useState(false)
+    const [renderListState,setRenderListState]=useState()
+    const [loading,setLoading]=useState(true)
 
     useEffect(()=>{
         ambilDataTransaksiList()
     },[])
+    useEffect(()=>{
+        onClickOpen()
+    },[TransaksiList.transaksi])
 
     const ambilDataTransaksiList=()=>{
         Axios.post(`${API_URL_SQL}/transaksi/gettransaksilist`,{user_id:Auth.id})
@@ -49,8 +56,7 @@ export const NotifTransaksi=()=>{
         })
     }
 
-    const TransaksiLength=()=>{
-
+    const onClickOpen=()=>{
         let renderlist=[]
 
         const belumDibayar=TransaksiList.transaksi.filter((filtering)=>{
@@ -63,7 +69,9 @@ export const NotifTransaksi=()=>{
                 padding:5
             }}>
                 <div> Belum Dibayar : {belumDibayar.length} Transaksi </div>
-                <div>Upload Bukti Pembayaran Disini</div>  
+                <Link to="/listbelanja/1">
+                    <div style={{cursor:"pointer"}}>Upload Bukti Pembayaran Disini</div>  
+                </Link>
             </div>
             )
         }
@@ -96,7 +104,9 @@ export const NotifTransaksi=()=>{
                     padding:5
                 }}>
                     <div> Pesanan Dikirim : {pesananDikirim.length} Transaksi </div>
-                    <div >Konfirmasi Pesanan Sudah Sampai Disini</div>  
+                    <Link to="/listbelanja/4">
+                    <div style={{cursor:"pointer"}}>Konfirmasi Pesanan Sudah Sampai Disini</div>  
+                    </Link>
                 </div>
             )
         }
@@ -110,16 +120,33 @@ export const NotifTransaksi=()=>{
         if(menungguKomentar.length!==0){
             renderlist.push(<div style={{borderBottom:"5px solid whitesmoke",padding:5}}> Menunggu Komentar : {menungguKomentar.length} Transaksi </div>)
         }
-        console.log(renderlist)
-        
-        return renderlist
+        const pesananSelesai=TransaksiList.transaksi.filter((filtering)=>{
+            return filtering.status==="Pesanan Selesai"
+        })
+        renderlist.push(<div style={{cursor:"pointer"}}><Link to="/listbelanja"><h6> Semua Transaksi</h6></Link></div>)
+        const simpanredux={
+            belumDibayar,
+            menungguKonfirmasi,
+            pesananDiproses,
+            pesananDikirim,
+            pesananSelesai,
+            menungguKomentar
+        }
+        dispatch({type:"FILTERTRANSAKSI",payload:simpanredux})
+        setRenderListState(renderlist)
+        setLoading(false)
     }
 
+    const TransaksiLength=()=>{
+
+        console.log(renderListState)
+        return renderListState
+    }
+    
     console.log(TransaksiList)
     if(Auth.isLogin==false){
         return null
     }
-    
     return (
         <div style={{
             position:"fixed",
@@ -127,7 +154,7 @@ export const NotifTransaksi=()=>{
             left:50,
             zIndex:5
         }}>
-            <div onClick={()=>setClose(!close)} style={{
+            <div onClick={()=>{onClickOpen();setClose(!close)}} style={{
                 backgroundColor:"#30a9e1",
                 color:"white",
                 // border:"1px solid whitesmoke",
@@ -167,8 +194,8 @@ export const NotifTransaksi=()=>{
                     <AiOutlineClose style={{cursor:"pointer"}} onClick={()=>setClose(!close)}/>
 
                 </div>
-                {TransaksiLength()}
-                <h6> Semua Transaksi</h6>
+                    {TransaksiLength()}
+                    
             </div>
         </div>
 
