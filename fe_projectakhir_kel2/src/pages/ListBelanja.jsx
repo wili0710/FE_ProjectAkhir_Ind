@@ -29,6 +29,7 @@ const ListBelanja=(props)=>{
     const [transaksi_id,settransaksi_id]=useState()
     const [showPembayaran,setShowPembayaran]=useState(false)
     const [image,setImage]=useState()
+    const [showItem,setShowItem]=useState()
 
     useEffect(()=>{
         console.log("jalan")     
@@ -75,6 +76,7 @@ const ListBelanja=(props)=>{
         .then((res)=>{
             Axios.post(`${API_URL_SQL}/transaksi/gettransaksilist`,{user_id:Auth.id})
             .then((res)=>{
+                console.log(res.data)
                 const simpanredux={
                     transaksi:res.data.transaksi,
                     transaksidetailsatuan:res.data.transaksidetailsatuan,
@@ -120,7 +122,7 @@ const ListBelanja=(props)=>{
                         paddingBottom:5
                     }}>
                         <div style={{flexBasis:"33.3%"}}> 
-                            {moment(val.lastupdate).format('MMMM Do YYYY')}
+                            TID:{val.id} | {moment(val.lastupdate).format('MMMM Do YYYY')}
                         </div>
                         <div style={{flexBasis:"20.3%",textAlign:"left"}}>
                             <div>
@@ -200,11 +202,162 @@ const ListBelanja=(props)=>{
                             </div>
                         </div>
                     </div>
+                    {showItem==val.id?
+                        <div style={{cursor:"pointer", color:"#30a9e1"}} onClick={()=>setShowItem()}>
+                            Tutup Detail
+                         </div>
+                        :
+                        <div style={{cursor:"pointer", color:"#30a9e1"}} onClick={()=>setShowItem(val.id)}>
+                            Lihat Item Detail
+                        </div>
+                    }
+                    <div style={{
+                        display:showItem==val.id?"flex":"none",
+                        flexDirection:"column"
+                    }}>
+                    {renderTransaksiDetail(val.id)}
+                    </div>
                 </div>
             )
         })
 
     }
+
+    // Render isi cart di cartPage
+    const renderTransaksiDetail=(transaksi_id)=>{
+        let filterTransaksiId=TransaksiList.transaksidetailsatuan.filter((filtering)=>{
+            return filtering.transaksi_id==transaksi_id
+        })
+        let arr1= filterTransaksiId.map((val,index)=>{
+            return (
+                <div style={{
+                    display:"flex",
+                    // justifyContent:"space-between",
+                    // borderBottom:"5px solid #f3f4f5",
+                    borderTop:"5px solid #f3f4f5",
+                    paddingTop:10,
+                    paddingBottom:100,
+                    // backgroundColor:"wheat",
+                    height:100,
+                    marginTop:20
+                }}>
+                    <div style={{
+                        marginRight:10
+                    }}>
+                        <img src={API_URL_SQL+val.image} width="50" height="50"/>
+                    </div>
+                    <div>
+                        <h6>{val.nama}</h6>
+                        <h6>Jumlah: {val.qty}</h6>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"flex-end",
+                        position:"absolute",
+                        right:200
+                    }}>
+                        <div style={{
+                            borderBottom:"1px #f3f4f5 solid",
+                            cursor:"default",
+                            marginBottom:10
+                        }}>
+                        </div>
+                        <h6>Total</h6>  
+                        <span style={{
+                            color:"#fa5a1e",
+                            fontWeight:"700"
+                        }}>
+                            Rp {numeral(val.hargatotal).format('0,0')}
+                        </span>                        
+                    </div>
+                </div>
+            )
+        })
+
+        let filterTransaksiParcelId=TransaksiList.transaksiparcel.filter((filtering)=>{
+            return filtering.transaksi_id==transaksi_id
+        })
+        let arr2= filterTransaksiParcelId.map((val,index)=>{
+            let detailparcel=TransaksiList.transaksidetailparcel.filter((filtering)=>{
+                return filtering.transaksidetail_id===val.transaksidetail_id
+            })
+            let renderdetailparcel=detailparcel.map((detail,index)=>{
+                return(
+                    <div style={{
+                        display:"flex"
+                    }}>
+                        <div>
+                            <h6>- {detail.namaproduct} : {detail.qtyproduct/detail.qtyparcel}</h6>
+                        </div>
+                    </div>
+                )
+            })
+            return (
+                <div style={{
+                    display:"flex",
+                    // justifyContent:"space-between",
+                    // borderBottom:"5px solid #f3f4f5",
+                    borderTop:"5px solid #f3f4f5",
+                    paddingTop:10,
+                    paddingBottom:20,
+                    marginBottom:10,
+                    marginTop:20,
+                }}>
+                    <div style={{
+                        marginRight:10
+                    }}>
+                        <img src={val.gambar} width="50" height="50"/>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column"
+                    }}>
+                        <h6>{index+1}: {val.nama}</h6>
+                        <h6>Isi Parcel</h6>
+                        <div style={{
+                            marginLeft:10,
+                            display:"flex",
+                            flexDirection:"column"
+                        }}>
+                            {renderdetailparcel}
+                        </div>
+                        <h6>Jumlah Parcel: {val.qty}</h6>
+                        <h6>Message Custom:</h6>
+                        <div style={{
+                            border:"3px #f3f4f5 solid",
+                            padding:20,
+                            marginTop:10,
+                            width:500,
+                            // height:"fit-content",
+                        }}>
+                            <p style={{wordWrap:"break-word"}}>
+                                {val.message}
+                            </p> 
+                        </div>
+                    </div>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        alignItems:"flex-end",
+                        position:"absolute",
+                        right:200,
+                    }}>
+                        <h6>Total</h6>
+                        <span style={{
+                            color:"#fa5a1e",
+                            fontWeight:"700"
+                        }}>
+                            Rp {numeral(val.hargatotal).format('0,0')}
+                        </span>
+                    </div>
+                </div>
+            )
+        })
+        let final=[arr2,arr1]
+        return final
+    }
+
     const renderlist=()=>{
         console.log("renderlist jalan")
         console.log(tabopen)
@@ -223,9 +376,9 @@ const ListBelanja=(props)=>{
         if(tabopen===5){
             return rendertransaksi("Pesanan Selesai") 
         }
-        if(tabopen===6){
-            return rendertransaksi("Menunggu Komentar") 
-        }
+        // if(tabopen===6){
+        //     return rendertransaksi("Menunggu Komentar") 
+        // }
     }
 
     if(!Auth.isLogin){
@@ -300,13 +453,13 @@ const ListBelanja=(props)=>{
                     }}  onClick={()=>settabopen(5)}>
                         Pesanan Selesai
                     </div>
-                    <div style={{
+                    {/* <div style={{
                         borderBottom:tabopen==6?"5px solid #30a9e1":null,
                         paddingBottom:5,
                         cursor:"pointer"
                     }}  onClick={()=>settabopen(6)}>
                         Menunggu Komentar
-                    </div>
+                    </div> */}
                 </div>
                 <div style={{
                     padding:20

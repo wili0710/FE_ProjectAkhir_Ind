@@ -43,6 +43,7 @@ export const NotifTransaksi=()=>{
     const ambilDataTransaksiList=()=>{
         Axios.post(`${API_URL_SQL}/transaksi/gettransaksilist`,{user_id:Auth.id})
         .then((res)=>{
+            console.log(res.data)
             const simpanredux={
                 transaksi:res.data.transaksi,
                 transaksidetailsatuan:res.data.transaksidetailsatuan,
