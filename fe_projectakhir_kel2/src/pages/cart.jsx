@@ -21,8 +21,15 @@ import { FcApprove } from 'react-icons/fc'
 import { AiFillMinusSquare,AiFillPlusSquare } from 'react-icons/ai'
 import Dropzone, {useDropzone} from 'react-dropzone'
 import HeaderWili from '../components/header/headerwili';
+import { css } from "@emotion/react";
+import { DotLoader, PulseLoader } from "react-spinners";
 
 
+const override = css`
+display: block;
+margin: 0 auto;
+border-color: red;
+`;
 
 const MsgAddSatuan = ({ nama }) =>{
     console.log(nama)
@@ -71,6 +78,8 @@ const CartPage=()=>{
     const [loading,setLoading]=useState(true)
     const [loadingEdit,setLoadingEdit]=useState(true)
     const [loadingEdit2,setLoadingEdit2]=useState(true)
+    const [loadingEdit3,setLoadingEdit3]=useState(true)
+    const [loadingScreen,setLoadingScreen]=useState(false)
 
     const [showCart,setShowCart]=useState(false)                    // Show Dropdown Caart
     const [showMenuUser,setShowMenuUser]=useState(false)            // Show Dropdown User
@@ -130,6 +139,7 @@ const CartPage=()=>{
                 text: 'Nama Penerima dan Pengirim serta Alamat perlu diisi'
             })
         }else{
+            setLoadingScreen(true)
             Axios.post(`${API_URL_SQL}/transaksi/checkout`,{transaksi_id,users_id,alamatPengiriman:alamat,catatanTambahan,namaPenerima,namaPengirim})
             .then((res)=>{
                 dispatch({type:'CART',cart:res.data})                
@@ -151,11 +161,13 @@ const CartPage=()=>{
                         transaksidetailparcel:res.data.transaksidetailparcel
                     }
                     dispatch({type:"LOADTRANSAKSILIST",payload:simpanredux})
-
+                    setLoadingScreen(false)
                 }).catch((err)=>{
                     console.log(err)
+                    setLoadingScreen(false)
                 })
             }).catch((err)=>{
+                setLoadingScreen(false)
                 console.log(err)
                 Swal.fire({
                     icon: 'error',
@@ -173,6 +185,7 @@ const CartPage=()=>{
             let findproduct=listProduct.find((finding)=>{
                 return finding.id==val.products_id
             })
+            console.log(findproduct)
             if (val.qty*qtyParcel>findproduct.stok){
                 stokTersisa.push(findproduct.stok)
                 return val
@@ -246,6 +259,7 @@ const CartPage=()=>{
 
     const addProductSatuan=async(products_id,namaproduct)=>{
         try {
+            setLoadingScreen(true)
             let addToBE=await Axios.post(`${API_URL_SQL}/transaksi/addtocartproduct`,{
                 user_id:Auth.id,
                 products_id:products_id,
@@ -257,6 +271,8 @@ const CartPage=()=>{
             notifyAddProductSatuan(namaproduct)
         } catch (error) {
             console.log(error)
+        } finally{
+            setLoadingScreen(false)
         }
     }
 
@@ -414,6 +430,7 @@ const CartPage=()=>{
         setMessage(dataforedit[0].message)
         setLoadingEdit(true)
         setLoadingEdit2(true)
+        setLoadingEdit3(true)
         setItemEdit(dataforedit)
         getLimitProduct(dataforedit)
 
@@ -470,6 +487,7 @@ const CartPage=()=>{
             const gettobe=await Axios.post(`${API_URL_SQL}/product/getAllProductByCategory/`,{categoryproduct_id:arrCategoryId})
             console.log(gettobe.data)
             setListProduct(gettobe.data)
+            setLoadingEdit2(false)
         } catch (error) {
             console.log(error)
         }
@@ -535,7 +553,7 @@ const CartPage=()=>{
                 }
             }
         })
-        setLoadingEdit2(false)
+        setLoadingEdit3(false)
         setStatusPerCategory(letstatusPerCategory)
 
 
@@ -741,6 +759,9 @@ const CartPage=()=>{
                 })
 
                 // render row masing masing category
+                // if(loadingEdit2){
+                //     setLoadingEdit2(false)
+                // }
                 return (
                     <div style={{
                         display:"flex",
@@ -961,11 +982,13 @@ const CartPage=()=>{
     }
     
     const clickSaveSatuan=(products_id,transaksidetail_id,nama,qty,indexs)=>{
+        setLoadingScreen(true)
         Axios.post(`${API_URL_SQL}/product/getdataproductbyid/`,{id:products_id})
         .then((res)=>{
             console.log(res.data)
             if(qtySatuan>res.data[0].stok){
                 setEditSatuan()
+                setLoadingScreen(false)
                 return Swal.fire({
                     icon: 'error',
                     title: 'Stok Kurang',
@@ -985,6 +1008,7 @@ const CartPage=()=>{
                     console.log(res.data)
                     dispatch({type:'CART',cart:res.data})
                     notifyEditProductSatuan(nama,qty,indexs)
+                    setLoadingScreen(false)
                 }).catch((err)=>{
                     console.log(err)
                 })
@@ -993,13 +1017,14 @@ const CartPage=()=>{
     }
     const onClickSaveParcel=(transaksidetail_id,parcel_id,indexs)=>{
         console.log(komposisiParcel)
-
+        setLoadingScreen(true)
         if(!isAllLimit){
             Swal.fire({
                 icon: 'error',
                 title: 'Sorry',
                 text: 'Isi Parcel Belum Penuh!',
               })
+              
         }
         else{
             let products_id=komposisiParcel.map((val,index)=>{
@@ -1027,13 +1052,15 @@ const CartPage=()=>{
                 dispatch({type:'CART',cart:res.data})
                 setShowEdit(!showEdit)
                 notifyEditProductParcel()
+                setLoadingScreen(false)
             }).catch((err)=>{
                 setShowEdit(!showEdit)
                 console.log(err)
+                setLoadingScreen(false)
             })
 
         }
-
+        
     }
 
 
@@ -1073,7 +1100,29 @@ const CartPage=()=>{
                 draggable
                 pauseOnHover
             />
-            {/* MODAL Pembayaran */}
+            {loadingScreen?
+                <div style={{
+                    height:"100%",
+                    width:"100%",
+                    backgroundColor:"rgba(0, 0, 0, 0.5)",
+                    position:"fixed",
+                    zIndex:5,
+                    display:"flex",
+                    justifyContent:"center",
+                    alignItems:"center",
+                    top:0
+                }}>
+                    <DotLoader
+                        css={override}
+                        size={20}
+                        color={"whitesmoke"}
+                        loading={loadingScreen}
+                    />
+                </div>
+                :
+                null
+            }
+            {/* MODAL Checkout */}
             {
                 showPembayaran?
                 <>
@@ -1255,15 +1304,21 @@ const CartPage=()=>{
                                 <div style={{
                                     marginLeft:20
                                 }}>
-                                    Ganti Qty : <input onChange={(e)=>{
-                                        if(e.target.value<=0){
-                                            setQtyParcel(1)
-                                        }else{
-                                            setQtyParcelBefore(qtyParcel)
-                                            setQtyParcel(e.target.value)
-                                        }
-                                    }} value={qtyParcel} type="number" defaultValue={itemEdit[0].qty} style={{width:50, border:"none",outline:"none"}}/>
-                                    
+                                    {
+                                        loadingEdit2?
+                                        <Skeleton variant="text" width={"100%"} />
+                                        :
+                                        <>
+                                            Ganti Qty : <input onChange={(e)=>{
+                                                if(e.target.value<=0){
+                                                    setQtyParcel(1)
+                                                }else{
+                                                    setQtyParcelBefore(qtyParcel)
+                                                    setQtyParcel(e.target.value)
+                                                }
+                                            }} value={qtyParcel} type="number" defaultValue={itemEdit[0].qty} style={{width:50, border:"none",outline:"none"}}/>
+                                        </>
+                                    }
                                 </div>
                             </div>
                             
@@ -1304,7 +1359,7 @@ const CartPage=()=>{
                                     </div>
                                     <div>
                                     {
-                                        loadingEdit2?
+                                        loadingEdit3?
                                         <Skeleton variant="text" width={"100%"} height={118} />
                                         :
                                         renderIsiParcel()
@@ -1337,152 +1392,6 @@ const CartPage=()=>{
             {/* End Modal Edit */}
             
             <HeaderWili/>
-
-            {/* <div style={{
-                display:"flex",
-                justifyContent:"space-between",
-                backgroundColor:"#158ae6",
-                padding:15,
-                color:"white",
-                position:"fixed",
-                top:0,
-                width:"100%",
-                maxWidth:2000,
-                zIndex:1}}>
-                <div style={{
-                    marginLeft:20
-                }}>
-                    <Link to="/">
-                        <img src={Logo} alt="logo" width="145px" color="black"/>
-                    </Link>
-                </div>
-                <div style={{
-                    display:"flex",
-                    justifyContent:"flex-end",
-                    alignItems:"center",
-                    flexBasis:"13%"}}>
-                    <div style={{
-                        position:"relative",marginRight:10}} onMouseEnter={()=>setShowCart(true)} onMouseLeave={()=>setShowCart(false)}>
-                        <Badge color="error" badgeContent={Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length}>
-                            <BiCart color="white" size="20" style={{cursor:"pointer"}}/>
-                        </Badge>
-                        <div style={{
-                            position:"absolute",
-                            display:showCart?"block":"none",
-                            right:-100,
-                            paddingTop:10,
-                            width:350,
-                            
-                        }}>
-                            <div style={{
-                                border:'1 solid white',
-                                borderBottomLeftRadius:10,
-                                borderBottomRightRadius:10,
-                                color:"black",
-                                padding:10,
-                                paddingLeft:20,
-                                paddingRight:20,
-                                boxShadow:"#f3f4f5 0px 3px 5px 1px",
-                                backgroundColor:"white",
-                                display:"flex",
-                                flexDirection:"column",
-                                animation: "growOut 500ms ease-in-out forwards",
-                                transformOrigin: "top center",
-                                overflowY:"auto",
-                                maxHeight:500
-                            }}>
-                                <div style={{
-                                    display:"flex",
-                                    justifyContent:"space-between",
-                                    borderBottom:"#f3f4f5 solid 1px"
-                                }}>
-                                    <h6>
-                                        Keranjang ({Auth.cart.transaksiparcel.length+Auth.cart.transaksidetailsatuan.length})
-                                    </h6>
-                                    <span>
-                                        <Link to="/cart" style={{
-                                            color:"#158ae6",
-                                            fontWeight:"500",
-                                            textDecorationLine:"none"
-                                            }}> <h6>Lihat Keranjang</h6></Link>
-                                    </span>
-                                </div>
-                                <div>
-                                    <Scrollbars autoHeight autoHeightMin={Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?50:0} 
-                                    autoHide autoHeightMax={400}>
-                                            
-                                        {Auth.cart.transaksiparcel.length>0||Auth.cart.transaksidetailsatuan.length>0?
-                                        renderCart()
-                                        // null
-                                        :
-                                        <div style={{
-                                            display:"flex",
-                                            justifyContent:"center",
-                                            padding:10
-                                        }}>
-                                            <span>Masih Kosong</span>    
-                                        </div>
-                                        }
-                                      
-                                    </Scrollbars>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style={{
-                        borderLeft: '1px solid white',
-                        paddingLeft:10,
-                        marginLeft:10,
-                        position:"relative",
-                        }}
-                        onMouseEnter={()=>setShowMenuUser(true)} onMouseLeave={()=>setShowMenuUser(false)}>
-                        <BiUser color="white" size="20" style={{cursor:"pointer"}}/> Halo, {namaPertama(Auth.nama)}
-                        <div style={{
-                            position:"absolute",
-                            display:showMenuUser?"block":"none",
-                            paddingTop:10,
-                            width:100,
-                        }}>
-                            <div style={{
-                                border:'1 solid white',
-                                borderBottomLeftRadius:10,
-                                borderBottomRightRadius:10,
-                                color:"black",
-                                padding:10,
-                                paddingLeft:20,
-                                paddingRight:20,
-                                boxShadow:"#f3f4f5 0px 3px 5px 1px",
-                                backgroundColor:"white",
-                                display:"flex",
-                                flexDirection:"column",
-                                animation: "growOut 300ms ease-in-out forwards",
-                                transformOrigin: "top center"
-                                // animation: "growDown 300ms ease-in-out"
-                            }}>
-                                <div style={{
-                                    display:"flex",
-                                    justifyContent:"space-between",
-                                    borderBottom:"#f3f4f5 solid 1px"
-                                }}>
-                                    <div>Setting</div>
-
-                                </div>
-                                <div style={{
-                                    display:"flex",
-                                    justifyContent:"space-between",
-                                    borderBottom:"#f3f4f5 solid 1px",
-                                    cursor:"pointer"
-                                }}onClick={()=>{
-                                    localStorage.removeItem("id")
-                                    dispatch({type:'LOGOUT'})
-                                }}>
-                                    <div>Logout</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>   */}
 
             <div style={{
                 display:"flex",
@@ -1654,103 +1563,3 @@ const CartPage=()=>{
 }
 
 export default CartPage
-
-// Dipakai untuk Modal pembayraan saat di halaman list transaksi menunggu pembayaran
-
-// const clickSendBukti=(transaksi_id,users_id)=>{
-//     console.log(transaksi_id,users_id)
-//     console.log(image)
-
-//     if(!image){
-//         return Swal.fire({
-//             icon: 'error',
-//             title: 'Oops...',
-//             text: 'Bukti transfer belum ada!'
-//           })
-//     }
-
-
-//     if(!image){
-//         return Swal.fire({
-//             icon: 'error',
-//             title: 'Oops...',
-//             text: 'Bukti transfer belum ada!'
-//           })
-//     }
-    
-//     let formData=new FormData()
-//     let options={
-//         headers:{
-//             'Content-type':'multipart/form-data'
-//         }
-//     }
-//     formData.append('bukti',image)
-//     console.log(formData,image)
-//     formData.append('data',JSON.stringify({transaksi_id:transaksi_id,users_id:users_id}))
-
-//     Axios.post(`${API_URL_SQL}/payment/uploadpaymenttransfer`,formData,options)
-//     .then((res)=>{
-//         fetchdata()
-//     }).catch((err)=>{
-//         console.log(err)
-//     })
-//     setShowPembayaran(!showPembayaran)
-// }
-
-{/* <div style={{
-    padding:20,
-    display:"flex",
-    flexDirection:"column",
-    // justifyContent:"center",
-    // alignItems:"center",
-    height:"100%",
-    width:"70%"
-}}>
-    <div style={{padding:5}}>
-        <h4>Pembayaran Dengan Transfer</h4>
-    </div>
-    <div style={{padding:5}}> 
-        <h6>Silakan transfer ke Rekening</h6>
-        <span>- Bank ABCD No.Rekening: 1310025105 A/n hearttoheart</span>
-    </div>
-    <div style={{padding:5}}>
-        <h6>Upload Bukti Pembayaran :</h6>
-    </div>
-    <div style={{padding:5}}>  
-        <div {...getRootProps()}>
-            <input {...getInputProps()} />
-            {
-            isDragActive ?
-                <p>Drop the files here ...</p> :
-                <p>Drag 'n' drop some files here, or click to select files</p>
-            }
-        </div>
-
-        {
-            image?
-            <ReactImageMagnify {...{
-                smallImage: {
-                    alt: 'Payment',
-                    // isFluidWidth: true,
-                    width:50,
-                    height:100,
-                    src: URL.createObjectURL(image)
-                },
-                largeImage: {
-                    src: URL.createObjectURL(image) ,
-                    width:800,
-                    height: 800
-                },
-                enlargedImageContainerDimensions:{
-                    width:"1600%",
-                    height:"300%"
-                }
-            }} />
-            :
-            null
-        }
-    </div>
-    <div style={{padding:5}}>
-        <Button color="primary" onClick={()=>clickSendBukti(Auth.cart.transaksi[0].id,Auth.id)}>Upload Bukti Pembayaran</Button>
-    </div>
-</div> */}
