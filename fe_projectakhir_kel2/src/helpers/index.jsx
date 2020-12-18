@@ -112,4 +112,5 @@ export function renderOption(props) {
     );
 }; 
 
-export const API_URL_SQL = `http://localhost:8000`;
+// export const API_URL_SQL = `http://localhost:8000`;
+export const API_URL_SQL = 'https://hearttoheart-kel2.herokuapp.com'
