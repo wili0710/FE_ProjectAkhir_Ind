@@ -6,7 +6,7 @@ const INITIAL_STATE = {
     isLogin: false,
     isLoading: false,
     error: '',
-    cart:{transaksi:[],transaksidetailsatuan:[],transaksidetailparcel:[]},
+    cart:{transaksi:[],transaksiparcel:[],transaksidetailsatuan:[],transaksidetailparcel:[]},
     isResetPass:false,
     dataProduct:[],
     dataJSON:{}

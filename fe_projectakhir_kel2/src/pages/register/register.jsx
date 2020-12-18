@@ -9,7 +9,7 @@ import {useSelector,useDispatch} from 'react-redux'
 import {Redirect, Link} from 'react-router-dom'
 import { ModalResetPassword } from '../../components/modalresetpassword';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
-
+import Logo from './../../assets/logoblue.png'
 
 
 const Register=(props)=>{
@@ -199,7 +199,7 @@ const Register=(props)=>{
                 'Ingin mengirimkan Parcel Custom? Serahkan pada kami!',
                 'success'
             )
-            dispatch({type:'LOGIN',payload:res.data,cart:{transaksi:[],transaksidetailsatuan:[],transaksidetailparcel:[]}})
+            dispatch({type:'LOGIN',payload:res.data,cart:{transaksi:[],transaksiparcel:[],transaksidetailsatuan:[],transaksidetailparcel:[]}})
             localStorage.setItem('id',res.data.id)
             localStorage.removeItem("registrasi")
             localStorage.removeItem("verified")
@@ -296,7 +296,7 @@ const Register=(props)=>{
             <div className='d-flex flex-column mt-1'>
                 <span>Email :</span>
                 <input type='email' className="form-control" onChange={(e)=>funcvalidateemail(e)} style={{transition:'500ms'}}/>
-                <span className='my-2'>Contoh : email@parcelita.com</span>
+                <span className='my-2'>Contoh : email@hearttoheart.com</span>
                 <button className='p-2' disabled style={{transition:'1000ms',border:'0px', borderRadius:'5px', backgroundColor:"#e5e7e9",fontSize:'20px',cursor:'not-allowed'}}>Daftar</button>
             </div>
         )
@@ -361,9 +361,9 @@ const Register=(props)=>{
                 }
             <div className='d-flex align-items-center flex-column' style={{width:'1200px'}}>
                 <div className='my-3'>
-                    <h1 className="logociptalapak">
-                        Parcelita
-                    </h1>
+                    <Link to="/">
+                        <img src={Logo} width={200}/>
+                    </Link>
                 </div>
                 {email && isverified?
                         <div className='mx-4' style={{
@@ -421,7 +421,7 @@ const Register=(props)=>{
                         </div>
                 }
                 <div className='p-1' style={{width:'1200px',borderTop:'1px solid lightgrey',position:"fixed",bottom:0,paddingBottom:10, backgroundColor:"white"}}>
-                    <span style={{fontSize:'14px'}}>© 2020, Parcelita</span>
+                    <span style={{fontSize:'14px'}}>© 2020, hearttoheart</span>
                 </div>
             </div>
         </div>
